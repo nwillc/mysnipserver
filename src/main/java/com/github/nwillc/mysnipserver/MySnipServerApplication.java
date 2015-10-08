@@ -21,13 +21,19 @@ import spark.servlet.SparkApplication;
 
 import java.util.logging.Logger;
 
-public class MySnipServer {
-    private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
-    private final static SparkApplication application = new MySnipServerApplication();
+import static spark.Spark.*;
 
-    public static void main(String[] args) {
+class MySnipServerApplication implements SparkApplication {
+    private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
+
+    @Override
+    public void init() {
         LOGGER.info("Starting");
-        application.init();
+        // Static files
+        staticFileLocation("/public");
+
+        // Setup routes
+        get("/ping", (request, response) -> "PONG");
         LOGGER.info("Completed");
     }
 }

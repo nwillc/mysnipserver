@@ -1,9 +1,21 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.nwillc:vplugin:1.2.4"
+    }
+}
 
+apply plugin: "com.github.nwillc.vplugin"
 apply plugin: 'java'
+
 
 repositories {
   jcenter {
-    url "http://jcenter.bintray.com"
+    url 'http://jcenter.bintray.com'
   }
 }
 
@@ -37,3 +49,10 @@ test {
         exceptionFormat "full"
     }
 }
+
+task stage(type: Copy) {
+    from sourceSets.main.runtimeClasspath
+    into 'build/staging'
+}
+
+stage.dependsOn build
