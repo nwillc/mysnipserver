@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.controller.Categories;
+import com.github.nwillc.mysnipserver.controller.Controller;
 import spark.servlet.SparkApplication;
 
 import java.util.logging.Logger;
@@ -26,7 +27,7 @@ import static spark.Spark.*;
 
 class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final Categories categories = new Categories();
+    private final Controller categories = new Categories();
 
     @Override
     public void init() {
@@ -34,9 +35,13 @@ class MySnipServerApplication implements SparkApplication {
         // Static files
         staticFileLocation("/public");
 
-        // Setup routes
+        // Specific routes
         get("/ping", (request, response) -> "PONG");
-        get("/v1/categories", categories::findAll);
+
+        // Controller routes
+        for (String path : categories.getRoutes().keySet()) {
+            get(path, categories.getRoutes().get(path));
+        }
         LOGGER.info("Completed");
     }
 }
