@@ -7,7 +7,7 @@
     <script>
         $(document).ready(function(){
             $("button").click(function(){
-                $.get("ping", function(data, status){
+                $.get("v1/categories", function(data, status){
                     alert("Data: " + data + "\nStatus: " + status);
                 });
             });
