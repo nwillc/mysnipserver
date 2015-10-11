@@ -19,6 +19,8 @@ package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Controller;
+import com.google.gson.Gson;
+import spark.Route;
 import spark.servlet.SparkApplication;
 
 import java.util.logging.Logger;
@@ -28,6 +30,7 @@ import static spark.Spark.*;
 class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
     private final Controller categories = new Categories();
+    private final Gson gson = new Gson();
 
     @Override
     public void init() {
@@ -40,8 +43,11 @@ class MySnipServerApplication implements SparkApplication {
 
         // Controller routes
         for (String path : categories.getRoutes().keySet()) {
-            get(path, categories.getRoutes().get(path));
+            Route route = categories.getRoutes().get(path);
+            LOGGER.info("Registering route: " + path + " -> " + categories.getClass().getSimpleName());
+            get(path, route, gson::toJson);
         }
+
         LOGGER.info("Completed");
     }
 }

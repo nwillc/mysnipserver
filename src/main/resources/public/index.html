@@ -8,7 +8,11 @@
         $(document).ready(function(){
             $("button").click(function(){
                 $.get("v1/categories", function(data, status){
-                    alert("Data: " + data + "\nStatus: " + status);
+                    var list = JSON.parse(data);
+                    var categories = $("#categories");
+                    $(list).each(function(){
+                       categories.append(new Option(this,this));
+                    });
                 });
             });
         });
@@ -17,5 +21,7 @@
 <body>
 <h1>My Snippets</h1>
 <button>Ping</button>
+<br>
+Category: <select id="categories"></select>
 </body>
 </html>
