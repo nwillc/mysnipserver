@@ -4,19 +4,7 @@
     <meta charset="UTF-8">
     <title>My Snippets</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("button").click(function(){
-                $.get("v1/categories", function(data, status){
-                    var list = JSON.parse(data);
-                    var categories = $("#categories");
-                    $(list).each(function(){
-                       categories.append(new Option(this,this));
-                    });
-                });
-            });
-        });
-    </script>
+    <script src="mysnipserver.js"></script>
 </head>
 <body>
 <h1>My Snippets</h1>
