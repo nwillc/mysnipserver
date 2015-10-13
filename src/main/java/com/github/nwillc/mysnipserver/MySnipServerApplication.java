@@ -18,23 +18,20 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.controller.Categories;
-import com.github.nwillc.mysnipserver.controller.Controller;
 import com.github.nwillc.mysnipserver.controller.Snippits;
-import com.google.gson.Gson;
-import spark.Route;
+import com.github.nwillc.mysnipserver.controller.SparkController;
 import spark.servlet.SparkApplication;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.staticFileLocation;
 
 class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final Controller[] controllers = new Controller[]{
-            new Categories(),
-            new Snippits()
-        };
-    private final Gson gson = new Gson();
+    private final List<SparkController> controllers = new ArrayList<>();
 
     @Override
     public void init() {
@@ -42,17 +39,11 @@ class MySnipServerApplication implements SparkApplication {
         // Static files
         staticFileLocation("/public");
 
+        controllers.add(new Categories());
+        controllers.add(new Snippits());
+
         // Specific routes
         get("/ping", (request, response) -> "PONG");
-
-        // Controller routes
-        for (Controller controller : controllers) {
-            for (String path : controller.getRoutes().keySet()) {
-                Route route = controller.getRoutes().get(path);
-                LOGGER.info("Registering route: " + path + " -> " + controller.getClass().getSimpleName());
-                get(path, route, gson::toJson);
-            }
-        }
 
         LOGGER.info("Completed");
     }

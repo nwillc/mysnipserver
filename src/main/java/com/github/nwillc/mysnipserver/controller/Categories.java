@@ -6,9 +6,10 @@ import spark.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Categories extends Controller {
+public class Categories implements SparkController {
+
 	public Categories() {
-		getRoutes().put("/v1/categories", this::findAll);
+		get("/v1/categories", this::findAll);
 	}
 
 	public List<String> findAll(Request request, Response response) {
@@ -16,5 +17,9 @@ public class Categories extends Controller {
 		list.add("Java");
 		list.add("glossery");
 		return list;
+	}
+
+	public Boolean save(Request request, Response response) {
+		return Boolean.TRUE;
 	}
 }

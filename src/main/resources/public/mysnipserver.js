@@ -4,6 +4,8 @@
     var titles = $("#titles");
     var snippet = $("#snippet");
 
+    $("div").hide();
+
     $(categories).change(function() {
         var category = $(categories).val();
         console.log("Selected Category: " + category);

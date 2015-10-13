@@ -7,9 +7,22 @@
     <script src="mysnipserver.js"></script>
 </head>
 <body>
+<hr>
+<button>Browse</button>&nbsp;
+<button id="newSnippet">New Snippet</button>&nbsp;
+<button>New Category</button>&nbsp;
+<hr>
 Category: <select id="categories"></select> <br>
-Titles: <br>
-<select id="titles" size="10" style="width:70%"></select> <br>
-<textarea id="snippet" style="width:70%"></textarea>
+
+<div id="browseDiv">
+    Titles: <br>
+    <select id="titles" size="10" style="width:70%"></select><br>
+    <textarea id="snippet" style="width:70%"></textarea>
+</div>
+
+<div id="newSnippetDiv">
+    Title: <input type="text" id="title"></input>
+</div>
+
 </body>
 </html>

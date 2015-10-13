@@ -7,10 +7,10 @@ import spark.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Snippits extends Controller {
+public class Snippits implements SparkController {
 	public Snippits() {
-		getRoutes().put("/v1/snippets/category/*", this::find);
-		getRoutes().put("/v1/snippet/category/*/title/*", this::findOne);
+		get("/v1/snippets/category/*", this::find);
+		get("/v1/snippet/category/*/title/*", this::findOne);
 	}
 
 	public List<String> find(Request request, Response response) {
