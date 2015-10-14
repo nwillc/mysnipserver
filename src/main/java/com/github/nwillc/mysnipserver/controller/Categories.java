@@ -9,7 +9,7 @@ import java.util.List;
 public class Categories implements SparkController {
 
 	public Categories() {
-		get("/v1/categories", this::findAll);
+		get("categories", this::findAll);
 	}
 
 	public List<String> findAll(Request request, Response response) {

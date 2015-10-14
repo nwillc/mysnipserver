@@ -6,14 +6,19 @@ import spark.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static com.github.nwillc.mysnipserver.rest.Params.*;
 
 public class Snippits implements SparkController {
+	private final static Logger LOGGER = Logger.getLogger(Snippits.class.getCanonicalName());
+
 	public Snippits() {
-		get("/v1/snippets/category/*", this::find);
-		get("/v1/snippet/category/*/title/*", this::findOne);
+		get("snippets/category/" + CATEGORY.getLabel(), this::find);
+		get("snippet/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
 	}
 
 	public List<String> find(Request request, Response response) {
+		LOGGER.info("Finding snippets in category: " + request.params(CATEGORY.getLabel()));
 		List<String> list = new ArrayList<>();
 		list.add("This is a test");
 		list.add("Another");
