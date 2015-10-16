@@ -8,12 +8,13 @@
 </head>
 <body>
 <hr>
-<button>Browse</button>&nbsp;
-<button id="newSnippet">New Snippet</button>&nbsp;
-<button>New Category</button>&nbsp;
+<button id="browseButton">Browse</button>&nbsp;
+<button id="newSnippetButton">New Snippet</button>&nbsp;
+<button id="newCategoryButton">New Category</button>&nbsp;
 <hr>
+<div id="categoryDiv">
 Category: <select id="categories"></select> <br>
-
+</div>
 <div id="browseDiv">
     Titles: <br>
     <select id="titles" size="10" style="width:70%"></select><br>
@@ -23,6 +24,11 @@ Category: <select id="categories"></select> <br>
 <div id="newSnippetDiv">
     Title: <input type="text" id="title"></input>
 </div>
+
+<div id="newCategoryDiv">
+    Category: <input type="text" id="category"></input>
+</div>
+
 
 </body>
 </html>

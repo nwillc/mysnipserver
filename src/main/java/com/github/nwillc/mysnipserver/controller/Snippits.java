@@ -14,11 +14,11 @@ public class Snippits implements SparkController {
 
 	public Snippits() {
 		get("snippets/category/" + CATEGORY.getLabel(), this::find);
-		get("snippet/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
+		get("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
 	}
 
 	public List<String> find(Request request, Response response) {
-		LOGGER.info("Finding snippets in category: " + request.params(CATEGORY.getLabel()));
+		LOGGER.info("Finding snippets in category: " + CATEGORY.from(request));
 		List<String> list = new ArrayList<>();
 		list.add("This is a test");
 		list.add("Another");
@@ -26,6 +26,7 @@ public class Snippits implements SparkController {
 	}
 
 	public Snippet findOne(Request request, Response response) {
+		LOGGER.info("Finding snippet in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
 		return new Snippet("Java", "Another", "this is another \n snippet.");
 	}
 }

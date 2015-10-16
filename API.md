@@ -1,9 +1,10 @@
 API
 ===
 
-/v1/category
+## GET
 /v1/categories
-/v1/snipets
-/v1/snipets/category/*
-/v1/snipet/category/*/title/*
+/v1/categories/:category
+/v1/snippets
+/v1/snippets/category/:category
+/v1/snippets/category/:category/title/:title
 

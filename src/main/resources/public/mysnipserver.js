@@ -6,6 +6,23 @@
 
     $("div").hide();
 
+    $("#browseButton").click(function(){
+        $("div").hide();
+        $("#categoryDiv").show();
+        $("#browseDiv").show();
+    });
+
+    $("#newSnippetButton").click(function(){
+        $("div").hide();
+        $("#categoryDiv").show();
+        $("#newSnippetDiv").show();
+    });
+
+    $("#newCategoryButton").click(function(){
+        $("div").hide();
+        $("#newCategoryDiv").show();
+    });
+
     $(categories).change(function() {
         var category = $(categories).val();
         console.log("Selected Category: " + category);
@@ -21,7 +38,7 @@
         var category = $(categories).val();
         var title = $(titles).val();
         console.log("Selected Category: " + category + " Title: " + title);
-        $.get("v1/snippet/category/" + category + "/title/" + title, function(data, status){
+        $.get("v1/snippets/category/" + category + "/title/" + title, function(data, status){
             console.log("Status: " + status + " Data: " + data);
             var found = JSON.parse(data);
             $(snippet).val(found.snippet);
