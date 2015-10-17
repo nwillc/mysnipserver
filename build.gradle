@@ -14,16 +14,20 @@ apply plugin: 'java'
 
 
 repositories {
-  jcenter {
-    url 'http://jcenter.bintray.com'
-  }
+    jcenter {
+        url 'http://jcenter.bintray.com'
+    }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.12',
             'com.sparkjava:spark-core:2.3',
             'commons-cli:commons-cli:1.3',
-            'com.google.code.gson:gson:2.4'
+            'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.1',
+            name: 'myorchsnip-0.1'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:contracts:1.6.7',
             'org.assertj:assertj-core:3.2.0'

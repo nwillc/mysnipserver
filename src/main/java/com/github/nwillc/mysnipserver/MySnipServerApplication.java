@@ -39,7 +39,7 @@ class MySnipServerApplication implements SparkApplication {
         // Static files
         staticFileLocation("/public");
 
-        controllers.add(new Categories());
+        controllers.add(new Categories(null));
         controllers.add(new Snippits());
 
         // Specific routes

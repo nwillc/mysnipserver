@@ -2,7 +2,7 @@
     var ping = $("#ping");
     var categories = $("#categories");
     var titles = $("#titles");
-    var snippet = $("#snippet");
+    var body = $("#body");
 
     $("div").hide();
 
@@ -41,7 +41,7 @@
         $.get("v1/snippets/category/" + category + "/title/" + title, function(data, status){
             console.log("Status: " + status + " Data: " + data);
             var found = JSON.parse(data);
-            $(snippet).val(found.snippet);
+            $(body).val(found.body);
         })
     });
 

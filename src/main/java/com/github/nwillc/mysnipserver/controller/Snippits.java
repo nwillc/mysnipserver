@@ -1,6 +1,6 @@
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.mysnipserver.Entities.Snippet;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import spark.Request;
 import spark.Response;
 
@@ -26,7 +26,7 @@ public class Snippits implements SparkController {
 	}
 
 	public Snippet findOne(Request request, Response response) {
-		LOGGER.info("Finding snippet in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
-		return new Snippet("Java", "Another", "this is another \n snippet.");
+		LOGGER.info("Finding body in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
+		return new Snippet("Java", "Another", "this is another \n body.");
 	}
 }
