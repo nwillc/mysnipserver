@@ -48,7 +48,7 @@
     $.get("v1/categories", function(data, status){
         var list = JSON.parse(data);
         $(list).each(function(){
-            categories.append(new Option(this,this));
+            categories.append(new Option(this.name,this.name));
         });
     });
 

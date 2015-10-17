@@ -17,9 +17,12 @@
 
 package com.github.nwillc.mysnipserver;
 
+import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Snippits;
 import com.github.nwillc.mysnipserver.controller.SparkController;
+import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import spark.servlet.SparkApplication;
 
 import java.util.ArrayList;
@@ -31,7 +34,14 @@ import static spark.Spark.staticFileLocation;
 
 class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final List<SparkController> controllers = new ArrayList<>();
+    private final List<SparkController> controllers = new ArrayList<>(10);
+    private final Dao<Category> categoriesDao;
+    private final Dao<Snippet> snippetDao;
+
+    public MySnipServerApplication(Dao<Category> categoriesDao, Dao<Snippet> snippetDao) {
+        this.categoriesDao = categoriesDao;
+        this.snippetDao = snippetDao;
+    }
 
     @Override
     public void init() {
@@ -39,8 +49,8 @@ class MySnipServerApplication implements SparkApplication {
         // Static files
         staticFileLocation("/public");
 
-        controllers.add(new Categories(null));
-        controllers.add(new Snippits());
+        controllers.add(new Categories(categoriesDao));
+        controllers.add(new Snippits(snippetDao));
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");

@@ -17,6 +17,7 @@
 
 package com.github.nwillc.mysnipserver;
 
+import com.github.nwillc.mysnipserver.dao.CategoryDao;
 import org.apache.commons.cli.*;
 import spark.servlet.SparkApplication;
 
@@ -28,7 +29,7 @@ import static spark.Spark.port;
 
 public class MySnipServer {
     private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
-    private final static SparkApplication application = new MySnipServerApplication();
+    private final static SparkApplication application = new MySnipServerApplication(new CategoryDao(), null);
 
     public static void main(String[] args) {
         LOGGER.info("Starting");
