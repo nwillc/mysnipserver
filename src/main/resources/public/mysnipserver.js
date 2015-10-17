@@ -29,7 +29,7 @@
         $.get("v1/snippets/category/" + category, function(data, status){
             var list = JSON.parse(data);
             $(list).each(function(){
-                titles.append(new Option(this,this));
+                titles.append(new Option(this.title,this.title));
             })
         })
     });

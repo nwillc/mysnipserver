@@ -5,9 +5,9 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import spark.Request;
 import spark.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.github.nwillc.mysnipserver.rest.Params.CATEGORY;
 import static com.github.nwillc.mysnipserver.rest.Params.TITLE;
@@ -22,12 +22,9 @@ public class Snippits implements SparkController {
 		get("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
 	}
 
-	public List<String> find(Request request, Response response) {
+	public List<Snippet> find(Request request, Response response) {
 		LOGGER.info("Finding snippets in category: " + CATEGORY.from(request));
-		List<String> list = new ArrayList<>();
-		list.add("This is a test");
-		list.add("Another");
-		return list;
+		return dao.findAll().filter(snippet -> CATEGORY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
 	}
 
 	public Snippet findOne(Request request, Response response) {

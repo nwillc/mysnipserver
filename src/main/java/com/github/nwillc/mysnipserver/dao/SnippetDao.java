@@ -1,7 +1,7 @@
 package com.github.nwillc.mysnipserver.dao;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
-import com.github.nwillc.myorchsnip.entity.Snippet;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -19,7 +19,8 @@ public class SnippetDao implements Dao<Snippet> {
 
 	@Override
 	public Stream<Snippet> findAll() {
-		return null;
+		return Stream.of(new Snippet("Java", "import", "This is an import"),
+						new Snippet("Shell Script", "shebang", "#!/bin/bash"));
 	}
 
 	@Override
