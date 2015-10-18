@@ -17,8 +17,8 @@
 
 package com.github.nwillc.mysnipserver;
 
-import com.github.nwillc.mysnipserver.dao.CategoryDao;
-import com.github.nwillc.mysnipserver.dao.SnippetDao;
+import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
+import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
 import org.apache.commons.cli.*;
 import spark.servlet.SparkApplication;
 

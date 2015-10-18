@@ -1,4 +1,4 @@
-package com.github.nwillc.mysnipserver.dao;
+package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;

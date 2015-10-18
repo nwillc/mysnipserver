@@ -29,6 +29,9 @@ public class Snippits implements SparkController {
 
 	public Snippet findOne(Request request, Response response) {
 		LOGGER.info("Finding body in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
-		return new Snippet("Java", "Another", "this is another \n body.");
+		return dao.findAll().filter(
+				snippet -> CATEGORY.from(request).equals(snippet.getCategory()) &&
+							TITLE.from(request).equals(snippet.getTitle())
+			).findFirst().get();
 	}
 }

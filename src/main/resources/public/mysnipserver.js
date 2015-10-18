@@ -26,6 +26,8 @@
     $(categories).change(function() {
         var category = $(categories).val();
         console.log("Selected Category: " + category);
+        $('option', '#titles').remove();
+        $(body).val('');
         $.get("v1/snippets/category/" + category, function(data, status){
             var list = JSON.parse(data);
             $(list).each(function(){
@@ -47,6 +49,7 @@
 
     $.get("v1/categories", function(data, status){
         var list = JSON.parse(data);
+        $(categories).empty();
         $(list).each(function(){
             categories.append(new Option(this.name,this.name));
         });
