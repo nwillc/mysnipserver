@@ -55,6 +55,6 @@
     });
 
     $("#category").change(function(){
-        $.post("v1/categories", JSON.stringify({ name: 'foo'}));
+        $.post("v1/categories", JSON.stringify({ name: $("#category").val()}));
     });
  });
