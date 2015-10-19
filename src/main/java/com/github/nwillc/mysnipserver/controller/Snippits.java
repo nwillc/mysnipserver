@@ -1,10 +1,12 @@
 package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
+import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import spark.Request;
 import spark.Response;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ public class Snippits implements SparkController {
 		this.dao = dao;
 		get("snippets/category/" + CATEGORY.getLabel(), this::find);
 		get("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
+		post("snippets", this::save);
 	}
 
 	public List<Snippet> find(Request request, Response response) {
@@ -33,5 +36,16 @@ public class Snippits implements SparkController {
 				snippet -> CATEGORY.from(request).equals(snippet.getCategory()) &&
 							TITLE.from(request).equals(snippet.getTitle())
 			).findFirst().get();
+	}
+
+	public Boolean save(Request request, Response response) {
+		try {
+			final Snippet snippet = mapper.get().readValue(request.body(), Snippet.class);
+			LOGGER.info("Snippet: " + snippet);
+			dao.save(snippet);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return Boolean.TRUE;
 	}
 }
