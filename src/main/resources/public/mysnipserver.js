@@ -8,6 +8,13 @@
 
     $("#browseButton").click(function(){
         $("div").hide();
+        $.get("v1/categories", function(data, status){
+                        var list = JSON.parse(data);
+                        $(categories).empty();
+                        $(list).each(function(){
+                            categories.append(new Option(this.name,this.name));
+                        });
+                    });
         $("#categoryDiv").show();
         $("#browseDiv").show();
     });
@@ -47,12 +54,7 @@
         })
     });
 
-    $.get("v1/categories", function(data, status){
-        var list = JSON.parse(data);
-        $(categories).empty();
-        $(list).each(function(){
-            categories.append(new Option(this.name,this.name));
-        });
+    $("#category").change(function(){
+        $.post("v1/categories", JSON.stringify({ name: 'foo'}));
     });
-
  });
