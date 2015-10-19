@@ -21,6 +21,13 @@
 
     $("#newSnippetButton").click(function(){
         $("div").hide();
+        $.get("v1/categories", function(data, status){
+            var list = JSON.parse(data);
+            $(categories).empty();
+            $(list).each(function(){
+                categories.append(new Option(this.name,this.name));
+            });
+        });
         $("#categoryDiv").show();
         $("#newSnippetDiv").show();
     });

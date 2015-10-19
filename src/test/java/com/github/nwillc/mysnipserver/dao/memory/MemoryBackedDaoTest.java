@@ -18,27 +18,23 @@ public class MemoryBackedDaoTest {
 	@Test
 	public void shouldDelete() throws Exception {
 		testEntityDao.save(new TestEntity("foo"));
-		assert(testEntityDao.findOne("foo").get().getKey()).equals("foo");
+		assertThat(testEntityDao.findOne("foo").get().getKey()).isEqualTo("foo");
 		testEntityDao.delete("foo");
-		testEntityDao.findOne("foo").ifPresent(one -> {
-			fail("Entity foo still present");
-		});
+		testEntityDao.findOne("foo").ifPresent(one -> fail("Entity foo still present"));
 	}
 
 	@Test
 	public void shouldFindAll() throws Exception {
 		testEntityDao.save(new TestEntity("foo"));
 		testEntityDao.save(new TestEntity("bar"));
-		assertThat(testEntityDao.findAll().map(testEntity -> testEntity.getKey()).collect(Collectors.toList())).contains("foo", "bar");
+		assertThat(testEntityDao.findAll().map(TestEntity::getKey).collect(Collectors.toList())).contains("foo", "bar");
 	}
 
 	@Test
 	public void shouldSaveAndFindOne() throws Exception {
-		testEntityDao.findOne("foo").ifPresent(one -> {
-			fail("Entity foo already present");
-		});
+		testEntityDao.findOne("foo").ifPresent(one -> fail("Entity foo already present"));
 		testEntityDao.save(new TestEntity("foo"));
-		assert(testEntityDao.findOne("foo").get().getKey()).equals("foo");
+		assertThat(testEntityDao.findOne("foo").get().getKey()).isEqualTo("foo");
 	}
 
 	private class TestEntity extends Entity {
