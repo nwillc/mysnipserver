@@ -1,14 +1,12 @@
 package com.github.nwillc.mysnipserver.controller;
 
+import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import spark.Request;
 import spark.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.github.nwillc.myorchsnip.dao.Dao;
 
 public class Categories implements SparkController {
    	private final Dao<Category> dao;
