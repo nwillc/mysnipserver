@@ -1,3 +1,14 @@
+function LoadCategories(){
+    var categories = $("#categories");
+    $.get("v1/categories", function(data, status){
+        var list = JSON.parse(data);
+        $(categories).empty();
+        $(list).each(function(){
+            categories.append(new Option(this.name,this.name));
+        });
+    });
+}
+
  $(document).ready(function(){
     var ping = $("#ping");
     var categories = $("#categories");
@@ -8,26 +19,14 @@
 
     $("#browseButton").click(function(){
         $("div").hide();
-        $.get("v1/categories", function(data, status){
-                        var list = JSON.parse(data);
-                        $(categories).empty();
-                        $(list).each(function(){
-                            categories.append(new Option(this.name,this.name));
-                        });
-                    });
+        LoadCategories();
         $("#categoryDiv").show();
         $("#browseDiv").show();
     });
 
     $("#newSnippetButton").click(function(){
         $("div").hide();
-        $.get("v1/categories", function(data, status){
-            var list = JSON.parse(data);
-            $(categories).empty();
-            $(list).each(function(){
-                categories.append(new Option(this.name,this.name));
-            });
-        });
+        LoadCategories();
         $("#categoryDiv").show();
         $("#newSnippetDiv").show();
     });
