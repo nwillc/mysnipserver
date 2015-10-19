@@ -29,9 +29,10 @@ public class Categories implements SparkController {
 			final Category category = mapper.get().readValue(request.body(), Category.class);
 			LOGGER.info("Category: " + category);
 			dao.save(category);
+			return Boolean.TRUE;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return Boolean.TRUE;
+		return Boolean.FALSE;
 	}
 }

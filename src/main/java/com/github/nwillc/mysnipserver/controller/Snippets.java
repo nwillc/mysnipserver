@@ -1,7 +1,6 @@
 package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
-import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import spark.Request;
 import spark.Response;
@@ -12,17 +11,25 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.github.nwillc.mysnipserver.rest.Params.CATEGORY;
+import static com.github.nwillc.mysnipserver.rest.Params.KEY;
 import static com.github.nwillc.mysnipserver.rest.Params.TITLE;
 
-public class Snippits implements SparkController {
+public class Snippets implements SparkController {
 	private final Dao<Snippet> dao;
-	private final static Logger LOGGER = Logger.getLogger(Snippits.class.getCanonicalName());
+	private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
 
-	public Snippits(Dao<Snippet> dao) {
+	public Snippets(Dao<Snippet> dao) {
 		this.dao = dao;
+		get("snippets", this::findAll);
 		get("snippets/category/" + CATEGORY.getLabel(), this::find);
 		get("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
 		post("snippets", this::save);
+		delete("snippets/" + KEY.getLabel(), this::delete);
+	}
+
+	public List<Snippet> findAll(Request request, Response response) {
+		LOGGER.info("Requesting all");
+		return dao.findAll().collect(Collectors.toList());
 	}
 
 	public List<Snippet> find(Request request, Response response) {
@@ -36,6 +43,11 @@ public class Snippits implements SparkController {
 				snippet -> CATEGORY.from(request).equals(snippet.getCategory()) &&
 							TITLE.from(request).equals(snippet.getTitle())
 			).findFirst().get();
+	}
+
+	public Boolean delete(Request request, Response response) {
+		dao.delete(KEY.from(request));
+		return Boolean.TRUE;
 	}
 
 	public Boolean save(Request request, Response response) {

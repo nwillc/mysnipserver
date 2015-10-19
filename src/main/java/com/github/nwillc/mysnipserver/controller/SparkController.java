@@ -39,4 +39,6 @@ public interface SparkController extends Version {
 	default void post(String path, Route route) {
 		spark.Spark.post(versionedPath(path), route, this::toJson);
 	}
+
+	default void delete(String path, Route route) { spark.Spark.delete(versionedPath(path), route, this::toJson); }
 }

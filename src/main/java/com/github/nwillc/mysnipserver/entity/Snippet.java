@@ -34,7 +34,7 @@ public class Snippet extends Entity {
 	}
 
 	public static String key(String categoryKey, String title) {
-		return categoryKey + "/" + title;
+		return categoryKey + ":" + title;
 	}
 
 	@Override

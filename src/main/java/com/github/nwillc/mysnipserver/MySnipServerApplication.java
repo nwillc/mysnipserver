@@ -19,7 +19,7 @@ package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.controller.Categories;
-import com.github.nwillc.mysnipserver.controller.Snippits;
+import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.controller.SparkController;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
@@ -50,7 +50,7 @@ class MySnipServerApplication implements SparkApplication {
         staticFileLocation("/public");
 
         controllers.add(new Categories(categoriesDao));
-        controllers.add(new Snippits(snippetDao));
+        controllers.add(new Snippets(snippetDao));
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");

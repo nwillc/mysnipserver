@@ -4,6 +4,7 @@ import spark.Request;
 
 public enum  Params {
 	CATEGORY,
+	KEY,
 	TITLE;
 
 	public String getLabel() {
