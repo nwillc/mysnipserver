@@ -23,6 +23,7 @@ import com.github.nwillc.mysnipserver.controller.SparkController;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
+import spark.Session;
 import spark.servlet.SparkApplication;
 
 import java.util.ArrayList;
@@ -53,6 +54,14 @@ class MySnipServerApplication implements SparkApplication {
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");
+
+        before((request, response) -> {
+            Session session = request.session(true);
+            if (Boolean.TRUE != session.<Boolean>attribute("login.isDone")) {
+                session.attribute("login.isDone", Boolean.TRUE);
+                response.redirect("/login.html");
+            }
+        });
 
         exception(HttpException.class, (e, request, response) -> {
             response.status(((HttpException)e).getCode().code);
