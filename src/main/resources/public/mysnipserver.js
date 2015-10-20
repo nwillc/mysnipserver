@@ -4,6 +4,7 @@ var myPresentation = {
         console.log("init");
         myPresentation.config = {
             categories: $('#categories'),
+            category: $('#category'),
             titles: $('#titles'),
             title: $('#title'),
             body: $('#body'),
@@ -19,10 +20,10 @@ var myPresentation = {
         $('#browseButton').click(myPresentation.showBrowse);
         $('#newSnippetButton').click(myPresentation.showNewSnippet);
         $('#newCategoryButton').click(myPresentation.showNewCategory);
+        $('#saveSnippetButton').click(myPresentation.saveSnippet);
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
-        $("#category").change(myPresentation.saveCategory);
-        $('#saveSnippet').click(myPresentation.saveSnippet);
+        $(myPresentation.config.category).change(myPresentation.saveCategory);
     },
 
     hideAll: function () {
@@ -94,7 +95,7 @@ var myPresentation = {
 
     saveCategory: function () {
         console.log("saveCategory");
-        $.post("v1/categories", JSON.stringify({name: $("#category").val()}));
+        $.post("v1/categories", JSON.stringify({name: $(myPresentation.config.category).val()}));
         $('#category').val('');
     },
 
