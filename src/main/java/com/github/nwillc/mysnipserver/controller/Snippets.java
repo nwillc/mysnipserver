@@ -53,7 +53,7 @@ public class Snippets implements SparkController {
 	public Boolean save(Request request, Response response) {
 		try {
 			final Snippet snippet = mapper.get().readValue(request.body(), Snippet.class);
-			LOGGER.info("Snippet: " + snippet);
+			LOGGER.info("Saving snippet: " + snippet);
 			dao.save(snippet);
 		} catch (IOException e) {
 			e.printStackTrace();

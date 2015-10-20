@@ -5,7 +5,9 @@ var myPresentation = {
         myPresentation.config = {
             categories: $('#categories'),
             titles: $('#titles'),
-            body: $('#body')
+            title: $('#title'),
+            body: $('#body'),
+            bodyInput: $('#bodyInput')
         };
         $.extend(myPresentation.config, config);
         myPresentation.bind();
@@ -20,7 +22,7 @@ var myPresentation = {
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $("#category").change(myPresentation.saveCategory);
-        $('#bodyInput').change(myPresentation.saveSnippet);
+        $('#saveSnippet').click(myPresentation.saveSnippet);
     },
 
     hideAll: function () {
@@ -98,7 +100,13 @@ var myPresentation = {
 
     saveSnippet: function () {
         console.log("Save Snippet");
-        $.post('v1/snippets', JSON.stringify({category: 'Java', title: 'default method', body: 'This is the body'}));
+        $.post('v1/snippets', JSON.stringify({
+            category: $(myPresentation.config.categories).val(),
+            title: $(myPresentation.config.title).val(),
+            body: $(myPresentation.config.bodyInput).val()
+            }));
+        $(myPresentation.config.title).val('');
+        $(myPresentation.config.bodyInput).val('');
     }
 
 };
