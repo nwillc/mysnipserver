@@ -14,14 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao.memory;
+package com.github.nwillc.mysnipserver.rest;
 
-import com.github.nwillc.mysnipserver.entity.Snippet;
 
-public class SnippetDao extends MemoryBackedDao<Snippet> {
-	public SnippetDao() {
-		save(new Snippet("Java", "import", "This is an import"));
-		save(new Snippet("Shell Script", "shebang", "#!/bin/bash"));
-		save(new Snippet("Shell Script", "export variable", "# an export\nexport X=foo"));
-	}
+public enum HttpStatusCode {
+    OK(200),
+    CREATED(201),
+    NOT_FOUND(404),
+    INTERNAL_SERVER_ERROR(500);
+
+    public final int code;
+
+    HttpStatusCode(int code) {
+        this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return name() + " (" + code + ')';
+    }
 }
