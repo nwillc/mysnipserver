@@ -64,6 +64,7 @@ var myPresentation = {
                 .each(function () {
                     myPresentation.config.categories.append(new Option(this.name, this.name));
                 });
+            $("#categories :nth(0)").prop("selected","selected").change()
         });
     },
 
