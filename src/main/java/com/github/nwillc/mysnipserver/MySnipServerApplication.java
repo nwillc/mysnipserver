@@ -23,12 +23,14 @@ import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.controller.SparkController;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.mysnipserver.rest.error.NotFoundException;
 import spark.servlet.SparkApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.staticFileLocation;
 
@@ -54,6 +56,12 @@ class MySnipServerApplication implements SparkApplication {
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");
+
+        exception(NotFoundException.class, (e, request, response) -> {
+            response.status(404);
+            response.body("Resource not found");
+            LOGGER.info(e.toString());
+        });
 
         LOGGER.info("Completed");
     }

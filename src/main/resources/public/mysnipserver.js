@@ -39,7 +39,7 @@ var myPresentation = {
     },
 
     showNewSnippet: function () {
-      console.log("showNewSnippet");
+        console.log("showNewSnippet");
         myPresentation.hideAll();
         myPresentation.loadCategories();
         $("#categoryDiv").show();
@@ -64,7 +64,7 @@ var myPresentation = {
                 .each(function () {
                     myPresentation.config.categories.append(new Option(this.name, this.name));
                 });
-            $("#categories :nth(0)").prop("selected","selected").change()
+            $("#categories :nth(0)").prop("selected", "selected").change()
         });
     },
 
@@ -96,7 +96,12 @@ var myPresentation = {
 
     saveCategory: function () {
         console.log("saveCategory");
-        $.post("v1/categories", JSON.stringify({name: $(myPresentation.config.category).val()}));
+        $.post("v1/categories", JSON.stringify({
+            name: $(myPresentation.config.category).val()
+        }))
+            .fail(function () {
+                alert("Failed saving category");
+            });
         $('#category').val('');
     },
 
@@ -106,7 +111,10 @@ var myPresentation = {
             category: $(myPresentation.config.categories).val(),
             title: $(myPresentation.config.title).val(),
             body: $(myPresentation.config.bodyInput).val()
-            }));
+        }))
+            .fail(function () {
+                alert("Failed saving snippet.")
+            });
         $(myPresentation.config.title).val('');
         $(myPresentation.config.bodyInput).val('');
     }

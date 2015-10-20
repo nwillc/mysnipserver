@@ -2,11 +2,13 @@ package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.mysnipserver.rest.error.NotFoundException;
 import spark.Request;
 import spark.Response;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -55,9 +57,10 @@ public class Snippets implements SparkController {
 			final Snippet snippet = mapper.get().readValue(request.body(), Snippet.class);
 			LOGGER.info("Saving snippet: " + snippet);
 			dao.save(snippet);
+			return Boolean.TRUE;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Save failed", e);
 		}
-		return Boolean.TRUE;
+		return Boolean.FALSE;
 	}
 }
