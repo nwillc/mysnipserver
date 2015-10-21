@@ -14,24 +14,31 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest;
+var myLogin = {
+    init: function (config) {
+        console.log("init");
+        myLogin.config = {
+            username: $('#username'),
+            password: $('#password')
+        };
+        $.extend(myLogin.config, config);
+        myLogin.bind();
+    },
 
+    bind: function () {
+        console.log("bind");
+        $(myLogin.config.password).change(myLogin.login);
+    },
 
-public enum HttpStatusCode {
-    OK(200),
-    CREATED(201),
-    UNAUTHERIZED(401),
-    NOT_FOUND(404),
-    INTERNAL_SERVER_ERROR(500);
-
-    public final int code;
-
-    HttpStatusCode(int code) {
-        this.code = code;
+    login: function () {
+        $.get("v1/auth/" + $(myLogin.config.username).val() + "/" + $(myLogin.config.password).val(), function (data, status) {
+            window.location.replace("/");
+        });
     }
 
-    @Override
-    public String toString() {
-        return name() + " (" + code + ')';
-    }
-}
+};
+
+$(document).ready(function () {
+    myLogin.init();
+});
+

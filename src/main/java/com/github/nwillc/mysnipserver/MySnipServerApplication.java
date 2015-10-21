@@ -23,6 +23,7 @@ import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.controller.SparkController;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
 import spark.servlet.SparkApplication;
 
@@ -37,10 +38,14 @@ class MySnipServerApplication implements SparkApplication {
     private final List<SparkController> controllers = new ArrayList<>(10);
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
+    private final Dao<User> userDao;
 
-    public MySnipServerApplication(Dao<Category> categoriesDao, Dao<Snippet> snippetDao) {
+    public MySnipServerApplication(Dao<Category> categoriesDao,
+                                   Dao<Snippet> snippetDao,
+                                   Dao<User> userDao) {
         this.categoriesDao = categoriesDao;
         this.snippetDao = snippetDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -51,7 +56,7 @@ class MySnipServerApplication implements SparkApplication {
 
         controllers.add(new Categories(categoriesDao));
         controllers.add(new Snippets(snippetDao));
-        controllers.add(new Authentication());
+        controllers.add(new Authentication(userDao));
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");

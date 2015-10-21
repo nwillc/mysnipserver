@@ -1,6 +1,7 @@
 # API
 
 ## GET
+- /v1/auth/:username/:password
 - /v1/categories
 - /v1/categories/:category
 - /v1/snippets

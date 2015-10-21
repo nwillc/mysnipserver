@@ -22,6 +22,10 @@ import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
 public class HttpException extends RuntimeException {
     private final HttpStatusCode code;
 
+    public HttpException(HttpStatusCode code) {
+        this(code, code.name().toLowerCase());
+    }
+
     public HttpException(HttpStatusCode code, String msg) {
         super(msg);
         this.code = code;

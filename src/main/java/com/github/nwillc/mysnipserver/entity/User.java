@@ -14,24 +14,40 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest;
+package com.github.nwillc.mysnipserver.entity;
 
+import com.github.nwillc.myorchsnip.dao.Entity;
 
-public enum HttpStatusCode {
-    OK(200),
-    CREATED(201),
-    UNAUTHERIZED(401),
-    NOT_FOUND(404),
-    INTERNAL_SERVER_ERROR(500);
+public class User extends Entity {
+    private String username;
+    private String password;
 
-    public final int code;
+    public User() {
+    }
 
-    HttpStatusCode(int code) {
-        this.code = code;
+    public User(String password, String username) {
+        this.password = password;
+        this.username = username;
+    }
+
+    @Override
+    public String getKey() {
+        return username;
     }
 
     @Override
     public String toString() {
-        return name() + " (" + code + ')';
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + (password == null? "" : "*******") + '\'' +
+                '}';
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

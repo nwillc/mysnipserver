@@ -14,24 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest;
+package com.github.nwillc.mysnipserver.dao.memory;
 
+import com.github.nwillc.mysnipserver.entity.User;
 
-public enum HttpStatusCode {
-    OK(200),
-    CREATED(201),
-    UNAUTHERIZED(401),
-    NOT_FOUND(404),
-    INTERNAL_SERVER_ERROR(500);
-
-    public final int code;
-
-    HttpStatusCode(int code) {
-        this.code = code;
-    }
-
-    @Override
-    public String toString() {
-        return name() + " (" + code + ')';
+public class UserDao extends MemoryBackedDao<User> {
+    public UserDao() {
+        save(new User("nick", "nick"));
     }
 }
