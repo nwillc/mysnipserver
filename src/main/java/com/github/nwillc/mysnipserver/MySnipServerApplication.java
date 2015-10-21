@@ -24,7 +24,6 @@ import com.github.nwillc.mysnipserver.controller.SparkController;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
-import spark.Session;
 import spark.servlet.SparkApplication;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import static spark.Spark.*;
 
 class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final List<Object> controllers = new ArrayList<>(10);
+    private final List<SparkController> controllers = new ArrayList<>(10);
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
 
