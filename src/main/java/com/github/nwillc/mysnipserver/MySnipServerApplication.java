@@ -17,6 +17,7 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.myorchsnip.dao.Dao;
+import com.github.nwillc.mysnipserver.controller.Authentication;
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.controller.SparkController;
@@ -34,7 +35,7 @@ import static spark.Spark.*;
 
 class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final List<SparkController> controllers = new ArrayList<>(10);
+    private final List<Object> controllers = new ArrayList<>(10);
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
 
@@ -51,17 +52,10 @@ class MySnipServerApplication implements SparkApplication {
 
         controllers.add(new Categories(categoriesDao));
         controllers.add(new Snippets(snippetDao));
+        controllers.add(new Authentication());
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");
-
-        before((request, response) -> {
-            Session session = request.session(true);
-            if (Boolean.TRUE != session.<Boolean>attribute("login.isDone")) {
-                session.attribute("login.isDone", Boolean.TRUE);
-                response.redirect("/login.html");
-            }
-        });
 
         exception(HttpException.class, (e, request, response) -> {
             response.status(((HttpException)e).getCode().code);

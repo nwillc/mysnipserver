@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.nwillc.mysnipserver.rest.Version;
 import spark.Route;
+import spark.Spark;
 
 import java.util.logging.Logger;
 
@@ -49,12 +50,12 @@ public interface SparkController extends Version {
 	}
 
 	default void get(String path, Route route) {
-		spark.Spark.get(versionedPath(path), route, this::toJson);
+		Spark.get(versionedPath(path), route, this::toJson);
 	}
 
 	default void post(String path, Route route) {
-		spark.Spark.post(versionedPath(path), route, this::toJson);
+		Spark.post(versionedPath(path), route, this::toJson);
 	}
 
-	default void delete(String path, Route route) { spark.Spark.delete(versionedPath(path), route, this::toJson); }
+	default void delete(String path, Route route) { Spark.delete(versionedPath(path), route, this::toJson); }
 }
