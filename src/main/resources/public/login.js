@@ -27,15 +27,16 @@ var myLogin = {
 
     bind: function () {
         console.log("bind");
-        $(myLogin.config.password).change(myLogin.login);
+        $(myLogin.config.password).bind('keyup', myLogin.login);
     },
 
-    login: function () {
-        $.get("v1/auth/" + $(myLogin.config.username).val() + "/" + $(myLogin.config.password).val(), function (data, status) {
-            window.location.replace("/");
-        });
+    login: function (e) {
+        if (e.keyCode === 13) {
+            $.get("v1/auth/" + $(myLogin.config.username).val() + "/" + $(myLogin.config.password).val(), function () {
+                window.location.replace("/");
+            });
+        }
     }
-
 };
 
 $(document).ready(function () {

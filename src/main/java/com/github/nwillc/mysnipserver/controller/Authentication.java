@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver.controller;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
+import com.github.nwillc.mysnipserver.rest.Version;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
 import spark.Request;
 import spark.Response;
@@ -42,19 +43,27 @@ public class Authentication implements SparkController {
 		Spark.before(this::check);
 		noAuth(LOGIN_HTML);
 		noAuth("/login.js");
+        noAuth(versionedPath("auth"));
 		get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
+		delete("auth", this::logout);
 	}
 
 	private void check(Request request, Response response) {
 		Session session = request.session(true);
 
-		if (noAuth.stream().anyMatch(path -> request.pathInfo().equals(path))) {
+		if (noAuth.stream().anyMatch(path -> request.pathInfo().startsWith(path))) {
 			LOGGER.info("Path " + request.pathInfo() + " is white listed");
 		} else if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
 			// not white listed, not logged in, so redirect to login
 			LOGGER.warning("Access violation: " + request.pathInfo());
 			response.redirect(LOGIN_HTML);
+            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
 		}
+	}
+
+	private Boolean logout(Request request, Response response) {
+		request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
+		return Boolean.TRUE;
 	}
 
 	private Boolean login(Request request, Response response) {

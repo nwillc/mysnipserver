@@ -37,6 +37,7 @@ var myPresentation = {
         $('#newSnippetButton').click(myPresentation.showNewSnippet);
         $('#newCategoryButton').click(myPresentation.showNewCategory);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
+        $('#logoutButton').click(myPresentation.logout);
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $(myPresentation.config.category).change(myPresentation.saveCategory);
@@ -133,6 +134,16 @@ var myPresentation = {
             });
         $(myPresentation.config.title).val('');
         $(myPresentation.config.bodyInput).val('');
+    },
+
+    logout: function () {
+        console.log("logout");
+        $.ajax({
+            url: 'v1/auth',
+            type: 'DELETE',
+            success: function () {
+                window.location.replace("/login.html");
+            }});
     }
 
 };
