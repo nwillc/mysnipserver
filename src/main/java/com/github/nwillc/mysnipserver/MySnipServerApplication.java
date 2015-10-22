@@ -16,11 +16,11 @@
 
 package com.github.nwillc.mysnipserver;
 
-import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.controller.Authentication;
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.controller.SparkController;
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;

@@ -16,7 +16,7 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.myorchsnip.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import spark.Request;
 import spark.Response;

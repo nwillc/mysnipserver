@@ -18,7 +18,11 @@ package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
 import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import spark.servlet.SparkApplication;
 
 import java.util.logging.Logger;

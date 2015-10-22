@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,  nwillc@gmail.com
+ * Copyright (c) 2015, Nwillc <nwillc@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,38 +12,14 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
-package com.github.nwillc.mysnipserver.entity;
+package com.github.nwillc.mysnipserver.dao;
 
-import com.github.nwillc.mysnipserver.dao.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class Category extends Entity {
-	private String name;
-
-	public Category() {}
-
-	public Category(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getKey() {
-		return getName();
-	}
-
-	@Override
-	public String toString() {
-		return "Category{" +
-				"name='" + name + '\'' +
-				'}';
-	}
+@JsonIgnoreProperties({"key"})
+public abstract class Entity {
+	public abstract String getKey();
 }
