@@ -16,11 +16,11 @@
 
 package com.github.nwillc.mysnipserver;
 
-import com.github.nwillc.myorchsnip.dao.Dao;
 import com.github.nwillc.mysnipserver.controller.Authentication;
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.controller.SparkController;
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
@@ -48,25 +48,25 @@ class MySnipServerApplication implements SparkApplication {
         this.userDao = userDao;
     }
 
-    @Override
-    public void init() {
-        LOGGER.info("Starting");
-        // Static files
-        staticFileLocation("/public");
+	@Override
+	public void init() {
+		LOGGER.info("Starting");
+		// Static files
+		staticFileLocation("/public");
 
         controllers.add(new Categories(categoriesDao));
         controllers.add(new Snippets(snippetDao));
         controllers.add(new Authentication(userDao));
 
-        // Specific routes
-        get("/ping", (request, response) -> "PONG");
+		// Specific routes
+		get("/ping", (request, response) -> "PONG");
 
-        exception(HttpException.class, (e, request, response) -> {
-            response.status(((HttpException)e).getCode().code);
-            response.body(((HttpException)e).getCode().toString());
-            LOGGER.info("Returning: " + e.toString());
-        });
+		exception(HttpException.class, (e, request, response) -> {
+			response.status(((HttpException) e).getCode().code);
+			response.body(((HttpException) e).getCode().toString());
+			LOGGER.info("Returning: " + e.toString());
+		});
 
-        LOGGER.info("Completed");
-    }
+		LOGGER.info("Completed");
+	}
 }

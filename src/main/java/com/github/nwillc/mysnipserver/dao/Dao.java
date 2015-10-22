@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,  nwillc@gmail.com
+ * Copyright (c) 2015, Nwillc <nwillc@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,26 +12,20 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
-package com.github.nwillc.mysnipserver.rest;
+package com.github.nwillc.mysnipserver.dao;
 
+import java.util.Optional;
+import java.util.stream.Stream;
 
-public enum HttpStatusCode {
-    OK(200),
-    CREATED(201),
-    UNAUTHERIZED(401),
-    NOT_FOUND(404),
-    INTERNAL_SERVER_ERROR(500);
+public interface Dao<T extends Entity> {
+	Optional<T> findOne(final String key);
 
-	public final int code;
+	Stream<T> findAll();
 
-	HttpStatusCode(int code) {
-		this.code = code;
-	}
+	void save(final T entity);
 
-	@Override
-	public String toString() {
-		return name() + " (" + code + ')';
-	}
+	void delete(final String key);
 }

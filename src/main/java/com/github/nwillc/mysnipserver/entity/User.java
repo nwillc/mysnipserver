@@ -16,7 +16,7 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-import com.github.nwillc.myorchsnip.dao.Entity;
+import com.github.nwillc.mysnipserver.dao.Entity;
 
 public class User extends Entity {
     private String username;

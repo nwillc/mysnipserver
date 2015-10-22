@@ -16,8 +16,8 @@
 
 package com.github.nwillc.mysnipserver.dao.memory;
 
-import com.github.nwillc.myorchsnip.dao.Dao;
-import com.github.nwillc.myorchsnip.dao.Entity;
+import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.Entity;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -16,7 +16,7 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.myorchsnip.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
@@ -47,6 +47,7 @@ public class Authentication implements SparkController {
 
 	private void check(Request request, Response response) {
 		Session session = request.session(true);
+
 		if (noAuth.stream().anyMatch(path -> request.pathInfo().equals(path))) {
 			LOGGER.info("Path " + request.pathInfo() + " is white listed");
 		} else if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {

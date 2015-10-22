@@ -16,7 +16,7 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.myorchsnip.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import spark.Request;
 import spark.Response;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class Categories implements SparkController {
 	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
-   	private final Dao<Category> dao;
+	private final Dao<Category> dao;
 
 	public Categories(Dao<Category> dao) {
 		this.dao = dao;
