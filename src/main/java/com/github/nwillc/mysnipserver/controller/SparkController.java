@@ -37,11 +37,7 @@ public abstract class SparkController<T extends Entity> implements Version {
 
 	public SparkController(Dao<T> dao) {
 		this.dao = dao;
-        mapper = ThreadLocal.withInitial(() -> {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new Jdk8Module());
-            return mapper;
-        });
+        mapper = ThreadLocal.withInitial(() -> new ObjectMapper().registerModule(new Jdk8Module()));
 	}
 
 	protected Dao<T> getDao() {
