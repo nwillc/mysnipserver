@@ -19,7 +19,6 @@ package com.github.nwillc.mysnipserver.controller;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
-import com.github.nwillc.mysnipserver.rest.Version;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
 import spark.Request;
 import spark.Response;
@@ -29,17 +28,18 @@ import spark.Spark;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
-import static com.github.nwillc.mysnipserver.rest.Params.*;
 
-public class Authentication implements SparkController {
-	private final static Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
-	private final static String IS_LOGGED_IN = "loggedIn.true";
+import static com.github.nwillc.mysnipserver.rest.Params.PASSWORD;
+import static com.github.nwillc.mysnipserver.rest.Params.USERNAME;
+
+public class Authentication extends SparkController<User> {
+	private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
+	private static final String IS_LOGGED_IN = "loggedIn.true";
 	private static final String LOGIN_HTML = "/login.html";
-	private Set<String> noAuth = new HashSet<>();
-	private final Dao<User> dao;
+	private final Set<String> noAuth = new HashSet<>();
 
 	public Authentication(Dao<User> dao) {
-		this.dao = dao;
+		super(dao);
 		Spark.before(this::check);
 		noAuth(LOGIN_HTML);
 		noAuth("/login.js");
@@ -69,7 +69,7 @@ public class Authentication implements SparkController {
 	private Boolean login(Request request, Response response) {
 		LOGGER.info("Login attempt: " + USERNAME.from(request));
 
-		final User user = dao.findOne(USERNAME.from(request))
+		final User user = getDao().findOne(USERNAME.from(request))
 				.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
 
 		LOGGER.info("Found: " + user);

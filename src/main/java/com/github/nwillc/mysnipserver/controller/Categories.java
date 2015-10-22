@@ -26,25 +26,24 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class Categories implements SparkController {
+public class Categories extends SparkController<Category> {
 	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
-	private final Dao<Category> dao;
 
 	public Categories(Dao<Category> dao) {
-		this.dao = dao;
+		super(dao);
 		get("categories", this::findAll);
 		post("categories", this::save);
 	}
 
 	public List<Category> findAll(Request request, Response response) {
-		return dao.findAll().collect(Collectors.toList());
+		return getDao().findAll().collect(Collectors.toList());
 	}
 
 	public Boolean save(Request request, Response response) {
 		try {
-			final Category category = mapper.get().readValue(request.body(), Category.class);
+			final Category category = getMapper().get().readValue(request.body(), Category.class);
 			LOGGER.info("Category: " + category);
-			dao.save(category);
+			getDao().save(category);
 			return Boolean.TRUE;
 		} catch (IOException e) {
 			e.printStackTrace();
