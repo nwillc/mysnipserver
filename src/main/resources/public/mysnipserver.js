@@ -53,6 +53,7 @@ var myPresentation = {
         myPresentation.loadCategories();
         $("#categoryDiv").show();
         $("#browseDiv").show();
+        $(myPresentation.config.categories).focus();
     },
 
     showNewSnippet: function () {
@@ -61,12 +62,14 @@ var myPresentation = {
         myPresentation.loadCategories();
         $("#categoryDiv").show();
         $("#newSnippetDiv").show();
+        $(myPresentation.config.categories).focus();
     },
 
     showNewCategory: function () {
         console.log("showNewCategory");
         myPresentation.hideAll();
         $("#newCategoryDiv").show();
+        $(myPresentation.config.category).focus();
     },
 
     loadCategories: function () {

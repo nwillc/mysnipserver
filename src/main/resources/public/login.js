@@ -28,6 +28,7 @@ var myLogin = {
     bind: function () {
         console.log("bind");
         $(myLogin.config.password).bind('keyup', myLogin.login);
+        $(myLogin.config.username).focus();
     },
 
     login: function (e) {
