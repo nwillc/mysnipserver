@@ -24,7 +24,7 @@ public class Authentication implements SparkController {
 
 		Session session = request.session(true);
 
-		if(noAuth.stream().anyMatch(path -> request.pathInfo().equals(path))){
+		if (noAuth.stream().anyMatch(path -> request.pathInfo().equals(path))) {
 			LOGGER.info("Path " + request.pathInfo() + " is white listed");
 			session.attribute(IS_LOGGED_IN, Boolean.TRUE);
 		} else if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {

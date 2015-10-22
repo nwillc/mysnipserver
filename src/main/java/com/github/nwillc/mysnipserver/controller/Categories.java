@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class Categories implements SparkController {
 	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
-   	private final Dao<Category> dao;
+	private final Dao<Category> dao;
 
 	public Categories(Dao<Category> dao) {
 		this.dao = dao;

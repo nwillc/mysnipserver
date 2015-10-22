@@ -33,35 +33,35 @@ import java.util.logging.Logger;
 import static spark.Spark.*;
 
 class MySnipServerApplication implements SparkApplication {
-    private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final List<SparkController> controllers = new ArrayList<>(10);
-    private final Dao<Category> categoriesDao;
-    private final Dao<Snippet> snippetDao;
+	private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
+	private final List<SparkController> controllers = new ArrayList<>(10);
+	private final Dao<Category> categoriesDao;
+	private final Dao<Snippet> snippetDao;
 
-    public MySnipServerApplication(Dao<Category> categoriesDao, Dao<Snippet> snippetDao) {
-        this.categoriesDao = categoriesDao;
-        this.snippetDao = snippetDao;
-    }
+	public MySnipServerApplication(Dao<Category> categoriesDao, Dao<Snippet> snippetDao) {
+		this.categoriesDao = categoriesDao;
+		this.snippetDao = snippetDao;
+	}
 
-    @Override
-    public void init() {
-        LOGGER.info("Starting");
-        // Static files
-        staticFileLocation("/public");
+	@Override
+	public void init() {
+		LOGGER.info("Starting");
+		// Static files
+		staticFileLocation("/public");
 
-        controllers.add(new Categories(categoriesDao));
-        controllers.add(new Snippets(snippetDao));
-        controllers.add(new Authentication());
+		controllers.add(new Categories(categoriesDao));
+		controllers.add(new Snippets(snippetDao));
+		controllers.add(new Authentication());
 
-        // Specific routes
-        get("/ping", (request, response) -> "PONG");
+		// Specific routes
+		get("/ping", (request, response) -> "PONG");
 
-        exception(HttpException.class, (e, request, response) -> {
-            response.status(((HttpException)e).getCode().code);
-            response.body(((HttpException)e).getCode().toString());
-            LOGGER.info("Returning: " + e.toString());
-        });
+		exception(HttpException.class, (e, request, response) -> {
+			response.status(((HttpException) e).getCode().code);
+			response.body(((HttpException) e).getCode().toString());
+			LOGGER.info("Returning: " + e.toString());
+		});
 
-        LOGGER.info("Completed");
-    }
+		LOGGER.info("Completed");
+	}
 }

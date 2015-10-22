@@ -20,27 +20,27 @@ package com.github.nwillc.mysnipserver.rest.error;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
 
 public class HttpException extends RuntimeException {
-    private final HttpStatusCode code;
+	private final HttpStatusCode code;
 
-    public HttpException(HttpStatusCode code, String msg) {
-        super(msg);
-        this.code = code;
-    }
+	public HttpException(HttpStatusCode code, String msg) {
+		super(msg);
+		this.code = code;
+	}
 
-    public HttpException(HttpStatusCode code, String msg, Throwable cause){
-        super(msg, cause);
-        this.code = code;
-    }
+	public HttpException(HttpStatusCode code, String msg, Throwable cause) {
+		super(msg, cause);
+		this.code = code;
+	}
 
-    public HttpStatusCode getCode() {
-        return code;
-    }
+	public HttpStatusCode getCode() {
+		return code;
+	}
 
-    @Override
-    public String toString() {
-        return "HttpException{" +
-                "code=" + code +
-                ", message= '" + getMessage() +"'" +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "HttpException{" +
+				"code=" + code +
+				", message= '" + getMessage() + "'" +
+				'}';
+	}
 }

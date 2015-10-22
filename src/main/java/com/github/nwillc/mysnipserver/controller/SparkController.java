@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public interface SparkController extends Version {
 	Logger LOGGER = Logger.getLogger(SparkController.class.getCanonicalName());
-	ThreadLocal<ObjectMapper> mapper = new ThreadLocal<ObjectMapper>(){
+	ThreadLocal<ObjectMapper> mapper = new ThreadLocal<ObjectMapper>() {
 		@Override
 		protected ObjectMapper initialValue() {
 			ObjectMapper mapper = new ObjectMapper();
@@ -57,5 +57,7 @@ public interface SparkController extends Version {
 		Spark.post(versionedPath(path), route, this::toJson);
 	}
 
-	default void delete(String path, Route route) { Spark.delete(versionedPath(path), route, this::toJson); }
+	default void delete(String path, Route route) {
+		Spark.delete(versionedPath(path), route, this::toJson);
+	}
 }

@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 import static com.github.nwillc.mysnipserver.rest.Params.*;
 
 public class Snippets implements SparkController {
-	private final Dao<Snippet> dao;
 	private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
+	private final Dao<Snippet> dao;
 
 	public Snippets(Dao<Snippet> dao) {
 		this.dao = dao;
@@ -56,8 +56,8 @@ public class Snippets implements SparkController {
 		LOGGER.info("Finding body in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
 		return dao.findAll().filter(
 				snippet -> CATEGORY.from(request).equals(snippet.getCategory()) &&
-							TITLE.from(request).equals(snippet.getTitle())
-			).findFirst().get();
+						TITLE.from(request).equals(snippet.getTitle())
+		).findFirst().get();
 	}
 
 	public Boolean delete(Request request, Response response) {

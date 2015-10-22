@@ -21,7 +21,8 @@ import com.github.nwillc.mysnipserver.dao.Entity;
 public class Category extends Entity {
 	private String name;
 
-	public Category() {}
+	public Category() {
+	}
 
 	public Category(String name) {
 		this.name = name;

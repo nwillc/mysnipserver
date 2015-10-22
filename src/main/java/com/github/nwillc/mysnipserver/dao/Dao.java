@@ -22,7 +22,10 @@ import java.util.stream.Stream;
 
 public interface Dao<T extends Entity> {
 	Optional<T> findOne(final String key);
+
 	Stream<T> findAll();
+
 	void save(final T entity);
+
 	void delete(final String key);
 }

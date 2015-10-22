@@ -32,39 +32,39 @@ import static spark.Spark.ipAddress;
 import static spark.Spark.port;
 
 public class MySnipServer {
-    private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
-    private final static SparkApplication application = new MySnipServerApplication(new CategoryDao(),
-                                                                                    new SnippetDao());
+	private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
+	private final static SparkApplication application = new MySnipServerApplication(new CategoryDao(),
+			new SnippetDao());
 
-    public static void main(String[] args) {
-        LOGGER.info("Starting");
+	public static void main(String[] args) {
+		LOGGER.info("Starting");
 
-        Options options = CommandLineInterface.getOptions();
-        CommandLineParser commandLineParser = new DefaultParser();
+		Options options = CommandLineInterface.getOptions();
+		CommandLineParser commandLineParser = new DefaultParser();
 
-        try {
-            CommandLine commandLine = commandLineParser.parse(options, args);
+		try {
+			CommandLine commandLine = commandLineParser.parse(options, args);
 
-            if (commandLine.hasOption(CLI.help.name())) {
-                CommandLineInterface.help(options, 0);
-            }
+			if (commandLine.hasOption(CLI.help.name())) {
+				CommandLineInterface.help(options, 0);
+			}
 
-            if (commandLine.hasOption(CLI.port.name())) {
-                LOGGER.info("Configuring port: " + commandLine.getOptionValue(CLI.port.name()));
-                port(Integer.parseInt(commandLine.getOptionValue(CLI.port.name())));
-            }
+			if (commandLine.hasOption(CLI.port.name())) {
+				LOGGER.info("Configuring port: " + commandLine.getOptionValue(CLI.port.name()));
+				port(Integer.parseInt(commandLine.getOptionValue(CLI.port.name())));
+			}
 
-            if (commandLine.hasOption(CLI.address.name())) {
-                LOGGER.info("Configuring address: " + commandLine.getOptionValue(CLI.address.name()));
-                ipAddress(commandLine.getOptionValue(CLI.address.name()));
-            }
+			if (commandLine.hasOption(CLI.address.name())) {
+				LOGGER.info("Configuring address: " + commandLine.getOptionValue(CLI.address.name()));
+				ipAddress(commandLine.getOptionValue(CLI.address.name()));
+			}
 
-        } catch (ParseException e) {
-            LOGGER.severe("Failed to parse command line: " + e);
-            CommandLineInterface.help(options, 1);
-        }
+		} catch (ParseException e) {
+			LOGGER.severe("Failed to parse command line: " + e);
+			CommandLineInterface.help(options, 1);
+		}
 
-        application.init();
-        LOGGER.info("Completed");
-    }
+		application.init();
+		LOGGER.info("Completed");
+	}
 }
