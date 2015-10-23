@@ -20,6 +20,7 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
+import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
 
@@ -32,6 +33,7 @@ import static com.github.nwillc.mysnipserver.rest.Params.*;
 public class Snippets extends SparkController<Snippet> {
 	private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
 
+    @Inject
 	public Snippets(Dao<Snippet> dao) {
         super(dao);
 		get("snippets", this::findAll);

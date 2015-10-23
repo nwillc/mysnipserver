@@ -25,6 +25,7 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
+import com.google.inject.Inject;
 import spark.servlet.SparkApplication;
 
 import java.util.ArrayList;
@@ -33,13 +34,14 @@ import java.util.logging.Logger;
 
 import static spark.Spark.*;
 
-class MySnipServerApplication implements SparkApplication {
+public class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
     private final List<SparkController> controllers = new ArrayList<>(10);
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
     private final Dao<User> userDao;
 
+    @Inject
     public MySnipServerApplication(Dao<Category> categoriesDao,
                                    Dao<Snippet> snippetDao,
                                    Dao<User> userDao) {

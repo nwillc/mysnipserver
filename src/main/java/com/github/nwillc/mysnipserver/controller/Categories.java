@@ -18,6 +18,7 @@ package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
 
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class Categories extends SparkController<Category> {
 	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
 
+    @Inject
 	public Categories(Dao<Category> dao) {
 		super(dao);
 		get("categories", this::findAll);

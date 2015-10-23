@@ -16,15 +16,9 @@
 
 package com.github.nwillc.mysnipserver;
 
-import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
-import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
-import com.github.nwillc.mysnipserver.dao.memory.UserDao;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import spark.servlet.SparkApplication;
+import com.github.nwillc.mysnipserver.guice.MemoryBackedModule;
+import com.google.inject.Guice;
+import org.apache.commons.cli.*;
 
 import java.util.logging.Logger;
 
@@ -34,11 +28,6 @@ import static spark.Spark.port;
 
 public class MySnipServer {
     private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
-    private final static SparkApplication application = new MySnipServerApplication(
-            new CategoryDao(),
-            new SnippetDao(),
-            new UserDao()
-    );
 
 	public static void main(String[] args) {
 		LOGGER.info("Starting");
@@ -68,7 +57,7 @@ public class MySnipServer {
 			CommandLineInterface.help(options, 1);
 		}
 
-		application.init();
+        Guice.createInjector(new MemoryBackedModule()).getInstance(MySnipServerApplication.class).init();
 		LOGGER.info("Completed");
 	}
 }

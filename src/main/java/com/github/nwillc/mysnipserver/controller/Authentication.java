@@ -39,7 +39,7 @@ public class Authentication extends SparkController<User> {
 	private static final String LOGIN_HTML = "/login.html";
 	private final Set<String> noAuth = new HashSet<>();
 
-	@Inject
+    @Inject
 	public Authentication(Dao<User> dao) {
 		super(dao);
 		Spark.before(this::check);
