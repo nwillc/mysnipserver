@@ -43,18 +43,25 @@ public final class CommandLineInterface {
 		options.addOption(option);
 
 		option = new Option(CLI.address.name().substring(0, 1), CLI.address.name(), true, "IP address to listen on.");
-		option.setArgName("address");
+		option.setArgName(CLI.address.name());
 		option.setArgs(1);
 		option.setType(String.class);
 		option.setRequired(false);
 		options.addOption(option);
 
 		option = new Option(CLI.port.name().substring(0, 1), CLI.port.name(), true, "Port number to listen on.");
-		option.setArgName("port_no");
+		option.setArgName(CLI.port.name());
 		option.setArgs(1);
 		option.setType(Integer.class);
 		option.setRequired(false);
 		options.addOption(option);
+
+        option = new Option(CLI.dao.name().substring(0, 1), CLI.dao.name(), true, "Dao class name to access data with.");
+        option.setArgName(CLI.dao.name());
+        option.setArgs(1);
+        option.setType(String.class);
+        option.setRequired(false);
+        options.addOption(option);
 
 		return options;
 	}
@@ -62,6 +69,7 @@ public final class CommandLineInterface {
 	enum CLI {
 		address,
 		help,
-		port
+		port,
+        dao
 	}
 }

@@ -17,7 +17,9 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.guice.MemoryBackedModule;
+import com.github.nwillc.mysnipserver.guice.OrchestrateModule;
 import com.google.inject.Guice;
+import com.google.inject.Module;
 import org.apache.commons.cli.*;
 
 import java.util.logging.Logger;
@@ -34,6 +36,8 @@ public class MySnipServer {
 
 		Options options = CommandLineInterface.getOptions();
 		CommandLineParser commandLineParser = new DefaultParser();
+
+        Module module = null;
 
 		try {
 			CommandLine commandLine = commandLineParser.parse(options, args);
@@ -52,12 +56,21 @@ public class MySnipServer {
 				ipAddress(commandLine.getOptionValue(CLI.address.name()));
 			}
 
+            if (commandLine.hasOption(CLI.dao.name())) {
+                module = (Module)Class.forName("com.github.nwillc.mysnipserver.guice." +  commandLine.getOptionValue(CLI.dao.name())).newInstance();
+            } else {
+                module = new MemoryBackedModule();
+            }
+
 		} catch (ParseException e) {
 			LOGGER.severe("Failed to parse command line: " + e);
 			CommandLineInterface.help(options, 1);
-		}
+		} catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
+            LOGGER.severe("Failed instantiating DAO class: " + e);
+            CommandLineInterface.help(options, 1);
+        }
 
-        Guice.createInjector(new MemoryBackedModule()).getInstance(MySnipServerApplication.class).init();
+        Guice.createInjector(module).getInstance(MySnipServerApplication.class).init();
 		LOGGER.info("Completed");
 	}
 }
