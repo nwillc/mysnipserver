@@ -3,6 +3,9 @@
 SCRIPT_DIR=$(cd $(dirname ${0}) && pwd -P)
 
 cd ${SCRIPT_DIR}
+
+[ -f env.sh ] && source env.sh
+
 echo Rebuild server...
 ./gradlew -q stage
 

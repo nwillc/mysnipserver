@@ -2,3 +2,5 @@
 build
 mysnipserver.iml
 .idea
+env.*
+

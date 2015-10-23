@@ -1,17 +1,21 @@
-# API
+# API VERSION 1
+
+All paths are versioned with the version number (v#).
 
 ## GET
-- /v1/auth/:username/:password
-- /v1/categories
-- /v1/categories/:category
-- /v1/snippets
-- /v1/snippets/category/:category
-- /v1/snippets/category/:category/title/:title
+- /v#/auth/:username/:password
+- /v#/categories
+- /v#/categories/:category
+- /v#/snippets
+- /v#/snippets/category/:category
+- /v#/snippets/category/:category/title/:title
 
 ## Post
-- /v1/categories
-- /v1/snippets
+- /v#/categories
+- /v#/snippets
 
 ## Delete
-- /v1/categories/:category
-- /v1/snippets/category/:category/title/:title
+- /v#/categories/:category
+- /v#/snippets/category/:category/title/:title
+- /v#/auth
+
