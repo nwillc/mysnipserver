@@ -20,6 +20,7 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
+import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
 import spark.Session;
@@ -38,6 +39,7 @@ public class Authentication extends SparkController<User> {
 	private static final String LOGIN_HTML = "/login.html";
 	private final Set<String> noAuth = new HashSet<>();
 
+	@Inject
 	public Authentication(Dao<User> dao) {
 		super(dao);
 		Spark.before(this::check);
