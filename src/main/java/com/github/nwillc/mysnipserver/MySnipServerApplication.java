@@ -36,7 +36,6 @@ import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
-    private final List<SparkController> controllers = new ArrayList<>(10);
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
     private final Dao<User> userDao;
@@ -56,9 +55,10 @@ public class MySnipServerApplication implements SparkApplication {
 		// Static files
 		staticFileLocation("/public");
 
-        controllers.add(new Categories(categoriesDao));
-        controllers.add(new Snippets(snippetDao));
-        controllers.add(new Authentication(userDao));
+        // Create controllers
+        new Categories(categoriesDao);
+        new Snippets(snippetDao);
+        new Authentication(userDao);
 
 		// Specific routes
 		get("/ping", (request, response) -> "PONG");

@@ -19,7 +19,8 @@ var myPresentation = {
     init: function (config) {
         console.log("init");
         myPresentation.config = {
-            categories: $('#categories'),
+            categories: $('#browseCategories'),
+            snippetCategories: $('#snippetCategories'),
             category: $('#category'),
             titles: $('#titles'),
             title: $('#title'),
@@ -28,48 +29,17 @@ var myPresentation = {
         };
         $.extend(myPresentation.config, config);
         myPresentation.bind();
+        myPresentation.loadCategories();
     },
 
     bind: function () {
         console.log("bind");
-        myPresentation.hideAll();
-        $('#browseButton').click(myPresentation.showBrowse);
-        $('#newSnippetButton').click(myPresentation.showNewSnippet);
-        $('#newCategoryButton').click(myPresentation.showNewCategory);
-        $('#saveSnippetButton').click(myPresentation.saveSnippet);
-        $('#logoutButton').click(myPresentation.logout);
+        $('#tabs').tabs();
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $(myPresentation.config.category).change(myPresentation.saveCategory);
-    },
-
-    hideAll: function () {
-        $('div').hide();
-    },
-
-    showBrowse: function () {
-        console.log('showBrowse');
-        myPresentation.hideAll();
-        myPresentation.loadCategories();
-        $("#categoryDiv").show();
-        $("#browseDiv").show();
-        $(myPresentation.config.categories).focus();
-    },
-
-    showNewSnippet: function () {
-        console.log("showNewSnippet");
-        myPresentation.hideAll();
-        myPresentation.loadCategories();
-        $("#categoryDiv").show();
-        $("#newSnippetDiv").show();
-        $(myPresentation.config.categories).focus();
-    },
-
-    showNewCategory: function () {
-        console.log("showNewCategory");
-        myPresentation.hideAll();
-        $("#newCategoryDiv").show();
-        $(myPresentation.config.category).focus();
+        $('#saveSnippetButton').click(myPresentation.saveSnippet);
+        $('#logoutButton').click(myPresentation.logout);
     },
 
     loadCategories: function () {
@@ -85,6 +55,14 @@ var myPresentation = {
                     myPresentation.config.categories.append(new Option(this.name, this.name));
                 });
             $("#categories :nth(0)").prop("selected", "selected").change()
+            $(myPresentation.config.snippetCategories).empty();
+            $(list)
+                .sort(function (a, b) {
+                    return a.name > b.name;
+                })
+                .each(function () {
+                    myPresentation.config.snippetCategories.append(new Option(this.name, this.name));
+                });
         });
     },
 
@@ -118,17 +96,18 @@ var myPresentation = {
         console.log("saveCategory");
         $.post("v1/categories", JSON.stringify({
             name: $(myPresentation.config.category).val()
-        }))
-            .fail(function () {
-                alert("Failed saving category");
-            });
-        $('#category').val('');
+        }), function () {
+            myPresentation.loadCategories();
+            $('#category').val('');
+        }).fail(function () {
+            alert("Failed saving category");
+        });
     },
 
     saveSnippet: function () {
         console.log("Save Snippet");
         $.post('v1/snippets', JSON.stringify({
-            category: $(myPresentation.config.categories).val(),
+            category: $(myPresentation.config.snippetCategories).val(),
             title: $(myPresentation.config.title).val(),
             body: $(myPresentation.config.bodyInput).val()
         }))

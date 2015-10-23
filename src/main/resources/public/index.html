@@ -1,57 +1,35 @@
-<!DOCTYPE html>
-<!--
-  ~ Copyright (c) 2015,  nwillc@gmail.com
-  ~
-  ~ Permission to use, copy, modify, and/or distribute this software for any
-  ~ purpose with or without fee is hereby granted, provided that the above
-  ~ copyright notice and this permission notice appear in all copies.
-  ~
-  ~ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-  ~ WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-  ~ MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-  ~ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-  ~ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-  ~ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-  ~ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-  -->
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Snippets</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="mysnipserver.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" />
 </head>
 <body>
-<hr>
-<button id="browseButton">Browse</button>
-&nbsp;
-<button id="newSnippetButton">New Snippet</button>
-&nbsp;
-<button id="newCategoryButton">New Category</button>
-&nbsp;
-<button id="logoutButton">Logout</button>
-&nbsp;
-<hr>
-<div id="categoryDiv">
-    Category: <select id="categories"></select> <br>
+<div id="tabs">
+    <ul>
+        <li><a href="#browseTab">Browse</a></li>
+        <li><a href="#snippetTab">Add Snippet</a></li>
+        <li><a href="#categoryTab">Add Category</a></li>
+    </ul>
+    <div align="right"><button id="logoutButton">Logout</button></div>
+    <div id="browseTab">
+        Category: <select id="browseCategories"></select> <br>
+        Titles: <br>
+        <select id="titles" size="10" style="width: 45em;"></select><br>
+        <textarea id="body" rows="10" cols="80"></textarea>
+    </div>
+    <div id="snippetTab">
+        Category: <select id="snippetCategories"></select> <br>
+        Title: <input size="80" type="text" id="title"></input><br>
+        <textarea id="bodyInput"  rows="10" cols="80"></textarea><br>
+        <button id="saveSnippetButton">Save</button>
+    </div>
+    <div id="categoryTab">
+        Category: <input type="text" id="category"></input>
+    </div>
 </div>
-<div id="browseDiv">
-    Titles: <br>
-    <select id="titles" size="10" style="width:70%"></select><br>
-    <textarea id="body" style="width:70%"></textarea>
-</div>
-
-<div id="newSnippetDiv">
-    Title: <input type="text" id="title"></input><br>
-    <textarea id="bodyInput"></textarea><br>
-    <button id="saveSnippetButton">Save</button>
-</div>
-
-<div id="newCategoryDiv">
-    Category: <input type="text" id="category"></input>
-</div>
-
-
 </body>
 </html>

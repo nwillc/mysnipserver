@@ -1,36 +1,33 @@
-<!DOCTYPE html>
-<!--
-  ~ Copyright (c) 2015,  nwillc@gmail.com
-  ~
-  ~ Permission to use, copy, modify, and/or distribute this software for any
-  ~ purpose with or without fee is hereby granted, provided that the above
-  ~ copyright notice and this permission notice appear in all copies.
-  ~
-  ~ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-  ~ WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-  ~ MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-  ~ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-  ~ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-  ~ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-  ~ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-  -->
-
 <HTML>
 <head>
     <meta charset="UTF-8">
     <title>Snippets</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.idTabs.min.js"></script>
     <script src="login.js"></script>
+    <style>
+        .center-box {
+            width:300px;
+            height:4em;
+            background-color:#d9d9d9;
+            border: 1px solid black;
+            position:fixed;
+            margin-left:-150px; /* half of width */
+            margin-top:-2em;  /* half of height */
+            top:50%;
+            left:50%;
+        }
+    </style>
 </head>
 <BODY>
-<table>
+<table class="center-box">
     <tr>
         <th align="right">User:</th>
-        <td><input id="username" type="text"></td>
+        <td><input size="12" id="username" type="text"></td>
     </tr>
     <tr>
         <th align="right">Password:</th>
-        <td><input id="password" type="password"></td>
+        <td><input size="20" id="password" type="password"></td>
     </tr>
 </table>
 </BODY>
