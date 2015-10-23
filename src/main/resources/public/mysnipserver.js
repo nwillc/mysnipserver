@@ -44,7 +44,7 @@ var myPresentation = {
 
     loadCategories: function () {
         console.log("loadCategories");
-        $.get("v1/categories", function (data, status) {
+        $.get("v1/categories", function (data) {
             var list = JSON.parse(data);
             $(myPresentation.config.categories).empty();
             $(list)
@@ -54,7 +54,6 @@ var myPresentation = {
                 .each(function () {
                     myPresentation.config.categories.append(new Option(this.name, this.name));
                 });
-            $("#categories :nth(0)").prop("selected", "selected").change()
             $(myPresentation.config.snippetCategories).empty();
             $(list)
                 .sort(function (a, b) {
@@ -72,7 +71,7 @@ var myPresentation = {
         console.log("Selected Category: " + category);
         $('option', myPresentation.config.titles).remove();
         $(myPresentation.config.body).val('');
-        $.get("v1/snippets/category/" + category, function (data, status) {
+        $.get("v1/snippets/category/" + category, function (data) {
             var list = JSON.parse(data);
             $(list).each(function () {
                 myPresentation.config.titles.append(new Option(this.title, this.title));

@@ -6,29 +6,42 @@
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="mysnipserver.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" />
+    <style>
+        label { display: block; }
+        select {
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
+<div align="right"><button id="logoutButton">Logout</button></div>
 <div id="tabs">
     <ul>
         <li><a href="#browseTab">Browse</a></li>
         <li><a href="#snippetTab">Add Snippet</a></li>
         <li><a href="#categoryTab">Add Category</a></li>
     </ul>
-    <div align="right"><button id="logoutButton">Logout</button></div>
     <div id="browseTab">
-        Category: <select id="browseCategories"></select> <br>
-        Titles: <br>
-        <select id="titles" size="10" style="width: 45em;"></select><br>
+        <label for="browseCategories">Category:</label>
+        <select id="browseCategories"></select>
+        <label for="titles">Titles:</label>
+        <select id="titles" size="10" style="width: 45em;"></select>
+        <label for="body">Snippet:</label>
         <textarea id="body" rows="10" cols="80"></textarea>
     </div>
     <div id="snippetTab">
-        Category: <select id="snippetCategories"></select> <br>
-        Title: <input size="80" type="text" id="title"></input><br>
-        <textarea id="bodyInput"  rows="10" cols="80"></textarea><br>
+        <label for="snippetCategories">Category:</label>
+        <select id="snippetCategories"></select>
+        <label for="title">Title:</label>
+        <input size="80" type="text" id="title">
+        <label for="bodyInput">Snippet:</label>
+        <textarea id="bodyInput"  rows="10" cols="80"></textarea>
+        <br>
         <button id="saveSnippetButton">Save</button>
     </div>
     <div id="categoryTab">
-        Category: <input type="text" id="category"></input>
+        <label for="category">Category:</label>
+        <input type="text" id="category">
     </div>
 </div>
 </body>
