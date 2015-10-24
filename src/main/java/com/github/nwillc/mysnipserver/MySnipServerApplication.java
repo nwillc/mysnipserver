@@ -19,7 +19,6 @@ package com.github.nwillc.mysnipserver;
 import com.github.nwillc.mysnipserver.controller.Authentication;
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Snippets;
-import com.github.nwillc.mysnipserver.controller.SparkController;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
@@ -28,8 +27,6 @@ import com.github.nwillc.mysnipserver.rest.error.HttpException;
 import com.google.inject.Inject;
 import spark.servlet.SparkApplication;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import static spark.Spark.*;
