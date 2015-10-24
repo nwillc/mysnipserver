@@ -47,19 +47,16 @@ var myPresentation = {
         $.get("v1/categories", function (data) {
             var list = JSON.parse(data);
             $(myPresentation.config.categories).empty();
-            $(list)
-                .sort(function (a, b) {
+            $(list).sort(function (a, b) {
                     return a.name > b.name;
-                })
-                .each(function () {
+                }).each(function () {
                     myPresentation.config.categories.append(new Option(this.name, this.name));
                 });
+            window.setTimeout(function () { $(myPresentation.config.categories).change(); }, 1);
             $(myPresentation.config.snippetCategories).empty();
-            $(list)
-                .sort(function (a, b) {
+            $(list).sort(function (a, b) {
                     return a.name > b.name;
-                })
-                .each(function () {
+                }).each(function () {
                     myPresentation.config.snippetCategories.append(new Option(this.name, this.name));
                 });
         });
@@ -109,8 +106,7 @@ var myPresentation = {
             category: $(myPresentation.config.snippetCategories).val(),
             title: $(myPresentation.config.title).val(),
             body: $(myPresentation.config.bodyInput).val()
-        }))
-            .fail(function () {
+        })).fail(function () {
                 alert("Failed saving snippet.")
             });
         $(myPresentation.config.title).val('');
