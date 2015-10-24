@@ -115,7 +115,16 @@ var myPresentation = {
     },
 
     deleteSnippet: function () {
-        console.log("Delete Snippet");
+        console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
+            + $("#titles option:selected").text());
+        $.ajax({
+                    url: 'v1/snippets/category/' + $(myPresentation.config.categories).val() +
+                        '/title/' + $("#titles option:selected").text(),
+                    type: 'DELETE',
+                    success: function () {
+                        console.log('success');
+                        myPresentation.loadCategories();
+                    }});
     },
 
     logout: function () {
