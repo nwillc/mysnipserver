@@ -17,7 +17,6 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.guice.MemoryBackedModule;
-import com.github.nwillc.mysnipserver.guice.OrchestrateModule;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 import org.apache.commons.cli.*;
@@ -56,8 +55,10 @@ public class MySnipServer {
 				ipAddress(commandLine.getOptionValue(CLI.address.name()));
 			}
 
-            if (commandLine.hasOption(CLI.dao.name())) {
-                module = (Module)Class.forName("com.github.nwillc.mysnipserver.guice." +  commandLine.getOptionValue(CLI.dao.name())).newInstance();
+            if (commandLine.hasOption(CLI.store.name())) {
+                module = (Module)Class.forName("com.github.nwillc.mysnipserver.guice." +
+						commandLine.getOptionValue(CLI.store.name()) +
+						"Module").newInstance();
             } else {
                 module = new MemoryBackedModule();
             }

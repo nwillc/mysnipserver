@@ -56,8 +56,9 @@ public final class CommandLineInterface {
 		option.setRequired(false);
 		options.addOption(option);
 
-        option = new Option(CLI.dao.name().substring(0, 1), CLI.dao.name(), true, "Dao class name to access data with.");
-        option.setArgName(CLI.dao.name());
+        option = new Option(CLI.store.name().substring(0, 1), CLI.store.name(), true,
+				"Storage mechanism, MemoryBacked or Orchestrate.");
+        option.setArgName(CLI.store.name());
         option.setArgs(1);
         option.setType(String.class);
         option.setRequired(false);
@@ -70,6 +71,6 @@ public final class CommandLineInterface {
 		address,
 		help,
 		port,
-        dao
+		store
 	}
 }

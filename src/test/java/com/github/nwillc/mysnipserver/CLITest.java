@@ -22,7 +22,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CLITest {
-	private final String[] expected = {"address", "help", "port", "dao"};
+	private final String[] expected = {"address", "help", "port", "store"};
 
 	@Test
 	public void testOptionCount() throws Exception {
