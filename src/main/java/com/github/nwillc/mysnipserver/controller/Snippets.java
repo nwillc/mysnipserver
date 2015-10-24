@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.github.nwillc.mysnipserver.entity.Snippet.key;
-import static com.github.nwillc.mysnipserver.rest.Params.CATEGORY;
-import static com.github.nwillc.mysnipserver.rest.Params.TITLE;
+import static com.github.nwillc.mysnipserver.rest.Params.KEY;
 
 public class Snippets extends SparkController<Snippet> {
 	private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
@@ -39,10 +37,10 @@ public class Snippets extends SparkController<Snippet> {
 	public Snippets(Dao<Snippet> dao) {
         super(dao);
 		get("snippets", this::findAll);
-		get("snippets/category/" + CATEGORY.getLabel(), this::find);
-		get("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
+		get("snippets/category/" + KEY.getLabel(), this::find);
+		get("snippets/" + KEY.getLabel(), this::findOne);
 		post("snippets", this::save);
-		delete("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::delete);
+		delete("snippets/" + KEY.getLabel(), this::delete);
 	}
 
 	public List<Snippet> findAll(Request request, Response response) {
@@ -51,18 +49,17 @@ public class Snippets extends SparkController<Snippet> {
 	}
 
 	public List<Snippet> find(Request request, Response response) {
-		LOGGER.info("Finding snippets in category: " + CATEGORY.from(request));
-		return getDao().findAll().filter(snippet -> CATEGORY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
+		LOGGER.info("Finding snippets in category: " + KEY.from(request));
+		return getDao().findAll().filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
 	}
 
 	public Snippet findOne(Request request, Response response) {
-		LOGGER.info("Finding body in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
-		return getDao().findOne(key(CATEGORY.from(request), TITLE.from(request))).orElseThrow(() ->
-			new HttpException(HttpStatusCode.NOT_FOUND));
+		return getDao().findOne(KEY.from(request)).orElseThrow(() -> new HttpException(HttpStatusCode.NOT_FOUND));
 	}
 
 	public Boolean delete(Request request, Response response) {
-		getDao().delete(key(CATEGORY.from(request), TITLE.from(request)));
+		LOGGER.info("Delete snippet: " + KEY.from(request));
+		getDao().delete(KEY.from(request));
 		return Boolean.TRUE;
 	}
 

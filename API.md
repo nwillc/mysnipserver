@@ -5,17 +5,17 @@ All paths are versioned with the version number (v#).
 ## GET
 - /v#/auth/:username/:password
 - /v#/categories
-- /v#/categories/:category
+- /v#/categories/:key
 - /v#/snippets
-- /v#/snippets/category/:category
-- /v#/snippets/category/:category/title/:title
+- /v#/snippets/category/:key
+- /v#/snippets/:key
 
 ## Post
 - /v#/categories
 - /v#/snippets
 
 ## Delete
-- /v#/categories/:category
-- /v#/snippets/category/:category/title/:title
+- /v#/categories/:key
+- /v#/snippets/:key
 - /v#/auth
 

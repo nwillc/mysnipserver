@@ -16,9 +16,24 @@
 
 package com.github.nwillc.mysnipserver.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.UUID;
 
-@JsonIgnoreProperties({"key"})
 public abstract class Entity {
-	public abstract String getKey();
+	private String key;
+
+	public Entity() {
+		this(UUID.randomUUID().toString());
+	}
+
+	public Entity(String key) {
+		this.key = key;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 }

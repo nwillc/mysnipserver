@@ -19,8 +19,7 @@ package com.github.nwillc.mysnipserver.rest;
 import spark.Request;
 
 public enum Params {
-	CATEGORY,
-	TITLE,
+	KEY,
 	USERNAME,
 	PASSWORD;
 

@@ -51,14 +51,14 @@ var myPresentation = {
             $(list).sort(function (a, b) {
                     return a.name > b.name;
                 }).each(function () {
-                    myPresentation.config.categories.append(new Option(this.name, this.name));
+                    myPresentation.config.categories.append(new Option(this.name, this.key));
                 });
             window.setTimeout(function () { $(myPresentation.config.categories).change(); }, 1);
             $(myPresentation.config.snippetCategories).empty();
             $(list).sort(function (a, b) {
                     return a.name > b.name;
                 }).each(function () {
-                    myPresentation.config.snippetCategories.append(new Option(this.name, this.name));
+                    myPresentation.config.snippetCategories.append(new Option(this.name, this.key));
                 });
         });
     },
@@ -72,7 +72,7 @@ var myPresentation = {
         $.get("v1/snippets/category/" + category, function (data) {
             var list = JSON.parse(data);
             $(list).each(function () {
-                myPresentation.config.titles.append(new Option(this.title, this.title));
+                myPresentation.config.titles.append(new Option(this.title, this.key));
             })
         })
     },
@@ -82,7 +82,7 @@ var myPresentation = {
         var category = $(myPresentation.config.categories).val();
         var title = $(myPresentation.config.titles).val();
         console.log("Selected Category: " + category + " Title: " + title);
-        $.get("v1/snippets/category/" + category + "/title/" + title, function (data, status) {
+        $.get("v1/snippets/" + title, function (data, status) {
             console.log("Status: " + status + " Data: " + data);
             var found = JSON.parse(data);
             $(myPresentation.config.body).val(found.body);
@@ -118,8 +118,7 @@ var myPresentation = {
         console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
             + $("#titles option:selected").text());
         $.ajax({
-                    url: 'v1/snippets/category/' + $(myPresentation.config.categories).val() +
-                        '/title/' + $("#titles option:selected").text(),
+                    url: 'v1/snippets/' + $("#titles option:selected").val(),
                     type: 'DELETE',
                     success: function () {
                         console.log('success');

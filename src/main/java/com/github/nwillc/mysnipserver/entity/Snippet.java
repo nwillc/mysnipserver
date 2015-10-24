@@ -32,15 +32,6 @@ public class Snippet extends Entity {
 		this.title = title;
 	}
 
-	public static String key(String categoryKey, String title) {
-		return categoryKey + ":" + title;
-	}
-
-	@Override
-	public String getKey() {
-		return key(getCategory(), getTitle());
-	}
-
 	public String getCategory() {
 		return category;
 	}
