@@ -20,7 +20,6 @@ import spark.Request;
 
 public enum Params {
 	CATEGORY,
-	KEY,
 	TITLE,
 	USERNAME,
 	PASSWORD;

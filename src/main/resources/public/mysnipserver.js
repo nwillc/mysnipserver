@@ -40,6 +40,7 @@ var myPresentation = {
         $(myPresentation.config.category).change(myPresentation.saveCategory);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
         $('#logoutButton').click(myPresentation.logout);
+        $('#deleteButton').click(myPresentation.deleteSnippet);
     },
 
     loadCategories: function () {
@@ -111,6 +112,10 @@ var myPresentation = {
             });
         $(myPresentation.config.title).val('');
         $(myPresentation.config.bodyInput).val('');
+    },
+
+    deleteSnippet: function () {
+        console.log("Delete Snippet");
     },
 
     logout: function () {

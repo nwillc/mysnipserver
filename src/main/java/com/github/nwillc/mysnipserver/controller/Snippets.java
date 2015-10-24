@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.github.nwillc.mysnipserver.rest.Params.*;
+import static com.github.nwillc.mysnipserver.entity.Snippet.key;
+import static com.github.nwillc.mysnipserver.rest.Params.CATEGORY;
+import static com.github.nwillc.mysnipserver.rest.Params.TITLE;
 
 public class Snippets extends SparkController<Snippet> {
 	private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
@@ -40,7 +42,7 @@ public class Snippets extends SparkController<Snippet> {
 		get("snippets/category/" + CATEGORY.getLabel(), this::find);
 		get("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::findOne);
 		post("snippets", this::save);
-		delete("snippets/" + KEY.getLabel(), this::delete);
+		delete("snippets/category/" + CATEGORY.getLabel() + "/title/" + TITLE.getLabel(), this::delete);
 	}
 
 	public List<Snippet> findAll(Request request, Response response) {
@@ -55,14 +57,12 @@ public class Snippets extends SparkController<Snippet> {
 
 	public Snippet findOne(Request request, Response response) {
 		LOGGER.info("Finding body in category " + CATEGORY.from(request) + " entitled " + TITLE.from(request));
-		return getDao().findAll().filter(
-				snippet -> CATEGORY.from(request).equals(snippet.getCategory()) &&
-						TITLE.from(request).equals(snippet.getTitle())
-		).findFirst().get();
+		return getDao().findOne(key(CATEGORY.from(request), TITLE.from(request))).orElseThrow(() ->
+			new HttpException(HttpStatusCode.NOT_FOUND));
 	}
 
 	public Boolean delete(Request request, Response response) {
-		getDao().delete(KEY.from(request));
+		getDao().delete(key(CATEGORY.from(request), TITLE.from(request)));
 		return Boolean.TRUE;
 	}
 
