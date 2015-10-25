@@ -16,7 +16,9 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
+import com.github.nwillc.mysnipserver.controller.persona.PersonaAssertion;
 import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
 import com.github.nwillc.mysnipserver.rest.error.HttpException;
@@ -26,6 +28,7 @@ import spark.Response;
 import spark.Session;
 import spark.Spark;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -48,6 +51,7 @@ public class Authentication extends SparkController<User> {
 		noAuth("/persona.js");
         noAuth(versionedPath("auth"));
 		get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
+		post("auth", this::personaAssertion);
 		delete("auth", this::logout);
 	}
 
@@ -85,7 +89,21 @@ public class Authentication extends SparkController<User> {
 		return Boolean.TRUE;
 	}
 
+	private Boolean personaAssertion(Request request, Response response) {
+		try {
+			LOGGER.info("Recieved: " + request.body());
+			final PersonaAssertion assertion = getMapper().get().readValue(request.body(),
+					PersonaAssertion.class);
+			LOGGER.info("Checking personal assertion: " + assertion);
+			return Boolean.TRUE;
+		} catch (Exception e) {
+			throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR,
+					"Failed checking persona assertion: " + e.getMessage(), e);
+		}
+	}
+
 	private void noAuth(String path) {
 		noAuth.add(path);
 	}
+
 }

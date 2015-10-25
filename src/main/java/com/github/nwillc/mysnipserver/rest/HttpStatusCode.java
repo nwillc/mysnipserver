@@ -16,13 +16,14 @@
 
 package com.github.nwillc.mysnipserver.rest;
 
+import static java.net.HttpURLConnection.*;
 
 public enum HttpStatusCode {
-    OK(200),
-    CREATED(201),
-    UNAUTHERIZED(401),
-    NOT_FOUND(404),
-    INTERNAL_SERVER_ERROR(500);
+    OK(HTTP_OK),
+    CREATED(HTTP_CREATED),
+    UNAUTHERIZED(HTTP_UNAUTHORIZED),
+    NOT_FOUND(HTTP_NOT_FOUND),
+    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR);
 
 	public final int code;
 

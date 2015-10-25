@@ -14,31 +14,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
- var myPersona = {
-    login: function (username) {
-        console.log("Logging in " + username + " via persona.");
-        navigator.id.watch({
-            loggedInUser: username,
-            onlogin: myPersona.loginHandler,
-            onlogout: myPersona.logoutHandler
-        });
-        navigator.id.request();
-    },
+package com.github.nwillc.mysnipserver.controller.persona;
 
-    logout: function () {
-    },
+public class PersonaAssertion {
+	private String assertion;
 
-    loginHandler: function (assertion) {
-        console.log("Assertion: " + assertion);
-        $.post('v1/auth', JSON.stringify({
-                    assertion: assertion
-                }), function () {
-                    console.log('Passed.');
-                }).fail(function () {
-                    alert("Failed saving snippet.")
-                });
-    },
+	public PersonaAssertion() {
+	}
 
-    logoutHandler: function () {
-    }
- };
+	public String getAssertion() {
+		return assertion;
+	}
+
+	public void setAssertion(String assertion) {
+		this.assertion = assertion;
+	}
+}

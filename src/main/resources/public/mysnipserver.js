@@ -112,7 +112,7 @@ var myPresentation = {
             myPresentation.loadCategories();
         }).fail(function () {
                 alert("Failed saving snippet.")
-            });
+        });
         $(myPresentation.config.title).val('');
         $(myPresentation.config.bodyInput).val('');
     },
