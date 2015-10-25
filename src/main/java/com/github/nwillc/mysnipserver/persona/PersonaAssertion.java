@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.persona;
+package com.github.nwillc.mysnipserver.persona;
 
 public class PersonaAssertion {
 	private String assertion;

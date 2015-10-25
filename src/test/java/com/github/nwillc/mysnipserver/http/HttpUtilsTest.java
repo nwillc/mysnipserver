@@ -14,25 +14,21 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest;
+package com.github.nwillc.mysnipserver.http;
 
-import static java.net.HttpURLConnection.*;
+import com.github.nwillc.mysnipserver.IntegrationTest;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-public enum HttpStatusCode {
-    OK(HTTP_OK),
-    CREATED(HTTP_CREATED),
-    UNAUTHERIZED(HTTP_UNAUTHORIZED),
-    NOT_FOUND(HTTP_NOT_FOUND),
-    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR);
+import static org.assertj.core.api.Assertions.assertThat;
 
-	public final int code;
 
-	HttpStatusCode(int code) {
-		this.code = code;
-	}
+public class HttpUtilsTest {
 
-	@Override
-	public String toString() {
-		return name() + " (" + code + ')';
+
+	@Category(IntegrationTest.class)
+	@Test
+	public void shouldHttpPost() throws Exception {
+		assertThat(HttpUtils.httpPost(null,null)).isEqualTo("okay");
 	}
 }

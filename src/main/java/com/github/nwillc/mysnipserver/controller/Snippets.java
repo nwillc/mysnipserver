@@ -18,8 +18,8 @@ package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
-import com.github.nwillc.mysnipserver.rest.error.HttpException;
+import com.github.nwillc.mysnipserver.http.HttpStatusCode;
+import com.github.nwillc.mysnipserver.http.error.HttpException;
 import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;

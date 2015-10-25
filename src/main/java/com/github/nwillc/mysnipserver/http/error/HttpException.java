@@ -14,10 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest.error;
+package com.github.nwillc.mysnipserver.http.error;
 
 
-import com.github.nwillc.mysnipserver.rest.HttpStatusCode;
+import com.github.nwillc.mysnipserver.http.HttpStatusCode;
 
 public class HttpException extends RuntimeException {
     private final HttpStatusCode code;
