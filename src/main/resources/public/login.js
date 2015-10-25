@@ -29,6 +29,11 @@ var myLogin = {
         console.log("bind");
         $(myLogin.config.password).bind('keyup', myLogin.login);
         $(myLogin.config.username).focus();
+        $('#personaButton').click(myLogin.personaLogin);
+    },
+
+    personaLogin: function () {
+        myPersona.login($(myLogin.config.username).val());
     },
 
     login: function (e) {
