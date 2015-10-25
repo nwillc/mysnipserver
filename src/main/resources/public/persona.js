@@ -34,6 +34,7 @@
                     assertion: assertion
                 }), function () {
                     console.log('Passed.');
+                     window.location.replace("/");
                 }).fail(function () {
                     alert("Failed saving snippet.")
                 });

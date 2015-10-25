@@ -16,18 +16,22 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
+import com.github.nwillc.mysnipserver.http.HttpUtils;
 import com.github.nwillc.mysnipserver.persona.PersonaAssertion;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.http.error.HttpException;
+import com.github.nwillc.mysnipserver.persona.Verification;
 import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
 import spark.Session;
 import spark.Spark;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -93,6 +97,16 @@ public class Authentication extends SparkController<User> {
 			final PersonaAssertion assertion = getMapper().get().readValue(request.body(),
 					PersonaAssertion.class);
 			LOGGER.info("Checking personal assertion: " + assertion);
+			Map<String,String> params = new HashMap<>();
+			params.put("assertion", assertion.getAssertion());
+			params.put("audience", "http://localtest.me:4567");
+			String answer = HttpUtils.httpPost("https://verifier.login.persona.org/verify", params);
+			Verification verification = getMapper().get().readValue(answer, Verification.class);
+			LOGGER.info("Answer: " + verification);
+			if ("okay".equals(verification.getStatus())) {
+				Session session = request.session(true);
+				session.attribute(IS_LOGGED_IN, Boolean.TRUE);
+			}
 			return Boolean.TRUE;
 		} catch (Exception e) {
 			throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR,
