@@ -18,8 +18,8 @@
 <div id="tabs">
     <ul>
         <li><a href="#browseTab">Browse</a></li>
-        <li><a href="#snippetTab">Add Snippet</a></li>
-        <li><a href="#categoryTab">Add Category</a></li>
+        <li><a href="#snippetTab">Snippet</a></li>
+        <li><a href="#categoryTab">Category</a></li>
     </ul>
     <div id="browseTab">
         <label for="browseCategories">Category:</label>
@@ -29,6 +29,7 @@
         <label for="body">Snippet:</label>
         <textarea id="body" rows="5" cols="80"></textarea><br>
         <button id="deleteButton">Delete Snippet</button>
+        <button id="deleteCategoryButton">Delete Category</button>
     </div>
     <div id="snippetTab">
         <label for="snippetCategories">Category:</label>
@@ -42,7 +43,8 @@
     </div>
     <div id="categoryTab">
         <label for="category">Category:</label>
-        <input type="text" id="category">
+        <input type="text" id="category"><br>
+        <button id="saveCategoryButton">Save</button>
     </div>
 </div>
 </body>

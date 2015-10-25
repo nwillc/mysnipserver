@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.github.nwillc.mysnipserver.rest.Params.KEY;
+
 public class Categories extends SparkController<Category> {
 	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
 
@@ -35,10 +37,17 @@ public class Categories extends SparkController<Category> {
 		super(dao);
 		get("categories", this::findAll);
 		post("categories", this::save);
+		delete("categories/" + KEY.getLabel(), this::delete);
 	}
 
 	public List<Category> findAll(Request request, Response response) {
 		return getDao().findAll().collect(Collectors.toList());
+	}
+
+	public Boolean delete(Request request, Response response) {
+		LOGGER.info("Delete category: " + KEY.from(request));
+		getDao().delete(KEY.from(request));
+		return Boolean.TRUE;
 	}
 
 	public Boolean save(Request request, Response response) {

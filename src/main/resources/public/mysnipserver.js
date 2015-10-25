@@ -37,10 +37,11 @@ var myPresentation = {
         $('#tabs').tabs();
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
-        $(myPresentation.config.category).change(myPresentation.saveCategory);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
         $('#logoutButton').click(myPresentation.logout);
         $('#deleteButton').click(myPresentation.deleteSnippet);
+        $('#saveCategoryButton').click(myPresentation.saveCategory);
+        $('#deleteCategoryButton').click(myPresentation.deleteCategory);
     },
 
     loadCategories: function () {
@@ -107,7 +108,9 @@ var myPresentation = {
             category: $(myPresentation.config.snippetCategories).val(),
             title: $(myPresentation.config.title).val(),
             body: $(myPresentation.config.bodyInput).val()
-        })).fail(function () {
+        }), function () {
+            myPresentation.loadCategories();
+        }).fail(function () {
                 alert("Failed saving snippet.")
             });
         $(myPresentation.config.title).val('');
@@ -116,7 +119,7 @@ var myPresentation = {
 
     deleteSnippet: function () {
         console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
-            + $("#titles option:selected").text());
+            + $("#titles option:selected").val());
         $.ajax({
                     url: 'v1/snippets/' + $("#titles option:selected").val(),
                     type: 'DELETE',
@@ -125,6 +128,17 @@ var myPresentation = {
                         myPresentation.loadCategories();
                     }});
     },
+
+     deleteCategory: function () {
+            console.log("Delete Category: " + $(myPresentation.config.categories).val());
+            $.ajax({
+                        url: 'v1/categories/' + $(myPresentation.config.categories).val(),
+                        type: 'DELETE',
+                        success: function () {
+                            console.log('success');
+                            myPresentation.loadCategories();
+                        }});
+        },
 
     logout: function () {
         console.log("logout");
