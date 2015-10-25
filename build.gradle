@@ -54,12 +54,6 @@ targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 
 test {
-    testLogging.showStandardStreams = true
-
-    useJUnit {
-      //  excludeCategories  'com.github.nwillc.mysnipserver.IntegrationTest'
-    }
-
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
     }

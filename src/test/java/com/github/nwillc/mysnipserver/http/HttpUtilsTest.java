@@ -16,19 +16,36 @@
 
 package com.github.nwillc.mysnipserver.http;
 
-import com.github.nwillc.mysnipserver.IntegrationTest;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import spark.Spark;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class HttpUtilsTest {
+	private static final String TEST_URL = "http://localhost:4567/test";
+	private static final String TEST_RESULT = "Hello";
+	private static final String TEST_PARAM_NAME="payload";
+	private static final String TEST_PARAM_VALUE = "World";
 
+	@Before
+	public void setUp() throws Exception {
+		Spark.post("test", (req, res) -> TEST_RESULT + req.body().split("=")[1]);
+	}
 
-	@Category(IntegrationTest.class)
+	@After
+	public void tearDown() throws Exception {
+		Spark.stop();
+	}
+
 	@Test
 	public void shouldHttpPost() throws Exception {
-		assertThat(HttpUtils.httpPost(null,null)).isEqualTo("okay");
+		Map<String, String> params = new HashMap<>();
+		params.put(TEST_PARAM_NAME, TEST_PARAM_VALUE);
+		assertThat(HttpUtils.httpPost(TEST_URL,params)).isEqualTo(TEST_RESULT + TEST_PARAM_VALUE);
 	}
 }
