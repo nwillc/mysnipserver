@@ -27,14 +27,15 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpUtilsTest {
-	private static final String TEST_URL = "http://localhost:4567/test";
+	private static final String TEST_PATH = "test";
+	private static final String TEST_URL = "http://localhost:4567/" + TEST_PATH;
 	private static final String TEST_RESULT = "Hello";
 	private static final String TEST_PARAM_NAME="payload";
 	private static final String TEST_PARAM_VALUE = "World";
 
 	@Before
 	public void setUp() throws Exception {
-		Spark.post("test", (req, res) -> TEST_RESULT + req.body().split("=")[1]);
+		Spark.post(TEST_PATH, (req, res) -> TEST_RESULT + req.body().split("=")[1]);
 	}
 
 	@After

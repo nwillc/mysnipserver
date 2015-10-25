@@ -41,7 +41,9 @@ public final class HttpUtils {
 		try {
 			if (params != null) {
 				post.setEntity(new UrlEncodedFormEntity(
-						params.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue())).collect(Collectors.toList())));
+						params.entrySet().stream()
+								.map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
+								.collect(Collectors.toList())));
 			}
 
 			HttpResponse response = client.execute(post);
