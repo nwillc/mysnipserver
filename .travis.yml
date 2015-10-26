@@ -3,12 +3,3 @@ jdk:
   - oraclejdk8
 env:
   - TERM=dumb
-deploy:
-  provider: openshift
-  user: nwillc@gmail.com
-  password:
-    secure: rQ12FyelAZ9+LjbZgqh3ejoaKunvv4wUYHbd2SPIImNu/pFiltwSaN9CB1M72+9KLJhekfCdCBEusr846hn4zTsVnNnYUR/0ZLX8GeORjeJjgRWx6zyGW77Xckn0C78DWRW47AwmDTsqKOcX0kvAKofaDW0xH/P8WdbkZW7fTRIolzkkTS5XkAQWfne0u7DMyxMVH4352rmD+I7/ZCL2+sSMHPKSX7Bz2jQtWPJT/O6qguyedMC2f3uKEZ6mNvXGrjBC6xc68piBpFbj0vsqrTAzmfqJ97sERiHx1/XmlKFovMHzhbOS+fdq1o/usoCBxf/fsi/bFPkVSnLgQ/VVQbnnuXSgbLepyc6hKnJGagw5ikLDfN5F43vIs9aIM4Bbmuk/eQV/k1WBbkgyiP4VRX8sqmqbh+uEuWzEJg1G4lNhBa+3v3nGrf9iDVdfi7pQ05rOTLwGOFoU/I55qGh00JCsRnoOOUqNvsG3jNNIDKZcHxN1t+6rRgamSvIb4/LRTE9bZMmDR31Jy5k6+YiXk2aJ3H9LhQSAQvnQFSHXFYXljSvgT3GNnkA4kaVPpv9eMb0HbWqekDXCTtMFuvwbB8u9lDTEWM4yplDEOBMPQGHa9jl0HbFBPHdVF79oE0Zr0cu3gq7TH2ktgmwntKo3qp1hVrM8ryv6EIAffImh9vY=
-  app: snippets
-  domain: nwillc
-  on:
-    repo: nwillc/mysnipserver
