@@ -7,7 +7,7 @@ cd ${SCRIPT_DIR}
 [ -f env.sh ] && source env.sh
 
 echo Rebuild server...
-./gradlew -q stage
+./gradlew -q stage -x test
 
 echo Start server...
 java -cp build/staging:build/staging/* com.github.nwillc.mysnipserver.MySnipServer $*
