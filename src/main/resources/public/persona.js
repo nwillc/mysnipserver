@@ -14,7 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
- var myPersona = {
+var myPersona = {
+
     login: function (username) {
         console.log("Logging in " + username + " via persona.");
         navigator.id.watch({
@@ -26,20 +27,21 @@
     },
 
     logout: function () {
+        navigator.id.logout();
     },
 
     loginHandler: function (assertion) {
         console.log("Assertion: " + assertion);
         $.post('v1/auth', JSON.stringify({
-                    assertion: assertion
-                }), function () {
-                    console.log('Passed.');
-                     window.location.replace("/");
-                }).fail(function () {
-                    alert("Failed saving snippet.")
-                });
+            assertion: assertion
+        }), function () {
+            console.log('Passed.');
+            window.location.replace("/");
+        }).fail(function () {
+            alert("Failed logging in via Persona.")
+        });
     },
 
     logoutHandler: function () {
     }
- };
+};

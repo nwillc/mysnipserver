@@ -50,17 +50,19 @@ var myPresentation = {
             var list = JSON.parse(data);
             $(myPresentation.config.categories).empty();
             $(list).sort(function (a, b) {
-                    return a.name > b.name;
-                }).each(function () {
-                    myPresentation.config.categories.append(new Option(this.name, this.key));
-                });
-            window.setTimeout(function () { $(myPresentation.config.categories).change(); }, 1);
+                return a.name > b.name;
+            }).each(function () {
+                myPresentation.config.categories.append(new Option(this.name, this.key));
+            });
+            window.setTimeout(function () {
+                $(myPresentation.config.categories).change();
+            }, 1);
             $(myPresentation.config.snippetCategories).empty();
             $(list).sort(function (a, b) {
-                    return a.name > b.name;
-                }).each(function () {
-                    myPresentation.config.snippetCategories.append(new Option(this.name, this.key));
-                });
+                return a.name > b.name;
+            }).each(function () {
+                myPresentation.config.snippetCategories.append(new Option(this.name, this.key));
+            });
         });
     },
 
@@ -111,7 +113,7 @@ var myPresentation = {
         }), function () {
             myPresentation.loadCategories();
         }).fail(function () {
-                alert("Failed saving snippet.")
+            alert("Failed saving snippet.")
         });
         $(myPresentation.config.title).val('');
         $(myPresentation.config.bodyInput).val('');
@@ -121,24 +123,26 @@ var myPresentation = {
         console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
             + $("#titles option:selected").val());
         $.ajax({
-                    url: 'v1/snippets/' + $("#titles option:selected").val(),
-                    type: 'DELETE',
-                    success: function () {
-                        console.log('success');
-                        myPresentation.loadCategories();
-                    }});
+            url: 'v1/snippets/' + $("#titles option:selected").val(),
+            type: 'DELETE',
+            success: function () {
+                console.log('success');
+                myPresentation.loadCategories();
+            }
+        });
     },
 
-     deleteCategory: function () {
-            console.log("Delete Category: " + $(myPresentation.config.categories).val());
-            $.ajax({
-                        url: 'v1/categories/' + $(myPresentation.config.categories).val(),
-                        type: 'DELETE',
-                        success: function () {
-                            console.log('success');
-                            myPresentation.loadCategories();
-                        }});
-        },
+    deleteCategory: function () {
+        console.log("Delete Category: " + $(myPresentation.config.categories).val());
+        $.ajax({
+            url: 'v1/categories/' + $(myPresentation.config.categories).val(),
+            type: 'DELETE',
+            success: function () {
+                console.log('success');
+                myPresentation.loadCategories();
+            }
+        });
+    },
 
     logout: function () {
         console.log("logout");
@@ -147,7 +151,8 @@ var myPresentation = {
             type: 'DELETE',
             success: function () {
                 window.location.replace("/login.html");
-            }});
+            }
+        });
     }
 
 };
