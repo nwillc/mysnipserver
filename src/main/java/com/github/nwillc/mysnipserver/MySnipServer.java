@@ -60,9 +60,8 @@ public class MySnipServer {
 			}
 
             if (commandLine.hasOption(CLI.store.name())) {
-                module = (Module)Class.forName("com.github.nwillc.mysnipserver.guice." +
-						commandLine.getOptionValue(CLI.store.name()) +
-						"Module").newInstance();
+                module = (Module)Class.forName(MemoryBackedModule.class.getPackage().getName() + "." +
+						commandLine.getOptionValue(CLI.store.name()) + "Module").newInstance();
             } else {
                 module = new MemoryBackedModule();
             }
