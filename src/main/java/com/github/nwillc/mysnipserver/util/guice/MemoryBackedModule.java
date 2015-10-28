@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.guice;
+package com.github.nwillc.mysnipserver.util.guice;
 
 import com.github.nwillc.mysnipserver.MySnipServerApplication;
 import com.github.nwillc.mysnipserver.dao.Dao;

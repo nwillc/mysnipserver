@@ -14,20 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest;
+package com.github.nwillc.mysnipserver.util.http;
 
-import spark.Request;
+import static java.net.HttpURLConnection.*;
 
-public enum Params {
-	KEY,
-	USERNAME,
-	PASSWORD;
+public enum HttpStatusCode {
+    OK(HTTP_OK),
+    CREATED(HTTP_CREATED),
+    UNAUTHERIZED(HTTP_UNAUTHORIZED),
+    NOT_FOUND(HTTP_NOT_FOUND),
+    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR);
 
-	public String getLabel() {
-		return ":" + name().toLowerCase();
+	public final int code;
+
+	HttpStatusCode(int code) {
+		this.code = code;
 	}
 
-	public String from(Request request) {
-		return request.params(getLabel());
+	@Override
+	public String toString() {
+		return name() + " (" + code + ')';
 	}
 }

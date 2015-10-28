@@ -14,12 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.rest;
+package com.github.nwillc.mysnipserver.util.rest;
 
-public interface Version {
-	String API_VERSION = "v1";
+import spark.Request;
 
-	default String versionedPath(String path) {
-		return "/" + API_VERSION + "/" + path;
+public enum Params {
+	KEY,
+	USERNAME,
+	PASSWORD;
+
+	public String getLabel() {
+		return ":" + name().toLowerCase();
+	}
+
+	public String from(Request request) {
+		return request.params(getLabel());
 	}
 }

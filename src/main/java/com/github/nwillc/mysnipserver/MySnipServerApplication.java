@@ -23,7 +23,7 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
-import com.github.nwillc.mysnipserver.http.error.HttpException;
+import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.inject.Inject;
 import spark.servlet.SparkApplication;
 

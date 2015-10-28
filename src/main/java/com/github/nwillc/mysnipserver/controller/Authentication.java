@@ -16,12 +16,12 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.mysnipserver.http.HttpUtils;
+import com.github.nwillc.mysnipserver.util.http.HttpUtils;
 import com.github.nwillc.mysnipserver.controller.persona.PersonaAssertion;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
-import com.github.nwillc.mysnipserver.http.HttpStatusCode;
-import com.github.nwillc.mysnipserver.http.error.HttpException;
+import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
+import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.github.nwillc.mysnipserver.controller.persona.Verification;
 import com.google.inject.Inject;
 import spark.Request;
@@ -35,8 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static com.github.nwillc.mysnipserver.rest.Params.PASSWORD;
-import static com.github.nwillc.mysnipserver.rest.Params.USERNAME;
+import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
+import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
 
 public class Authentication extends SparkController<User> {
 	private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());

@@ -14,10 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.http;
+package com.github.nwillc.mysnipserver.util.http;
 
+import com.github.nwillc.contracts.UtilityClassContract;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import spark.Spark;
 
@@ -26,27 +28,40 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpUtilsTest {
+public class HttpUtilsTest extends UtilityClassContract {
 	private static final String TEST_PATH = "test";
-	private static final String TEST_URL = "http://localhost:4567/" + TEST_PATH;
+    private static final int TEST_PORT = 7654;
+	private static final String TEST_URL = "http://localhost:" + TEST_PORT + "/" + TEST_PATH;
 	private static final String TEST_RESULT = "Hello";
 	private static final String TEST_PARAM_NAME="payload";
 	private static final String TEST_PARAM_VALUE = "World";
 
-	@Before
+    @Override
+    public Class<?> getClassToTest() {
+        return HttpUtils.class;
+    }
+
+    @Before
 	public void setUp() throws Exception {
+        Spark.port(TEST_PORT);
 		Spark.post(TEST_PATH, (req, res) -> TEST_RESULT + req.body().split("=")[1]);
+        Spark.awaitInitialization();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		Spark.stop();
 	}
-
+    
 	@Test
 	public void shouldHttpPost() throws Exception {
 		Map<String, String> params = new HashMap<>();
 		params.put(TEST_PARAM_NAME, TEST_PARAM_VALUE);
 		assertThat(HttpUtils.httpPost(TEST_URL,params)).isEqualTo(TEST_RESULT + TEST_PARAM_VALUE);
 	}
+
+    @Test
+    public void testAppUrl() throws Exception {
+
+    }
 }

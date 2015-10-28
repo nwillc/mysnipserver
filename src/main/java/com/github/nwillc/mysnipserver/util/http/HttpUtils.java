@@ -14,9 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.http;
+package com.github.nwillc.mysnipserver.util.http;
 
-import com.github.nwillc.mysnipserver.http.error.HttpException;
+import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -24,6 +24,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -33,6 +34,10 @@ public final class HttpUtils {
 
 	private HttpUtils() {
 	}
+
+    static public String appUrl(HttpServletRequest request) {
+        return "";
+    }
 
 	static public String httpPost(String url, Map<String, String> params) {
 		HttpClient client = HttpClientBuilder.create().build();

@@ -16,7 +16,7 @@
 
 package com.github.nwillc.mysnipserver;
 
-import com.github.nwillc.mysnipserver.guice.MemoryBackedModule;
+import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 import org.apache.commons.cli.CommandLine;

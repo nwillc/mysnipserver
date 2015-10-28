@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
-import com.github.nwillc.mysnipserver.rest.Version;
+import com.github.nwillc.mysnipserver.util.rest.Version;
 import spark.Route;
 import spark.Spark;
 

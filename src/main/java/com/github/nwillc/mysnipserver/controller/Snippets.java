@@ -18,8 +18,8 @@ package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.http.HttpStatusCode;
-import com.github.nwillc.mysnipserver.http.error.HttpException;
+import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
+import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.github.nwillc.mysnipserver.rest.Params.KEY;
+import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Snippets extends SparkController<Snippet> {
 	private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());

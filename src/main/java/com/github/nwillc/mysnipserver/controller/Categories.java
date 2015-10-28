@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.github.nwillc.mysnipserver.rest.Params.KEY;
+import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Categories extends SparkController<Category> {
 	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());

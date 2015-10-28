@@ -14,25 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.http;
+package com.github.nwillc.mysnipserver.util.rest;
 
-import static java.net.HttpURLConnection.*;
+public interface Version {
+	String API_VERSION = "v1";
 
-public enum HttpStatusCode {
-    OK(HTTP_OK),
-    CREATED(HTTP_CREATED),
-    UNAUTHERIZED(HTTP_UNAUTHORIZED),
-    NOT_FOUND(HTTP_NOT_FOUND),
-    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR);
-
-	public final int code;
-
-	HttpStatusCode(int code) {
-		this.code = code;
-	}
-
-	@Override
-	public String toString() {
-		return name() + " (" + code + ')';
+	default String versionedPath(String path) {
+		return "/" + API_VERSION + "/" + path;
 	}
 }
