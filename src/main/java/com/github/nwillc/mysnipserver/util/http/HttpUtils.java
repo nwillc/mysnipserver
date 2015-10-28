@@ -36,7 +36,10 @@ public final class HttpUtils {
 	}
 
     static public String appUrl(HttpServletRequest request) {
-        return "";
+        final String url = request.getRequestURL().toString();
+        final String uri = request.getRequestURI();
+
+        return url.substring(0, url.length() - uri.length());
     }
 
 	static public String httpPost(String url, Map<String, String> params) {

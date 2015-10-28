@@ -17,6 +17,7 @@
 package com.github.nwillc.mysnipserver.controller.persona;
 
 public class PersonaAssertion {
+    public static final String VERIFIER = "https://verifier.login.persona.org/verify";
 	private String assertion;
 
 	public PersonaAssertion() {

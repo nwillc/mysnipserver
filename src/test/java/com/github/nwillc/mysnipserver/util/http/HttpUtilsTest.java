@@ -23,10 +23,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 import spark.Spark;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class HttpUtilsTest extends UtilityClassContract {
 	private static final String TEST_PATH = "test";
@@ -52,7 +55,7 @@ public class HttpUtilsTest extends UtilityClassContract {
 	public void tearDown() throws Exception {
 		Spark.stop();
 	}
-    
+
 	@Test
 	public void shouldHttpPost() throws Exception {
 		Map<String, String> params = new HashMap<>();
@@ -62,6 +65,9 @@ public class HttpUtilsTest extends UtilityClassContract {
 
     @Test
     public void testAppUrl() throws Exception {
-
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localtest:4567/v3/test"));
+        when(request.getRequestURI()).thenReturn("/v3/test");
+        assertThat(HttpUtils.appUrl(request)).isEqualTo("http://localtest:4567");
     }
 }

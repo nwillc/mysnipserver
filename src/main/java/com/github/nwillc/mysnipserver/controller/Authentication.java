@@ -99,9 +99,8 @@ public class Authentication extends SparkController<User> {
 			LOGGER.info("Checking personal assertion: " + assertion);
 			Map<String,String> params = new HashMap<>();
 			params.put("assertion", assertion.getAssertion());
-			params.put("audience", request.url().substring(0,
-					request.url().length() - request.uri().length()));
-			String answer = HttpUtils.httpPost("https://verifier.login.persona.org/verify", params);
+			params.put("audience", HttpUtils.appUrl(request.raw()));
+			String answer = HttpUtils.httpPost(PersonaAssertion.VERIFIER, params);
 			Verification verification = getMapper().get().readValue(answer, Verification.class);
 			LOGGER.info("Answer: " + verification);
 			if ("okay".equals(verification.getStatus())) {
