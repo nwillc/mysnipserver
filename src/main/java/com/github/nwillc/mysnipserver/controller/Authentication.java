@@ -17,12 +17,12 @@
 package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.http.HttpUtils;
-import com.github.nwillc.mysnipserver.persona.PersonaAssertion;
+import com.github.nwillc.mysnipserver.controller.persona.PersonaAssertion;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.http.error.HttpException;
-import com.github.nwillc.mysnipserver.persona.Verification;
+import com.github.nwillc.mysnipserver.controller.persona.Verification;
 import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
