@@ -4,4 +4,4 @@ export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0
 export PATH=${JAVA_HOME}/bin:${PATH}
 
 cd ${OPENSHIFT_REPO_DIR}
-java -cp build/staging:build/staging/* com.github.nwillc.mysnipserver.MySnipServer -a ${OPENSHIFT_DIY_IP} -p 8080 |& /usr/bin/logshifter -tag snippets &
+java -cp build/staging:build/staging/* com.github.nwillc.mysnipserver.MySnipServer -s Orchestrate -a ${OPENSHIFT_DIY_IP} -p 8080 |& /usr/bin/logshifter -tag snippets &
