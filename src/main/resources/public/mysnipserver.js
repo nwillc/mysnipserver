@@ -36,6 +36,7 @@ var myPresentation = {
         console.log("bind");
         $('#tabs').tabs();
         $('#searchCategoryDialog').dialog();
+        $('#searchCategoryDialog').dialog('close');
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
@@ -54,7 +55,7 @@ var myPresentation = {
             $(list).sort(function (a, b) {
                 return a.name > b.name;
             }).each(function () {
-                myPresentation.config.categories.append(new Option(this.name, this.key));
+                myPresentation.config.categories.append($("<option></option>").attr("value",this.key).text(this.name));
             });
             window.setTimeout(function () {
                 $(myPresentation.config.categories).change();
@@ -63,7 +64,7 @@ var myPresentation = {
             $(list).sort(function (a, b) {
                 return a.name > b.name;
             }).each(function () {
-                myPresentation.config.snippetCategories.append(new Option(this.name, this.key));
+                myPresentation.config.snippetCategories.append($("<option></option>").attr("value",this.key).text(this.name));
             });
         });
     },
