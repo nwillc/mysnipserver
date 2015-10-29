@@ -25,7 +25,8 @@ var myPresentation = {
             titles: $('#titles'),
             title: $('#title'),
             body: $('#body'),
-            bodyInput: $('#bodyInput')
+            bodyInput: $('#bodyInput'),
+            searchDialog: $('#searchCategoryDialog')
         };
         $.extend(myPresentation.config, config);
         myPresentation.bind();
@@ -35,8 +36,8 @@ var myPresentation = {
     bind: function () {
         console.log("bind");
         $('#tabs').tabs();
-        $('#searchCategoryDialog').dialog();
-        $('#searchCategoryDialog').dialog('close');
+        $(myPresentation.config.searchDialog).dialog();
+        $(myPresentation.config.searchDialog).dialog('close');
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
@@ -55,7 +56,7 @@ var myPresentation = {
             $(list).sort(function (a, b) {
                 return a.name > b.name;
             }).each(function () {
-                myPresentation.config.categories.append($("<option></option>").attr("value",this.key).text(this.name));
+                myPresentation.config.categories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
             window.setTimeout(function () {
                 $(myPresentation.config.categories).change();
@@ -64,7 +65,7 @@ var myPresentation = {
             $(list).sort(function (a, b) {
                 return a.name > b.name;
             }).each(function () {
-                myPresentation.config.snippetCategories.append($("<option></option>").attr("value",this.key).text(this.name));
+                myPresentation.config.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
         });
     },
@@ -78,7 +79,7 @@ var myPresentation = {
         $.get("v1/snippets/category/" + category, function (data) {
             var list = JSON.parse(data);
             $(list).each(function () {
-                myPresentation.config.titles.append(new Option(this.title, this.key));
+                myPresentation.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
             })
         })
     },
@@ -123,10 +124,11 @@ var myPresentation = {
     },
 
     deleteSnippet: function () {
+        var selected = $("#titles option:selected");
         console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
-            + $("#titles option:selected").val());
+            + $(selected).val());
         $.ajax({
-            url: 'v1/snippets/' + $("#titles option:selected").val(),
+            url: 'v1/snippets/' + $(selected).val(),
             type: 'DELETE',
             success: function () {
                 console.log('success');
@@ -148,7 +150,7 @@ var myPresentation = {
     },
 
     openSearch: function () {
-      $('#searchCategoryDialog').dialog('open');
+        $(myPresentation.config.searchDialog).dialog('open');
     },
 
     logout: function () {
