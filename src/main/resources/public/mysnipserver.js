@@ -35,6 +35,7 @@ var myPresentation = {
     bind: function () {
         console.log("bind");
         $('#tabs').tabs();
+        $('#searchCategoryDialog').dialog();
         $(myPresentation.config.categories).change(myPresentation.loadTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
@@ -42,6 +43,7 @@ var myPresentation = {
         $('#deleteButton').click(myPresentation.deleteSnippet);
         $('#saveCategoryButton').click(myPresentation.saveCategory);
         $('#deleteCategoryButton').click(myPresentation.deleteCategory);
+        $('#searchButton').click(myPresentation.openSearch);
     },
 
     loadCategories: function () {
@@ -142,6 +144,10 @@ var myPresentation = {
                 myPresentation.loadCategories();
             }
         });
+    },
+
+    openSearch: function () {
+      $('#searchCategoryDialog').dialog('open');
     },
 
     logout: function () {
