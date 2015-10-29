@@ -18,6 +18,7 @@ var myPersona = {
 
     login: function (username) {
         console.log("Logging in " + username + " via persona.");
+        document.cookie="username=" + username;
         navigator.id.watch({
             loggedInUser: username,
             onlogin: myPersona.loginHandler,
@@ -43,5 +44,12 @@ var myPersona = {
     },
 
     logoutHandler: function () {
+        var username = document.cookie;
+        navigator.id.watch({
+            loggedInUser: username,
+            onlogin: myPersona.loginHandler,
+            onlogout: myPersona.logoutHandler
+        });
+        navigator.id.logout();
     }
 };
