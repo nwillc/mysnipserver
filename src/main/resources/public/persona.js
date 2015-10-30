@@ -18,7 +18,7 @@ var myPersona = {
 
     login: function (username) {
         console.log("Logging in " + username + " via persona.");
-        document.cookie="username=" + username;
+        Cookies.set("username", username);
         navigator.id.watch({
             loggedInUser: username,
             onlogin: myPersona.loginHandler,
@@ -33,7 +33,7 @@ var myPersona = {
 
     loginHandler: function (assertion) {
         console.log("Assertion: " + assertion);
-        $.post('v1/auth/' + document.cookie, JSON.stringify({
+        $.post('v1/auth/' + Cookies.get("username"), JSON.stringify({
             assertion: assertion
         }), function () {
             console.log('Passed.');
