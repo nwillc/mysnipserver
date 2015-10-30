@@ -29,6 +29,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	private final Class<T> tClass;
 	private final String collection;
 	private final Client client;
+	private int limit = 100;
 
 	public CollectionDao(Client client, Class<T> tClass) {
 		this(client, tClass.getSimpleName(), tClass);
@@ -52,6 +53,14 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		return tClass;
 	}
 
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
 	@Override
 	public Optional<T> findOne(final String key) {
 		KvObject<T> categoryKvObject =
@@ -69,6 +78,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	@Override
 	public Stream<T> findAll() {
 		return StreamSupport.stream(client.listCollection(collection)
+				.limit(limit)
 				.get(tClass)
 				.get().spliterator(), false)
 				.map(entryKvObject -> entryKvObject.getValue(tClass));
