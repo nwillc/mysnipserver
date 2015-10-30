@@ -33,7 +33,7 @@ var myPersona = {
 
     loginHandler: function (assertion) {
         console.log("Assertion: " + assertion);
-        $.post('v1/auth', JSON.stringify({
+        $.post('v1/auth/' + document.cookie, JSON.stringify({
             assertion: assertion
         }), function () {
             console.log('Passed.');
@@ -44,9 +44,8 @@ var myPersona = {
     },
 
     logoutHandler: function () {
-        var username = document.cookie;
         navigator.id.watch({
-            loggedInUser: username,
+            loggedInUser: document.cookie,
             onlogin: myPersona.loginHandler,
             onlogout: myPersona.logoutHandler
         });

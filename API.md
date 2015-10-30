@@ -3,6 +3,7 @@
 All paths are versioned with the version number (v#).
 
 ## GET
+- /v#/auth
 - /v#/auth/:username/:password
 - /v#/categories
 - /v#/categories/:key
@@ -13,7 +14,7 @@ All paths are versioned with the version number (v#).
 ## Post
 - /v#/categories
 - /v#/snippets
-- /v#/auth
+- /v#/auth/:username
 
 ## Delete
 - /v#/categories/:key

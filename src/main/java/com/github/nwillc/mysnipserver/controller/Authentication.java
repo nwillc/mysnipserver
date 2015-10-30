@@ -53,7 +53,7 @@ public class Authentication extends SparkController<User> {
 		noAuth("/persona.js");
         noAuth(versionedPath("auth"));
 		get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
-		post("auth", this::personaAssertion);
+		post("auth/" + USERNAME.getLabel(), this::personaAssertion);
 		delete("auth", this::logout);
 	}
 
@@ -97,6 +97,8 @@ public class Authentication extends SparkController<User> {
 			final PersonaAssertion assertion = getMapper().get().readValue(request.body(),
 					PersonaAssertion.class);
 			LOGGER.info("Checking personal assertion: " + assertion);
+			getDao().findOne(USERNAME.from(request))
+					.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
 			Map<String,String> params = new HashMap<>();
 			params.put("assertion", assertion.getAssertion());
 			params.put("audience", HttpUtils.appUrl(request.raw()));
