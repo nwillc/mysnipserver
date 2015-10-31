@@ -20,6 +20,6 @@ import com.github.nwillc.mysnipserver.entity.User;
 
 public class UserDao extends MemoryBackedDao<User> {
     public UserDao() {
-        save(new User("nick", "nick"));
+        save(new User("nick", "nwillc@gmail.com"));
     }
 }

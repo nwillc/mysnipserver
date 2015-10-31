@@ -28,6 +28,11 @@ var myPersona = {
     },
 
     logout: function () {
+        navigator.id.watch({
+            loggedInUser: Cookies.get("username"),
+            onlogin: myPersona.loginHandler,
+            onlogout: myPersona.logoutHandler
+        });
         navigator.id.logout();
     },
 

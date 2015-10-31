@@ -155,6 +155,7 @@ var myPresentation = {
 
     logout: function () {
         console.log("logout");
+        myPersona.logout();
         $.ajax({
             url: 'v1/auth',
             type: 'DELETE',
