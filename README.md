@@ -1,6 +1,6 @@
 # MySnipServer
 
-This is a simple snippets. It is a RESTful server based on:
+This is a simple snippets app. It is a RESTful server based on:
 
 - Java 8
 - Java Spark
