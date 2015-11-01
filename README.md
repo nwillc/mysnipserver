@@ -8,7 +8,7 @@ This is a simple snippets app. It is a RESTful server based on:
 - Persona
 - jQuery
 
-It gets deployed by Travis-ci to OpenShift.
+It gets deployed when tests pass by Travis-ci to OpenShift.
 
 You can read more on <a href="https://nwillc.wordpress.com/2015/10/30/from-dropbox-to-orchestrate/">my blog entry</a>.
 
