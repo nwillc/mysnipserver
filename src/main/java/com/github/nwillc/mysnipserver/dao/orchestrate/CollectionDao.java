@@ -71,16 +71,17 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Optional<T> findOne(final String key) {
-		KvObject<T> categoryKvObject =
-				client.kv(collection, key)
-						.get(tClass)
-						.get();
-
-		if (categoryKvObject == null) {
-			return Optional.empty();
-		}
-
-		return Optional.of(categoryKvObject.getValue(tClass));
+        return Optional.ofNullable(cache.get(key));
+//		KvObject<T> categoryKvObject =
+//				client.kv(collection, key)
+//						.get(tClass)
+//						.get();
+//
+//		if (categoryKvObject == null) {
+//			return Optional.empty();
+//		}
+//
+//		return Optional.of(categoryKvObject.getValue(tClass));
 	}
 
 	@Override
