@@ -18,12 +18,15 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
+import com.github.nwillc.simplecache.integration.SCacheLoader;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 
 import javax.cache.Cache;
 import javax.cache.Caching;
+import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
+import javax.cache.integration.CacheLoader;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -72,16 +75,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	@Override
 	public Optional<T> findOne(final String key) {
         return Optional.ofNullable(cache.get(key));
-//		KvObject<T> categoryKvObject =
-//				client.kv(collection, key)
-//						.get(tClass)
-//						.get();
-//
-//		if (categoryKvObject == null) {
-//			return Optional.empty();
-//		}
-//
-//		return Optional.of(categoryKvObject.getValue(tClass));
 	}
 
 	@Override
@@ -118,6 +111,14 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     private MutableConfiguration<String, T> getCacheConfig() {
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+        configuration.setReadThrough(true);
+        configuration.setCacheLoaderFactory(
+                (Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(k -> {
+                    KvObject<T> categoryKvObject = client.kv(collection, k)
+                            .get(tClass)
+                            .get();
+                    return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+                }));
         return configuration;
     }
 }
