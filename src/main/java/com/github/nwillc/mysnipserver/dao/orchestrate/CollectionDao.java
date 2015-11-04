@@ -21,6 +21,9 @@ import com.github.nwillc.mysnipserver.dao.Entity;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 
+import javax.cache.Cache;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -30,6 +33,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	private final String collection;
 	private final Client client;
 	private int limit = 100;
+    private final Cache<String,T> cache;
 
 	public CollectionDao(Client client, Class<T> tClass) {
 		this(client, tClass.getSimpleName(), tClass);
@@ -39,6 +43,8 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		this.collection = collection;
 		this.tClass = tClass;
 		this.client = client;
+        cache = Caching.getCachingProvider().getCacheManager().createCache(collection,getCacheConfig());
+        loadCache();
 	}
 
 	protected Client getClient() {
@@ -98,4 +104,21 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 				.get();
 	}
 
+    @SuppressWarnings("unchecked")
+    private void loadCache() {
+        MutableConfiguration<String,Entity> conf = cache.getConfiguration(MutableConfiguration.class);
+        conf.setWriteThrough(false);
+        StreamSupport.stream(client.listCollection(collection)
+                .limit(limit)
+                .get(tClass)
+                .get().spliterator(), false)
+                .map(entryKvObject -> entryKvObject.getValue(tClass))
+                .forEach(e -> cache.put(e.getKey(), e));
+        conf.setWriteThrough(true);
+    }
+
+    private MutableConfiguration<String, T> getCacheConfig() {
+        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+        return configuration;
+    }
 }
