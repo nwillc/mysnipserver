@@ -28,6 +28,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static java.util.stream.StreamSupport.stream;
+
 public class CollectionDao<T extends Entity> implements Dao<T> {
 	private final Class<T> tClass;
 	private final String collection;
@@ -83,11 +85,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> findAll() {
-		return StreamSupport.stream(client.listCollection(collection)
-				.limit(limit)
-				.get(tClass)
-				.get().spliterator(), false)
-				.map(entryKvObject -> entryKvObject.getValue(tClass));
+		return stream(cache.spliterator(),false).map(Cache.Entry::getValue);
 	}
 
 	@Override
@@ -108,7 +106,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     private void loadCache() {
         MutableConfiguration<String,Entity> conf = cache.getConfiguration(MutableConfiguration.class);
         conf.setWriteThrough(false);
-        StreamSupport.stream(client.listCollection(collection)
+        stream(client.listCollection(collection)
                 .limit(limit)
                 .get(tClass)
                 .get().spliterator(), false)
