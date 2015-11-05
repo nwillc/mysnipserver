@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
 import com.github.nwillc.simplecache.integration.SCacheLoader;
+import com.github.nwillc.simplecache.integration.SCacheWriter;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 
@@ -27,7 +28,10 @@ import javax.cache.Caching;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoader;
+import javax.cache.integration.CacheWriter;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -39,6 +43,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	private final Client client;
 	private int limit = 100;
     private final Cache<String,T> cache;
+	private boolean loaded = false;
 
 	public CollectionDao(Client client, Class<T> tClass) {
 		this(client, tClass.getSimpleName(), tClass);
@@ -49,7 +54,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		this.tClass = tClass;
 		this.client = client;
         cache = Caching.getCachingProvider().getCacheManager().createCache(collection,getCacheConfig());
-        loadCache();
 	}
 
 	protected Client getClient() {
@@ -79,21 +83,20 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> findAll() {
+		if (!loaded) {
+			loadCache();
+		}
 		return stream(cache.spliterator(),false).map(Cache.Entry::getValue);
 	}
 
 	@Override
 	public void save(final T entity) {
-		client.kv(collection, entity.getKey())
-				.put(entity)
-				.get();
+		cache.put(entity.getKey(), entity);
 	}
 
 	@Override
 	public void delete(final String key) {
-		client.kv(collection, key)
-				.delete(true)
-				.get();
+		cache.remove(key);
 	}
 
     @SuppressWarnings("unchecked")
@@ -106,19 +109,44 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
                 .get().spliterator(), false)
                 .map(entryKvObject -> entryKvObject.getValue(tClass))
                 .forEach(e -> cache.put(e.getKey(), e));
+		loaded = true;
         conf.setWriteThrough(true);
     }
 
     private MutableConfiguration<String, T> getCacheConfig() {
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
         configuration.setReadThrough(true);
-        configuration.setCacheLoaderFactory(
-                (Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(k -> {
-                    KvObject<T> categoryKvObject = client.kv(collection, k)
-                            .get(tClass)
-                            .get();
-                    return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
-                }));
+        configuration.setCacheLoaderFactory((Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(new Loader()));
+		configuration.setWriteThrough(true);
+		configuration.setCacheWriterFactory((Factory<CacheWriter<String,T>>)() -> new SCacheWriter<>(new Deleter(), e -> new Updater()));
         return configuration;
     }
+
+	private class Loader implements Function<String,T> {
+		@Override
+		public T apply(String k) {
+			KvObject<T> categoryKvObject = client.kv(collection, k)
+					.get(tClass)
+					.get();
+			return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+		}
+	}
+
+	private class Deleter implements Consumer<Object> {
+		@Override
+		public void accept(Object key) {
+			client.kv(collection, key.toString())
+					.delete(true)
+					.get();
+		}
+	}
+
+	private class Updater implements Consumer<Cache.Entry<String,T>> {
+		@Override
+		public void accept(Cache.Entry<String,T> entry) {
+			client.kv(collection, entry.getKey())
+					.put(entry.getValue())
+					.get();
+		}
+	}
 }
