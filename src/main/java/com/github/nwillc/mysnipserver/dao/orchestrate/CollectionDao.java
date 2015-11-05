@@ -42,7 +42,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	private final String collection;
 	private final Client client;
 	private int limit = 100;
-    private final Cache<String,T> cache;
+	private final Cache<String,T> cache;
 	private boolean loaded = false;
 
 	public CollectionDao(Client client, Class<T> tClass) {
@@ -53,7 +53,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		this.collection = collection;
 		this.tClass = tClass;
 		this.client = client;
-        cache = Caching.getCachingProvider().getCacheManager().createCache(collection,getCacheConfig());
+		cache = Caching.getCachingProvider().getCacheManager().createCache(collection,getCacheConfig());
 	}
 
 	protected Client getClient() {
@@ -78,7 +78,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Optional<T> findOne(final String key) {
-        return Optional.ofNullable(cache.get(key));
+		return Optional.ofNullable(cache.get(key));
 	}
 
 	@Override
@@ -99,28 +99,27 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		cache.remove(key);
 	}
 
-    @SuppressWarnings("unchecked")
-    private void loadCache() {
-        MutableConfiguration<String,Entity> conf = cache.getConfiguration(MutableConfiguration.class);
-        conf.setWriteThrough(false);
-        stream(client.listCollection(collection)
-                .limit(limit)
-                .get(tClass)
-                .get().spliterator(), false)
-                .map(entryKvObject -> entryKvObject.getValue(tClass))
-                .forEach(e -> cache.put(e.getKey(), e));
+	private void loadCache() {
+		MutableConfiguration conf = cache.getConfiguration(MutableConfiguration.class);
+		conf.setWriteThrough(false);
+		stream(client.listCollection(collection)
+				.limit(limit)
+				.get(tClass)
+				.get().spliterator(), false)
+				.map(entryKvObject -> entryKvObject.getValue(tClass))
+				.forEach(e -> cache.put(e.getKey(), e));
 		loaded = true;
-        conf.setWriteThrough(true);
-    }
+		conf.setWriteThrough(true);
+	}
 
-    private MutableConfiguration<String, T> getCacheConfig() {
-        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
-        configuration.setReadThrough(true);
-        configuration.setCacheLoaderFactory((Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(new Loader()));
+	private MutableConfiguration<String, T> getCacheConfig() {
+		MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+		configuration.setReadThrough(true);
+		configuration.setCacheLoaderFactory((Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(new Loader()));
 		configuration.setWriteThrough(true);
 		configuration.setCacheWriterFactory((Factory<CacheWriter<String,T>>)() -> new SCacheWriter<>(new Deleter(), e -> new Updater()));
-        return configuration;
-    }
+		return configuration;
+	}
 
 	private class Loader implements Function<String,T> {
 		@Override
