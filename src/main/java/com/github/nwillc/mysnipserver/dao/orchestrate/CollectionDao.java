@@ -27,9 +27,14 @@ import javax.cache.Cache;
 import javax.cache.Caching;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
+import javax.cache.expiry.ExpiryPolicy;
+import javax.cache.expiry.TouchedExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -118,6 +123,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		configuration.setCacheLoaderFactory((Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(new Loader()));
 		configuration.setWriteThrough(true);
 		configuration.setCacheWriterFactory((Factory<CacheWriter<String,T>>)() -> new SCacheWriter<>(new Deleter(), e -> new Updater()));
+		configuration.setExpiryPolicyFactory(() -> new TouchedExpiryPolicy(new Duration(TimeUnit.MINUTES,10)));
 		return configuration;
 	}
 
