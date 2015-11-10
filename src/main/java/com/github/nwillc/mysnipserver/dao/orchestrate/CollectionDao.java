@@ -18,8 +18,10 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
+import com.github.nwillc.simplecache.SCache;
 import com.github.nwillc.simplecache.integration.SCacheLoader;
 import com.github.nwillc.simplecache.integration.SCacheWriter;
+import com.github.nwillc.simplecache.managment.SCacheStatisticsMXBean;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 
@@ -34,15 +36,19 @@ import javax.cache.expiry.TouchedExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.StreamSupport.stream;
 
 public class CollectionDao<T extends Entity> implements Dao<T> {
+	private static final Logger LOGGER = Logger.getLogger(CollectionDao.class.getCanonicalName());
 	private final Class<T> tClass;
 	private final String collection;
 	private final Client client;
@@ -59,6 +65,17 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		this.tClass = tClass;
 		this.client = client;
 		cache = Caching.getCachingProvider().getCacheManager().createCache(collection,getCacheConfig());
+		SCache sCache = cache.unwrap(SCache.class);
+		SCacheStatisticsMXBean statistics = sCache.getStatistics();
+		new Timer(collection, true)
+				.schedule(new TimerTask() {
+							  @Override
+							  public void run() {
+								  LOGGER.info(collection + "-" + statistics.toString());
+							  }
+						  },
+						TimeUnit.SECONDS.toMillis(3),
+						TimeUnit.SECONDS.toMillis(30));
 	}
 
 	protected Client getClient() {
@@ -124,6 +141,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		configuration.setWriteThrough(true);
 		configuration.setCacheWriterFactory((Factory<CacheWriter<String,T>>)() -> new SCacheWriter<>(new Deleter(), e -> new Updater()));
 		configuration.setExpiryPolicyFactory(() -> new TouchedExpiryPolicy(new Duration(TimeUnit.MINUTES,10)));
+		configuration.setStatisticsEnabled(true);
 		return configuration;
 	}
 
