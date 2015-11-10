@@ -5,6 +5,7 @@ This is a simple snippets app. It is a RESTful server based on:
 - Java 8
 - Java Spark
 - Orchestrate
+- JSR 107 Caching   
 - Persona
 - jQuery
 
