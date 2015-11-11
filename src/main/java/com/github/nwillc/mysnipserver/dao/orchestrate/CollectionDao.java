@@ -34,12 +34,14 @@ import javax.cache.expiry.TouchedExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.StreamSupport.stream;
@@ -120,16 +122,13 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@SuppressWarnings("unchecked")
 	private void loadCache() {
-		MutableConfiguration conf = cache.getConfiguration(MutableConfiguration.class);
-		conf.setWriteThrough(false);
-		stream(client.listCollection(collection)
-				.limit(limit)
-				.get(tClass)
-				.get().spliterator(), false)
-				.map(entryKvObject -> entryKvObject.getValue(tClass))
-				.forEach(e -> cache.put(e.getKey(), e));
+        Set<String> keys = stream(client.listCollection(collection)
+                    .limit(limit)
+                    .withValues(false)
+                    .get(tClass)
+                    .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
+        cache.loadAll(keys, false, null);
 		loaded = true;
-		conf.setWriteThrough(true);
 	}
 
 	private MutableConfiguration<String, T> getCacheConfig() {
