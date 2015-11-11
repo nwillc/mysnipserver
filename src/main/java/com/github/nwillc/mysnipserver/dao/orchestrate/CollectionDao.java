@@ -29,9 +29,7 @@ import javax.cache.Cache;
 import javax.cache.Caching;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
-import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.expiry.TouchedExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
@@ -43,7 +41,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static java.util.stream.StreamSupport.stream;
 
@@ -121,6 +118,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		cache.remove(key);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadCache() {
 		MutableConfiguration conf = cache.getConfiguration(MutableConfiguration.class);
 		conf.setWriteThrough(false);

@@ -38,6 +38,10 @@ repositories {
     }
 }
 
+configurations {
+    compile.exclude group: 'org.slf4j', module: 'slf4j-simple'
+}
+
 dependencies {
     compile 'org.slf4j:slf4j-jdk14:1.7.13',
             'com.sparkjava:spark-core:2.3',
@@ -58,6 +62,12 @@ group = "com.github.nwillc"
 version = "0.1"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+}
 
 test {
     beforeTest { descriptor ->
