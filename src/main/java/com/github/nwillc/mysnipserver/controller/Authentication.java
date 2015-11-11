@@ -94,7 +94,6 @@ public class Authentication extends SparkController<User> {
 
 	private Boolean personaAssertion(Request request, Response response) {
 		try {
-			LOGGER.info("Recieved: " + request.body());
 			final PersonaAssertion assertion = getMapper().get().readValue(request.body(),
 					PersonaAssertion.class);
 			LOGGER.info("Checking " + USERNAME.from(request) + " persona assertion.");

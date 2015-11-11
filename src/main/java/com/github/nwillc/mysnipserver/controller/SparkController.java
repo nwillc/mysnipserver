@@ -25,13 +25,10 @@ import com.github.nwillc.mysnipserver.util.rest.Version;
 import spark.Route;
 import spark.Spark;
 
-import java.util.logging.Logger;
-
 /**
  * Isolate as much Spark specific code here as possible.
  */
 public abstract class SparkController<T extends Entity> implements Version {
-	private static final Logger LOGGER = Logger.getLogger(SparkController.class.getCanonicalName());
 	private final Dao<T> dao;
 	private final ThreadLocal<ObjectMapper> mapper;
 
@@ -62,9 +59,7 @@ public abstract class SparkController<T extends Entity> implements Version {
 
 	private String toJson(Object obj) {
 		try {
-			String val = mapper.get().writeValueAsString(obj);
-			LOGGER.info("Convert " + obj + " to " + val);
-			return val;
+			return mapper.get().writeValueAsString(obj);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("JSON", e);
 		}

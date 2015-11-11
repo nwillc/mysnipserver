@@ -25,6 +25,9 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static com.github.nwillc.mysnipserver.CommandLineInterface.CLI;
@@ -32,6 +35,17 @@ import static spark.Spark.ipAddress;
 import static spark.Spark.port;
 
 public class MySnipServer {
+	private static final String LOG_CONFIG = "/logging.properties";
+	static {
+		try (InputStream in = MySnipServer.class.getResourceAsStream(LOG_CONFIG)) {
+			if (in == null) {
+				System.err.println("Could not open " + LOG_CONFIG);
+			}
+			LogManager.getLogManager().readConfiguration(in);
+		} catch (IOException e) {
+			System.err.println("Failed reading " + LOG_CONFIG);
+		}
+	}
     private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
 
 	public static void main(String[] args) {
