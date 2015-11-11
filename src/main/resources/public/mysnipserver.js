@@ -54,7 +54,7 @@ var myPresentation = {
             var list = JSON.parse(data);
             $(myPresentation.config.categories).empty();
             $(list).sort(function (a, b) {
-                return a.name > b.name;
+                return a.name.toLowerCase() > b.name.toLowerCase();
             }).each(function () {
                 myPresentation.config.categories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
@@ -63,7 +63,7 @@ var myPresentation = {
             }, 1);
             $(myPresentation.config.snippetCategories).empty();
             $(list).sort(function (a, b) {
-                return a.name > b.name;
+                return a.name.toLowerCase() > b.name.toLowerCase();
             }).each(function () {
                 myPresentation.config.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
@@ -78,7 +78,9 @@ var myPresentation = {
         $(myPresentation.config.body).val('');
         $.get("v1/snippets/category/" + category, function (data) {
             var list = JSON.parse(data);
-            $(list).each(function () {
+            $(list).sort(function (a,b) {
+                return a.title.toLowerCase() > b.title.toLowerCase();
+            }).each(function () {
                 myPresentation.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
             })
         })
