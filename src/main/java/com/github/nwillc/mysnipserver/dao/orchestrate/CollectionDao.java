@@ -162,6 +162,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	private class Updater implements Consumer<Cache.Entry<String,T>> {
 		@Override
 		public void accept(Cache.Entry<String,T> entry) {
+			LOGGER.info("Writing: " + entry);
 			client.kv(collection, entry.getKey())
 					.put(entry.getValue())
 					.get();
