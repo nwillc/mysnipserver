@@ -19,15 +19,15 @@ package com.github.nwillc.mysnipserver.util.rest;
 import spark.Request;
 
 public enum Params {
-	KEY,
-	USERNAME,
-	PASSWORD;
+    KEY,
+    USERNAME,
+    PASSWORD;
 
-	public String getLabel() {
-		return ":" + name().toLowerCase();
-	}
+    public String getLabel() {
+        return ":" + name().toLowerCase();
+    }
 
-	public String from(Request request) {
-		return request.params(getLabel());
-	}
+    public String from(Request request) {
+        return request.params(getLabel());
+    }
 }

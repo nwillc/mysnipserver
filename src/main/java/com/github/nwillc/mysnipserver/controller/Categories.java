@@ -30,35 +30,35 @@ import java.util.stream.Collectors;
 import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Categories extends SparkController<Category> {
-	private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
+    private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
 
     @Inject
-	public Categories(Dao<Category> dao) {
-		super(dao);
-		get("categories", this::findAll);
-		post("categories", this::save);
-		delete("categories/" + KEY.getLabel(), this::delete);
-	}
+    public Categories(Dao<Category> dao) {
+        super(dao);
+        get("categories", this::findAll);
+        post("categories", this::save);
+        delete("categories/" + KEY.getLabel(), this::delete);
+    }
 
-	public List<Category> findAll(Request request, Response response) {
-		return getDao().findAll().collect(Collectors.toList());
-	}
+    public List<Category> findAll(Request request, Response response) {
+        return getDao().findAll().collect(Collectors.toList());
+    }
 
-	public Boolean delete(Request request, Response response) {
-		LOGGER.info("Delete category: " + KEY.from(request));
-		getDao().delete(KEY.from(request));
-		return Boolean.TRUE;
-	}
+    public Boolean delete(Request request, Response response) {
+        LOGGER.info("Delete category: " + KEY.from(request));
+        getDao().delete(KEY.from(request));
+        return Boolean.TRUE;
+    }
 
-	public Boolean save(Request request, Response response) {
-		try {
-			final Category category = getMapper().get().readValue(request.body(), Category.class);
-			LOGGER.info("Category: " + category);
-			getDao().save(category);
-			return Boolean.TRUE;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return Boolean.FALSE;
-	}
+    public Boolean save(Request request, Response response) {
+        try {
+            final Category category = getMapper().get().readValue(request.body(), Category.class);
+            LOGGER.info("Category: " + category);
+            getDao().save(category);
+            return Boolean.TRUE;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Boolean.FALSE;
+    }
 }

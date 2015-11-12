@@ -31,7 +31,7 @@ public class HttpException extends RuntimeException {
         this.code = code;
     }
 
-    public HttpException(HttpStatusCode code, String msg, Throwable cause){
+    public HttpException(HttpStatusCode code, String msg, Throwable cause) {
         super(msg, cause);
         this.code = code;
     }
@@ -44,7 +44,7 @@ public class HttpException extends RuntimeException {
     public String toString() {
         return "HttpException{" +
                 "code=" + code +
-                ", message= '" + getMessage() +"'" +
+                ", message= '" + getMessage() + "'" +
                 '}';
     }
 }

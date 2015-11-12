@@ -46,26 +46,26 @@ public class MySnipServerApplication implements SparkApplication {
         this.userDao = userDao;
     }
 
-	@Override
-	public void init() {
-		LOGGER.info("Starting");
-		// Static files
-		staticFileLocation("/public");
+    @Override
+    public void init() {
+        LOGGER.info("Starting");
+        // Static files
+        staticFileLocation("/public");
 
         // Create controllers
         new Categories(categoriesDao);
         new Snippets(snippetDao);
         new Authentication(userDao);
 
-		// Specific routes
-		get("/ping", (request, response) -> "PONG");
+        // Specific routes
+        get("/ping", (request, response) -> "PONG");
 
-		exception(HttpException.class, (e, request, response) -> {
-			response.status(((HttpException) e).getCode().code);
-			response.body(((HttpException) e).getCode().toString());
-			LOGGER.info("Returning: " + e.toString());
-		});
+        exception(HttpException.class, (e, request, response) -> {
+            response.status(((HttpException) e).getCode().code);
+            response.body(((HttpException) e).getCode().toString());
+            LOGGER.info("Returning: " + e.toString());
+        });
 
-		LOGGER.info("Completed");
-	}
+        LOGGER.info("Completed");
+    }
 }

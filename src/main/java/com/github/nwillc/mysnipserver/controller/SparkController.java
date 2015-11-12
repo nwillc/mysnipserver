@@ -29,39 +29,39 @@ import spark.Spark;
  * Isolate as much Spark specific code here as possible.
  */
 public abstract class SparkController<T extends Entity> implements Version {
-	private final Dao<T> dao;
-	private final ThreadLocal<ObjectMapper> mapper;
+    private final Dao<T> dao;
+    private final ThreadLocal<ObjectMapper> mapper;
 
-	public SparkController(Dao<T> dao) {
-		this.dao = dao;
+    public SparkController(Dao<T> dao) {
+        this.dao = dao;
         mapper = ThreadLocal.withInitial(() -> new ObjectMapper().registerModule(new Jdk8Module()));
-	}
+    }
 
-	protected Dao<T> getDao() {
-		return dao;
-	}
+    protected Dao<T> getDao() {
+        return dao;
+    }
 
-	public ThreadLocal<ObjectMapper> getMapper() {
-		return mapper;
-	}
+    public ThreadLocal<ObjectMapper> getMapper() {
+        return mapper;
+    }
 
-	protected void get(String path, Route route) {
-		Spark.get(versionedPath(path), route, this::toJson);
-	}
+    protected void get(String path, Route route) {
+        Spark.get(versionedPath(path), route, this::toJson);
+    }
 
-	protected void post(String path, Route route) {
-		Spark.post(versionedPath(path), route, this::toJson);
-	}
+    protected void post(String path, Route route) {
+        Spark.post(versionedPath(path), route, this::toJson);
+    }
 
-	protected void delete(String path, Route route) {
-		Spark.delete(versionedPath(path), route, this::toJson);
-	}
+    protected void delete(String path, Route route) {
+        Spark.delete(versionedPath(path), route, this::toJson);
+    }
 
-	private String toJson(Object obj) {
-		try {
-			return mapper.get().writeValueAsString(obj);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException("JSON", e);
-		}
-	}
+    private String toJson(Object obj) {
+        try {
+            return mapper.get().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON", e);
+        }
+    }
 }

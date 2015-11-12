@@ -78,7 +78,7 @@ var myPresentation = {
         $(myPresentation.config.body).val('');
         $.get("v1/snippets/category/" + category, function (data) {
             var list = JSON.parse(data);
-            $(list).sort(function (a,b) {
+            $(list).sort(function (a, b) {
                 return a.title.toLowerCase() > b.title.toLowerCase();
             }).each(function () {
                 myPresentation.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
@@ -126,7 +126,7 @@ var myPresentation = {
     },
 
     deleteSnippet: function () {
-        var selected = $("#titles option:selected");
+        var selected = $(titles).find("option:selected");
         console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
             + $(selected).val());
         $.ajax({

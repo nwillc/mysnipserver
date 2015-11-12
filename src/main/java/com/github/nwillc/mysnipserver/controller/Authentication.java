@@ -16,13 +16,13 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.mysnipserver.util.http.HttpUtils;
 import com.github.nwillc.mysnipserver.controller.persona.PersonaAssertion;
+import com.github.nwillc.mysnipserver.controller.persona.Verification;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
+import com.github.nwillc.mysnipserver.util.http.HttpUtils;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
-import com.github.nwillc.mysnipserver.controller.persona.Verification;
 import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
@@ -39,85 +39,85 @@ import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
 import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
 
 public class Authentication extends SparkController<User> {
-	private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
-	private static final String IS_LOGGED_IN = "loggedIn.true";
-	private static final String LOGIN_HTML = "/login.html";
-	private final Set<String> noAuth = new HashSet<>();
+    private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
+    private static final String IS_LOGGED_IN = "loggedIn.true";
+    private static final String LOGIN_HTML = "/login.html";
+    private final Set<String> noAuth = new HashSet<>();
 
     @Inject
-	public Authentication(Dao<User> dao) {
-		super(dao);
-		Spark.before(this::check);
-		noAuth(LOGIN_HTML);
-		noAuth("/login.js");
-		noAuth("/persona.js");
-		noAuth("/cookies.js");
+    public Authentication(Dao<User> dao) {
+        super(dao);
+        Spark.before(this::check);
+        noAuth(LOGIN_HTML);
+        noAuth("/login.js");
+        noAuth("/persona.js");
+        noAuth("/cookies.js");
         noAuth(versionedPath("auth"));
-		get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
-		post("auth/" + USERNAME.getLabel(), this::personaAssertion);
-		delete("auth", this::logout);
-	}
+        get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
+        post("auth/" + USERNAME.getLabel(), this::personaAssertion);
+        delete("auth", this::logout);
+    }
 
-	private void check(Request request, Response response) {
-		Session session = request.session(true);
+    private void check(Request request, Response response) {
+        Session session = request.session(true);
 
-		if (noAuth.stream().anyMatch(path -> request.pathInfo().startsWith(path))) {
-			LOGGER.info("Path " + request.pathInfo() + " is white listed");
-		} else if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
-			// not white listed, not logged in, so redirect to login
-			LOGGER.warning("Access violation: " + request.pathInfo());
-			response.redirect(LOGIN_HTML);
+        if (noAuth.stream().anyMatch(path -> request.pathInfo().startsWith(path))) {
+            LOGGER.info("Path " + request.pathInfo() + " is white listed");
+        } else if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
+            // not white listed, not logged in, so redirect to login
+            LOGGER.warning("Access violation: " + request.pathInfo());
+            response.redirect(LOGIN_HTML);
             throw new HttpException(HttpStatusCode.UNAUTHERIZED);
-		}
-	}
+        }
+    }
 
-	private Boolean logout(Request request, Response response) {
-		request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
-		return Boolean.TRUE;
-	}
+    private Boolean logout(Request request, Response response) {
+        request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
+        return Boolean.TRUE;
+    }
 
-	private Boolean login(Request request, Response response) {
-		LOGGER.info("Login attempt: " + USERNAME.from(request));
+    private Boolean login(Request request, Response response) {
+        LOGGER.info("Login attempt: " + USERNAME.from(request));
 
-		final User user = getDao().findOne(USERNAME.from(request))
-				.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
+        final User user = getDao().findOne(USERNAME.from(request))
+                .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
 
-		LOGGER.info("Found: " + user);
-		if (PASSWORD.from(request).equals(user.getPassword())) {
-			Session session = request.session(true);
-			session.attribute(IS_LOGGED_IN, Boolean.TRUE);
-		} else {
-			throw new HttpException(HttpStatusCode.UNAUTHERIZED);
-		}
-		return Boolean.TRUE;
-	}
+        LOGGER.info("Found: " + user);
+        if (PASSWORD.from(request).equals(user.getPassword())) {
+            Session session = request.session(true);
+            session.attribute(IS_LOGGED_IN, Boolean.TRUE);
+        } else {
+            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
+        }
+        return Boolean.TRUE;
+    }
 
-	private Boolean personaAssertion(Request request, Response response) {
-		try {
-			final PersonaAssertion assertion = getMapper().get().readValue(request.body(),
-					PersonaAssertion.class);
-			LOGGER.info("Checking " + USERNAME.from(request) + " persona assertion.");
-			getDao().findOne(USERNAME.from(request))
-					.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
-			Map<String,String> params = new HashMap<>();
-			params.put("assertion", assertion.getAssertion());
-			params.put("audience", HttpUtils.appUrl(request.raw()));
-			String answer = HttpUtils.httpPost(PersonaAssertion.VERIFIER, params);
-			Verification verification = getMapper().get().readValue(answer, Verification.class);
-			LOGGER.info("Answer: " + verification);
-			if ("okay".equals(verification.getStatus())) {
-				Session session = request.session(true);
-				session.attribute(IS_LOGGED_IN, Boolean.TRUE);
-			}
-			return Boolean.TRUE;
-		} catch (Exception e) {
-			throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR,
-					"Failed checking persona assertion: " + e.getMessage(), e);
-		}
-	}
+    private Boolean personaAssertion(Request request, Response response) {
+        try {
+            final PersonaAssertion assertion = getMapper().get().readValue(request.body(),
+                    PersonaAssertion.class);
+            LOGGER.info("Checking " + USERNAME.from(request) + " persona assertion.");
+            getDao().findOne(USERNAME.from(request))
+                    .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
+            Map<String, String> params = new HashMap<>();
+            params.put("assertion", assertion.getAssertion());
+            params.put("audience", HttpUtils.appUrl(request.raw()));
+            String answer = HttpUtils.httpPost(PersonaAssertion.VERIFIER, params);
+            Verification verification = getMapper().get().readValue(answer, Verification.class);
+            LOGGER.info("Answer: " + verification);
+            if ("okay".equals(verification.getStatus())) {
+                Session session = request.session(true);
+                session.attribute(IS_LOGGED_IN, Boolean.TRUE);
+            }
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR,
+                    "Failed checking persona assertion: " + e.getMessage(), e);
+        }
+    }
 
-	private void noAuth(String path) {
-		noAuth.add(path);
-	}
+    private void noAuth(String path) {
+        noAuth.add(path);
+    }
 
 }

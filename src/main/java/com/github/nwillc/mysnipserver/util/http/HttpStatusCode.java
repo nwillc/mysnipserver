@@ -25,14 +25,14 @@ public enum HttpStatusCode {
     NOT_FOUND(HTTP_NOT_FOUND),
     INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR);
 
-	public final int code;
+    public final int code;
 
-	HttpStatusCode(int code) {
-		this.code = code;
-	}
+    HttpStatusCode(int code) {
+        this.code = code;
+    }
 
-	@Override
-	public String toString() {
-		return name() + " (" + code + ')';
-	}
+    @Override
+    public String toString() {
+        return name() + " (" + code + ')';
+    }
 }

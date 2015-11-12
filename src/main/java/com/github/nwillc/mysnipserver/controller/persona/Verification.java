@@ -17,63 +17,63 @@
 package com.github.nwillc.mysnipserver.controller.persona;
 
 public class Verification {
-	private String audience;
-	private Long expires;
-	private String issuer;
-	private String email;
-	private String status;
+    private String audience;
+    private Long expires;
+    private String issuer;
+    private String email;
+    private String status;
 
-	public Verification() {
-	}
+    public Verification() {
+    }
 
-	public String getAudience() {
-		return audience;
-	}
+    public String getAudience() {
+        return audience;
+    }
 
-	public void setAudience(String audience) {
-		this.audience = audience;
-	}
+    public void setAudience(String audience) {
+        this.audience = audience;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public Long getExpires() {
-		return expires;
-	}
+    public Long getExpires() {
+        return expires;
+    }
 
-	public void setExpires(Long expires) {
-		this.expires = expires;
-	}
+    public void setExpires(Long expires) {
+        this.expires = expires;
+    }
 
-	public String getIssuer() {
-		return issuer;
-	}
+    public String getIssuer() {
+        return issuer;
+    }
 
-	public void setIssuer(String issuer) {
-		this.issuer = issuer;
-	}
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	@Override
-	public String toString() {
-		return "Verification{" +
-				"audience='" + audience + '\'' +
-				", expires=" + expires +
-				", issuer='" + issuer + '\'' +
-				", email='" + email + '\'' +
-				", status='" + status + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Verification{" +
+                "audience='" + audience + '\'' +
+                ", expires=" + expires +
+                ", issuer='" + issuer + '\'' +
+                ", email='" + email + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

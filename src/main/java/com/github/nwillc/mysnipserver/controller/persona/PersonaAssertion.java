@@ -18,16 +18,16 @@ package com.github.nwillc.mysnipserver.controller.persona;
 
 public class PersonaAssertion {
     public static final String VERIFIER = "https://verifier.login.persona.org/verify";
-	private String assertion;
+    private String assertion;
 
-	public PersonaAssertion() {
-	}
+    public PersonaAssertion() {
+    }
 
-	public String getAssertion() {
-		return assertion;
-	}
+    public String getAssertion() {
+        return assertion;
+    }
 
-	public void setAssertion(String assertion) {
-		this.assertion = assertion;
-	}
+    public void setAssertion(String assertion) {
+        this.assertion = assertion;
+    }
 }

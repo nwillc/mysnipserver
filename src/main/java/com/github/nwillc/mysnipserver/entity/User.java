@@ -39,7 +39,7 @@ public class User extends Entity {
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", password='" + (password == null? "" : "*******") + '\'' +
+                ", password='" + (password == null ? "" : "*******") + '\'' +
                 '}';
     }
 

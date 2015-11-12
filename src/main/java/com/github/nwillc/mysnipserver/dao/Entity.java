@@ -19,21 +19,21 @@ package com.github.nwillc.mysnipserver.dao;
 import java.util.UUID;
 
 public abstract class Entity {
-	private String key;
+    private String key;
 
-	public Entity() {
-		this(UUID.randomUUID().toString());
-	}
+    public Entity() {
+        this(UUID.randomUUID().toString());
+    }
 
-	public Entity(String key) {
-		this.key = key;
-	}
+    public Entity(String key) {
+        this.key = key;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

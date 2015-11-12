@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 
 public final class HttpUtils {
 
-	private HttpUtils() {
-	}
+    private HttpUtils() {
+    }
 
     static public String appUrl(HttpServletRequest request) {
         final String url = request.getRequestURL().toString();
@@ -42,30 +42,30 @@ public final class HttpUtils {
         return url.substring(0, url.length() - uri.length());
     }
 
-	static public String httpPost(String url, Map<String, String> params) {
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(url);
+    static public String httpPost(String url, Map<String, String> params) {
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(url);
 
-		try {
-			if (params != null) {
-				post.setEntity(new UrlEncodedFormEntity(
-						params.entrySet().stream()
-								.map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
-								.collect(Collectors.toList())));
-			}
+        try {
+            if (params != null) {
+                post.setEntity(new UrlEncodedFormEntity(
+                        params.entrySet().stream()
+                                .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
+                                .collect(Collectors.toList())));
+            }
 
-			HttpResponse response = client.execute(post);
-			BufferedReader rd = new BufferedReader(
-					new InputStreamReader(response.getEntity().getContent()));
+            HttpResponse response = client.execute(post);
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
 
-			StringBuilder result = new StringBuilder();
-			String line = "";
-			while ((line = rd.readLine()) != null) {
-				result.append(line);
-			}
-			return result.toString();
-		} catch (Exception e) {
-			throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "failed processing " + url, e);
-		}
-	}
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            return result.toString();
+        } catch (Exception e) {
+            throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "failed processing " + url, e);
+        }
+    }
 }

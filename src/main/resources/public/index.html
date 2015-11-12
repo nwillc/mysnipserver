@@ -9,16 +9,22 @@
     <script src="cookies.js"></script>
     <script src="persona.js"></script>
     <script src="mysnipserver.js"></script>
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" />
+    <link rel="stylesheet"
+          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css"/>
     <style>
-        label { display: block; }
+        label {
+            display: block;
+        }
+
         select {
             width: 200px;
         }
     </style>
 </head>
 <body>
-<div align="right"><button id="logoutButton">Logout</button></div>
+<div align="right">
+    <button id="logoutButton">Logout</button>
+</div>
 <div id="tabs">
     <ul>
         <li><a href="#browseTab">Browse</a></li>
@@ -42,7 +48,7 @@
         <label for="title">Title:</label>
         <input size="80" type="text" id="title">
         <label for="bodyInput">Snippet:</label>
-        <textarea id="bodyInput"  rows="10" cols="80"></textarea>
+        <textarea id="bodyInput" rows="10" cols="80"></textarea>
         <br>
         <button id="saveSnippetButton">Save</button>
     </div>

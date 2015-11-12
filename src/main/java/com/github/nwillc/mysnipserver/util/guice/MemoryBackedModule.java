@@ -32,12 +32,16 @@ import java.util.logging.Logger;
 public class MemoryBackedModule extends AbstractModule {
     private static final Logger LOGGER = Logger.getLogger(MemoryBackedModule.class.getCanonicalName());
 
-	@Override
-	protected void configure() {
+    @Override
+    protected void configure() {
         LOGGER.info("Configuring Memory Backed module.");
-        bind(new TypeLiteral<Dao<Category>>(){}).toInstance(new CategoryDao());
-        bind(new TypeLiteral<Dao<Snippet>>(){}).toInstance(new SnippetDao());
-		bind(new TypeLiteral<Dao<User>>(){}).toInstance(new UserDao());
-        bind(new TypeLiteral<MySnipServerApplication>(){}).toInstance(new MySnipServerApplication(new CategoryDao(), new SnippetDao(), new UserDao()));
-	}
+        bind(new TypeLiteral<Dao<Category>>() {
+        }).toInstance(new CategoryDao());
+        bind(new TypeLiteral<Dao<Snippet>>() {
+        }).toInstance(new SnippetDao());
+        bind(new TypeLiteral<Dao<User>>() {
+        }).toInstance(new UserDao());
+        bind(new TypeLiteral<MySnipServerApplication>() {
+        }).toInstance(new MySnipServerApplication(new CategoryDao(), new SnippetDao(), new UserDao()));
+    }
 }
