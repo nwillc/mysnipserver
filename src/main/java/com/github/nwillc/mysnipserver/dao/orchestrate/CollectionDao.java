@@ -33,6 +33,7 @@ import javax.cache.expiry.Duration;
 import javax.cache.expiry.TouchedExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
+import javax.cache.integration.CompletionListenerFuture;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Timer;
@@ -53,7 +54,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	private final Client client;
 	private int limit = 100;
 	private final Cache<String,T> cache;
-	private boolean loaded = false;
 
 	public CollectionDao(Client client, Class<T> tClass) {
 		this(client, tClass.getSimpleName(), tClass);
@@ -104,8 +104,17 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> findAll() {
-		if (!loaded) {
-			loadCache();
+		Set<String> keys = stream(client.listCollection(collection)
+				.limit(limit)
+				.withValues(false)
+				.get(tClass)
+				.get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
+		CompletionListenerFuture done = new CompletionListenerFuture();
+		cache.loadAll(keys, false, done);
+		try {
+			done.get(10,TimeUnit.SECONDS);
+		} catch (Exception e) {
+			LOGGER.warning("Failed priming cache: " + e.getMessage());
 		}
 		return stream(cache.spliterator(),false).map(Cache.Entry::getValue);
 	}
@@ -118,17 +127,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	@Override
 	public void delete(final String key) {
 		cache.remove(key);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void loadCache() {
-        Set<String> keys = stream(client.listCollection(collection)
-                    .limit(limit)
-                    .withValues(false)
-                    .get(tClass)
-                    .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
-        cache.loadAll(keys, false, null);
-		loaded = true;
 	}
 
 	private MutableConfiguration<String, T> getCacheConfig() {
