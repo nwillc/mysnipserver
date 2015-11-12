@@ -38,8 +38,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -131,42 +129,39 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		loaded = true;
 	}
 
-	private MutableConfiguration<String, T> getCacheConfig() {
-		MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
-		configuration.setReadThrough(true);
-		configuration.setCacheLoaderFactory((Factory<CacheLoader<String,T>>)() -> new SCacheLoader<>(new Loader()));
-		configuration.setWriteThrough(true);
-		configuration.setCacheWriterFactory((Factory<CacheWriter<String,T>>)() -> new SCacheWriter<>(new Deleter(), e -> new Updater()));
-		configuration.setExpiryPolicyFactory(() -> new TouchedExpiryPolicy(new Duration(TimeUnit.MINUTES,10)));
-		configuration.setStatisticsEnabled(true);
-		return configuration;
-	}
+    private void deleteThrough(Object key) {
+        client.kv(collection, key.toString())
+                .delete(true)
+                .get();
+    }
 
-	private class Loader implements Function<String,T> {
-		@Override
-		public T apply(String k) {
-			KvObject<T> categoryKvObject = client.kv(collection, k)
+    private void writeThrough(Cache.Entry entry) {
+        client.kv(collection, entry.getKey().toString())
+                .put(entry.getValue())
+                .get();
+    }
+
+	private T readThrough(String key) {
+			KvObject<T> categoryKvObject = client.kv(collection, key)
 					.get(tClass)
 					.get();
 			return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
-		}
 	}
 
-	private class Deleter implements Consumer<Object> {
-		@Override
-		public void accept(Object key) {
-			client.kv(collection, key.toString())
-					.delete(true)
-					.get();
-		}
-	}
+    private MutableConfiguration<String, T> getCacheConfig() {
+        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
 
-	private class Updater implements Consumer<Cache.Entry<String,T>> {
-		@Override
-		public void accept(Cache.Entry<String,T> entry) {
-			client.kv(collection, entry.getKey())
-					.put(entry.getValue())
-					.get();
-		}
-	}
+        configuration.setReadThrough(true);
+        configuration.setCacheLoaderFactory((Factory<CacheLoader<String,T>>)() ->
+                new SCacheLoader<>(this::readThrough));
+
+
+        configuration.setWriteThrough(true);
+        configuration.setCacheWriterFactory((Factory<CacheWriter<String, T>>) () ->
+                new SCacheWriter<>(this::deleteThrough,this::writeThrough));
+
+        configuration.setExpiryPolicyFactory(() -> new TouchedExpiryPolicy(new Duration(TimeUnit.MINUTES,10)));
+        configuration.setStatisticsEnabled(true);
+        return configuration;
+    }
 }
