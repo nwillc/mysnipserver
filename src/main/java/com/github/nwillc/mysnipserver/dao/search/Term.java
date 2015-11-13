@@ -14,21 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao;
+package com.github.nwillc.mysnipserver.dao.search;
 
-import com.github.nwillc.mysnipserver.dao.search.Phrase;
+public class Term implements Phrase {
+    private final String term;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+    public Term(String term) {
+        this.term = term;
+    }
 
-public interface Dao<T extends Entity> {
-    Optional<T> findOne(final String key);
-
-    Stream<T> findAll();
-
-    Stream<T> find(Phrase phrase);
-
-    void save(final T entity);
-
-    void delete(final String key);
+    @Override
+    public String toString() {
+        return '"' + term +'"';
+    }
 }

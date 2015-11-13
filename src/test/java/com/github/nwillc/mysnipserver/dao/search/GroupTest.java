@@ -14,21 +14,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao;
+package com.github.nwillc.mysnipserver.dao.search;
 
-import com.github.nwillc.mysnipserver.dao.search.Phrase;
+import org.junit.Test;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public interface Dao<T extends Entity> {
-    Optional<T> findOne(final String key);
+public class GroupTest {
 
-    Stream<T> findAll();
+    @Test
+    public void testToString() throws Exception {
+        Group group = new Group(new Term("foo"));
 
-    Stream<T> find(Phrase phrase);
-
-    void save(final T entity);
-
-    void delete(final String key);
+        assertThat(group.toString()).isEqualTo("(\"foo\")");
+    }
 }

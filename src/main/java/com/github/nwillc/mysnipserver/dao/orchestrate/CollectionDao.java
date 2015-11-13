@@ -18,6 +18,7 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
+import com.github.nwillc.mysnipserver.dao.search.Phrase;
 import com.github.nwillc.simplecache.SCache;
 import com.github.nwillc.simplecache.integration.SCacheLoader;
 import com.github.nwillc.simplecache.integration.SCacheWriter;
@@ -96,6 +97,11 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
             LOGGER.warning("Failed priming cache: " + e.getMessage());
         }
         return stream(cache.spliterator(), false).map(Cache.Entry::getValue);
+    }
+
+    @Override
+    public Stream<T> find(Phrase phrase) {
+        return null;
     }
 
     @Override
