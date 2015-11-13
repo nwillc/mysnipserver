@@ -52,6 +52,7 @@ public class Authentication extends SparkController<User> {
         noAuth("/login.js");
         noAuth("/persona.js");
         noAuth("/cookies.js");
+        noAuth("/persona.png");
         noAuth(versionedPath("auth"));
         get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
         post("auth/" + USERNAME.getLabel(), this::personaAssertion);

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title>Snippets</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://login.persona.org/include.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//login.persona.org/include.js"></script>
     <script src="cookies.js"></script>
     <script src="persona.js"></script>
     <script src="login.js"></script>
@@ -21,6 +21,9 @@
             top: 50%;
             left: 50%;
         }
+        button {
+            padding-top:4px;
+        }
     </style>
 </head>
 <BODY>
@@ -35,7 +38,7 @@
     </tr>
     <tr>
         <td colspan="2" align="center">
-            <button id="personaButton">Login With Persona</button>
+            <button id="personaButton" ><img height="16" src="persona.png" width="16" /> Login With Persona</button>
         </td>
     </tr>
 </table>
