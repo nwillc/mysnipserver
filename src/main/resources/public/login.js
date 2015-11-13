@@ -19,7 +19,8 @@ var myLogin = {
         console.log("init");
         myLogin.config = {
             username: $('#username'),
-            password: $('#password')
+            password: $('#password'),
+            personaButton: $('#personaButton')
         };
         $.extend(myLogin.config, config);
         myLogin.bind();
@@ -27,9 +28,15 @@ var myLogin = {
 
     bind: function () {
         console.log("bind");
+        $(myLogin.config.username).bind('keyup', myLogin.enablePersona)
         $(myLogin.config.password).bind('keyup', myLogin.login);
         $(myLogin.config.username).focus();
-        $('#personaButton').click(myLogin.personaLogin);
+        $(myLogin.config.personaButton).click(myLogin.personaLogin);
+        myLogin.enablePersona();
+    },
+
+    enablePersona: function () {
+        $(myLogin.config.personaButton).prop('disabled', $(myLogin.config.username).val().length === 0);
     },
 
     personaLogin: function () {
