@@ -17,13 +17,9 @@
 package com.github.nwillc.mysnipserver.util.guice;
 
 import com.github.nwillc.mysnipserver.MySnipServerApplication;
-import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
 import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
 import com.github.nwillc.mysnipserver.dao.memory.UserDao;
-import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.entity.User;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
@@ -35,13 +31,7 @@ public class MemoryBackedModule extends AbstractModule {
     @Override
     protected void configure() {
         LOGGER.info("Configuring Memory Backed module.");
-        bind(new TypeLiteral<Dao<Category>>() {
-        }).toInstance(new CategoryDao());
-        bind(new TypeLiteral<Dao<Snippet>>() {
-        }).toInstance(new SnippetDao());
-        bind(new TypeLiteral<Dao<User>>() {
-        }).toInstance(new UserDao());
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        }).toInstance(new MySnipServerApplication(new CategoryDao(), new SnippetDao(), new UserDao()));
+        CategoryDao categoryDao = new CategoryDao();
+        bind(new TypeLiteral<MySnipServerApplication>() {}).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));
     }
 }

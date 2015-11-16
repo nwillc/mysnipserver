@@ -62,9 +62,11 @@ public class Authentication extends SparkController<User> {
         Session session = request.session(true);
 
         if (noAuth.stream().anyMatch(path -> request.pathInfo().startsWith(path))) {
-            LOGGER.info("Path " + request.pathInfo() + " is white listed");
-        } else if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
-            // not white listed, not logged in, so redirect to login
+            return;
+        }
+
+        if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
+            // auth required and not logged in, so redirect to login
             LOGGER.warning("Access violation: " + request.pathInfo());
             response.redirect(LOGIN_HTML);
             throw new HttpException(HttpStatusCode.UNAUTHERIZED);
@@ -117,6 +119,7 @@ public class Authentication extends SparkController<User> {
     }
 
     private void noAuth(String path) {
+        LOGGER.info("No authentication required: " + path);
         noAuth.add(path);
     }
 

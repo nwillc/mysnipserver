@@ -38,7 +38,8 @@ public class User extends Entity {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "key='" + getKey() + '\'' +
+                ", username='" + username + '\'' +
                 ", password='" + (password == null ? "" : "*******") + '\'' +
                 '}';
     }

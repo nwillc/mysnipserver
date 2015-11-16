@@ -38,7 +38,7 @@ var myPresentation = {
         $('#tabs').tabs();
         $(myPresentation.config.searchDialog).dialog();
         $(myPresentation.config.searchDialog).dialog('close');
-        $(myPresentation.config.categories).change(myPresentation.loadTitles);
+        $(myPresentation.config.categories).change(myPresentation.loadAllTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
         $('#logoutButton').click(myPresentation.logout);
@@ -46,6 +46,7 @@ var myPresentation = {
         $('#saveCategoryButton').click(myPresentation.saveCategory);
         $('#deleteCategoryButton').click(myPresentation.deleteCategory);
         $('#searchButton').click(myPresentation.openSearch);
+        $('#performSearch').click(myPresentation.performSearch);
     },
 
     loadCategories: function () {
@@ -70,19 +71,23 @@ var myPresentation = {
         });
     },
 
-    loadTitles: function () {
-        console.log("loadTitles");
+    loadAllTitles: function () {
+        console.log("loadAllTitles");
         var category = $(myPresentation.config.categories).val();
         console.log("Selected Category: " + category);
+        $.get("v1/snippets/category/" + category, function (data) {
+            myPresentation.loadTitles(JSON.parse(data));
+        })
+    },
+
+    loadTitles: function (list) {
+        console.log("loadTitles");
         $('option', myPresentation.config.titles).remove();
         $(myPresentation.config.body).val('');
-        $.get("v1/snippets/category/" + category, function (data) {
-            var list = JSON.parse(data);
-            $(list).sort(function (a, b) {
-                return a.title.toLowerCase() > b.title.toLowerCase();
-            }).each(function () {
-                myPresentation.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
-            })
+        $(list).sort(function (a, b) {
+            return a.title.toLowerCase() > b.title.toLowerCase();
+        }).each(function () {
+            myPresentation.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
         })
     },
 
@@ -153,6 +158,10 @@ var myPresentation = {
 
     openSearch: function () {
         $(myPresentation.config.searchDialog).dialog('open');
+    },
+
+    performSearch: function () {
+        $(myPresentation.config.searchDialog).dialog('close');
     },
 
     logout: function () {
