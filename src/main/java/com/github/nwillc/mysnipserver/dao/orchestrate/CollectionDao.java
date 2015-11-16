@@ -18,13 +18,13 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
-import com.github.nwillc.mysnipserver.dao.search.Phrase;
 import com.github.nwillc.simplecache.SCache;
 import com.github.nwillc.simplecache.integration.SCacheLoader;
 import com.github.nwillc.simplecache.integration.SCacheWriter;
 import com.github.nwillc.simplecache.managment.SCacheStatisticsMXBean;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
+import io.orchestrate.client.Result;
 
 import javax.cache.Cache;
 import javax.cache.Caching;
@@ -89,6 +89,18 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
                 .withValues(false)
                 .get(tClass)
                 .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
+       return find(keys);
+    }
+
+    @Override
+    public Stream<T> find(String query) {
+        Set<String> keys = stream(client.searchCollection(collection)
+                .get(tClass, query)
+                .get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(Collectors.toSet());
+        return find(keys);
+    }
+
+    private Stream<T> find(Set<String> keys) {
         CompletionListenerFuture done = new CompletionListenerFuture();
         cache.loadAll(keys, false, done);
         try {
@@ -96,12 +108,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         } catch (Exception e) {
             LOGGER.warning("Failed priming cache: " + e.getMessage());
         }
-        return stream(cache.spliterator(), false).map(Cache.Entry::getValue);
-    }
-
-    @Override
-    public Stream<T> find(Phrase phrase) {
-        return null;
+        return cache.getAll(keys).values().stream();
     }
 
     @Override

@@ -16,8 +16,6 @@
 
 package com.github.nwillc.mysnipserver.dao;
 
-import com.github.nwillc.mysnipserver.dao.search.Phrase;
-
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -26,7 +24,7 @@ public interface Dao<T extends Entity> {
 
     Stream<T> findAll();
 
-    Stream<T> find(Phrase phrase);
+    Stream<T> find(String query);
 
     void save(final T entity);
 

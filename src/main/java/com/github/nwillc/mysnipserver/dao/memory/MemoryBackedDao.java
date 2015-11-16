@@ -18,7 +18,6 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
-import com.github.nwillc.mysnipserver.dao.search.Phrase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +43,8 @@ public class MemoryBackedDao<T extends Entity> implements Dao<T> {
     }
 
     @Override
-    public Stream<T> find(Phrase phrase) {
-        return null;
+    public Stream<T> find(String phrase) {
+        return findAll();
     }
 
     @Override

@@ -42,17 +42,16 @@ public class Authentication extends SparkController<User> {
     private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";
+    private static final String[] whiteListed = {LOGIN_HTML, "/login.js", "/persona.js", "/cookies.js", "/persona.png", "/favicon.ico"};
     private final Set<String> noAuth = new HashSet<>();
 
     @Inject
     public Authentication(Dao<User> dao) {
         super(dao);
         Spark.before(this::check);
-        noAuth(LOGIN_HTML);
-        noAuth("/login.js");
-        noAuth("/persona.js");
-        noAuth("/cookies.js");
-        noAuth("/persona.png");
+        for (String path : whiteListed) {
+            noAuth(path);
+        }
         noAuth(versionedPath("auth"));
         get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
         post("auth/" + USERNAME.getLabel(), this::personaAssertion);
