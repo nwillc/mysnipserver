@@ -14,6 +14,7 @@ All paths are versioned with the version number (v#).
 ## Post
 - /v#/categories
 - /v#/snippets
+- /v#/snippets/category/:key
 - /v#/auth/:username
 
 ## Delete

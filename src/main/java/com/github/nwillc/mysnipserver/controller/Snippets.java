@@ -16,6 +16,7 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
+import com.github.nwillc.mysnipserver.controller.model.Query;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
@@ -39,6 +40,7 @@ public class Snippets extends SparkController<Snippet> {
         get("snippets", this::findAll);
         get("snippets/category/" + KEY.getLabel(), this::find);
         get("snippets/" + KEY.getLabel(), this::findOne);
+        post("snippets/category/" + KEY.getLabel(), this::searchCategory);
         post("snippets", this::save);
         delete("snippets/" + KEY.getLabel(), this::delete);
     }
@@ -53,6 +55,16 @@ public class Snippets extends SparkController<Snippet> {
         return getDao().findAll().filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
     }
 
+    public List<Snippet> searchCategory(Request request, Response response) {
+        try {
+            final Query query = getMapper().get().readValue(request.body(), Query.class);
+            LOGGER.info("Searching category: " + KEY.from(request) + " with query: " + query.getQuery());
+            return getDao().find(query.getQuery()).filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Search failed");
+        }
+
+    }
     public Snippet findOne(Request request, Response response) {
         return getDao().findOne(KEY.from(request)).orElseThrow(() -> new HttpException(HttpStatusCode.NOT_FOUND));
     }

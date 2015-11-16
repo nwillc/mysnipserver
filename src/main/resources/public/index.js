@@ -26,7 +26,8 @@ var myPresentation = {
             title: $('#title'),
             body: $('#body'),
             bodyInput: $('#bodyInput'),
-            searchDialog: $('#searchCategoryDialog')
+            searchDialog: $('#searchCategoryDialog'),
+            query: $('#query')
         };
         $.extend(myPresentation.config, config);
         myPresentation.bind();
@@ -161,7 +162,17 @@ var myPresentation = {
     },
 
     performSearch: function () {
-        $(myPresentation.config.searchDialog).dialog('close');
+        console.log("loadAllTitles");
+        var category = $(myPresentation.config.categories).val();
+        console.log("Selected Category: " + category);
+        $.post("v1/snippets/category/" + category, JSON.stringify({
+            query: $(query).val()
+        }), function (data) {
+            myPresentation.loadTitles(JSON.parse(data));
+            $(myPresentation.config.searchDialog).dialog('close');
+        }).fail(function () {
+            alert("Failed searching snippets.")
+        });
     },
 
     logout: function () {

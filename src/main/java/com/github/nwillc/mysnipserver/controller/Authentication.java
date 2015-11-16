@@ -42,14 +42,14 @@ public class Authentication extends SparkController<User> {
     private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";
-    private static final String[] whiteListed = {LOGIN_HTML, "/login.js", "/persona.js", "/cookies.js", "/persona.png", "/favicon.ico"};
+    private static final String[] NO_AUTH = {LOGIN_HTML, "/login.js", "/persona.js", "/cookies.js", "/persona.png", "/favicon.ico"};
     private final Set<String> noAuth = new HashSet<>();
 
     @Inject
     public Authentication(Dao<User> dao) {
         super(dao);
         Spark.before(this::check);
-        for (String path : whiteListed) {
+        for (String path : NO_AUTH) {
             noAuth(path);
         }
         noAuth(versionedPath("auth"));
@@ -119,7 +119,7 @@ public class Authentication extends SparkController<User> {
     }
 
     private void noAuth(String path) {
-        LOGGER.info("No authentication required: " + path);
+        LOGGER.info("No authentication required for: " + path);
         noAuth.add(path);
     }
 
