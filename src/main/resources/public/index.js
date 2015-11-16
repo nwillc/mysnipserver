@@ -37,7 +37,7 @@ var myPresentation = {
     bind: function () {
         console.log("bind");
         $('#tabs').tabs();
-        $(myPresentation.config.searchDialog).dialog();
+        $(myPresentation.config.searchDialog).dialog({ width: 500 });
         $(myPresentation.config.searchDialog).dialog('close');
         $(myPresentation.config.categories).change(myPresentation.loadAllTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
