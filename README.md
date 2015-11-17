@@ -3,13 +3,13 @@
 This is a simple snippets app. It is a RESTful server based on:
 
 - Java 8
-- Java Spark
-- Orchestrate
+- Java Spark RESTful servlet
+- Orchestrate persistence 
 - JSR 107 Caching   
-- Persona
-- jQuery
+- Persona authentication
+- jQuery UI
 
-It gets deployed when tests pass by Travis-ci to OpenShift.
+It gets deployed, when tests pass, by Travis-ci to OpenShift.
 
 You can read more on <a href="https://nwillc.wordpress.com/2015/10/30/from-dropbox-to-orchestrate/">my blog entry</a>.
 
