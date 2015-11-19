@@ -16,16 +16,11 @@
 
 package com.github.nwillc.mysnipserver.util.rest;
 
-public final class Version {
-    private static final String CURRENT_API_VERSION = "v1";
+import com.github.nwillc.contracts.UtilityClassContract;
 
-    private Version() {}
-
-    public static String versionedPath(String version, String path) {
-        return "/" + version + "/" + path;
-    }
-
-    public static String versionedPath(String path) {
-        return versionedPath(CURRENT_API_VERSION, path);
+public class VersionTest extends UtilityClassContract{
+    @Override
+    public Class<?> getClassToTest() {
+        return Version.class;
     }
 }

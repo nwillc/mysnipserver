@@ -40,7 +40,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,6 +49,7 @@ import static java.util.stream.StreamSupport.stream;
 public class CollectionDao<T extends Entity> implements Dao<T> {
     private static final Logger LOGGER = Logger.getLogger(CollectionDao.class.getCanonicalName());
     private static final int LIMIT = 100;
+    private static final int STATS_REPORT_SECONDS = 30;
     private final Class<T> tClass;
     private final String collection;
     private final Client client;
@@ -63,18 +63,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         this.collection = collection;
         this.tClass = tClass;
         this.client = client;
-        cache = Caching.getCachingProvider().getCacheManager().createCache(collection, getCacheConfig());
-        SCache sCache = cache.unwrap(SCache.class);
-        SCacheStatisticsMXBean statistics = sCache.getStatistics();
-        new Timer(collection, true)
-                .schedule(new TimerTask() {
-                              @Override
-                              public void run() {
-                                  LOGGER.info(collection + "-" + statistics.toString());
-                              }
-                          },
-                        TimeUnit.SECONDS.toMillis(3),
-                        TimeUnit.SECONDS.toMillis(30));
+        cache = cacheSetup();
     }
 
     @Override
@@ -100,17 +89,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return find(keys);
     }
 
-    private Stream<T> find(Set<String> keys) {
-        CompletionListenerFuture done = new CompletionListenerFuture();
-        cache.loadAll(keys, false, done);
-        try {
-            done.get(10, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            LOGGER.warning("Failed priming cache: " + e.getMessage());
-        }
-        return cache.getAll(keys).values().stream();
-    }
-
     @Override
     public void save(final T entity) {
         cache.put(entity.getKey(), entity);
@@ -119,6 +97,17 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     @Override
     public void delete(final String key) {
         cache.remove(key);
+    }
+
+    private Stream<T> find(Set<String> keys) {
+        CompletionListenerFuture done = new CompletionListenerFuture();
+        cache.loadAll(keys, false, done);
+        try {
+            done.get(10, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            LOGGER.warning("Failed finding a set: " + e.getMessage());
+        }
+        return cache.getAll(keys).values().stream();
     }
 
     private void deleteThrough(Object key) {
@@ -140,7 +129,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
     }
 
-    private MutableConfiguration<String, T> getCacheConfig() {
+    private Cache<String, T> cacheSetup() {
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
 
         configuration.setReadThrough(true);
@@ -154,7 +143,19 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
         configuration.setExpiryPolicyFactory(() -> new TouchedExpiryPolicy(new Duration(TimeUnit.MINUTES, 10)));
         configuration.setStatisticsEnabled(true);
-        return configuration;
+        Cache<String, T> c = Caching.getCachingProvider().getCacheManager().createCache(collection, configuration);
+        SCache sCache = c.unwrap(SCache.class);
+        SCacheStatisticsMXBean statistics = sCache.getStatistics();
+        new Timer(collection, true)
+                .schedule(new TimerTask() {
+                              @Override
+                              public void run() {
+                                  LOGGER.info(collection + "-" + statistics.toString());
+                              }
+                          },
+                        TimeUnit.SECONDS.toMillis(STATS_REPORT_SECONDS),
+                        TimeUnit.SECONDS.toMillis(STATS_REPORT_SECONDS));
+        return c;
     }
 
 }

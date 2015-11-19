@@ -37,12 +37,13 @@ import java.util.logging.Logger;
 
 import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
 import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
+import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 
 public class Authentication extends SparkController<User> {
     private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";
-    private static final String[] NO_AUTH = {LOGIN_HTML, "/login.js", "/persona.js", "/cookies.js", "/persona.png", "/favicon.ico"};
+    private static final String[] NO_AUTH = {LOGIN_HTML, "/login.js", "/persona.js", "/cookies.js", "/persona.png", "/favicon.ico", versionedPath("auth")};
     private final Set<String> noAuth = new HashSet<>();
 
     @Inject
@@ -52,7 +53,6 @@ public class Authentication extends SparkController<User> {
         for (String path : NO_AUTH) {
             noAuth(path);
         }
-        noAuth(versionedPath("auth"));
         get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
         post("auth/" + USERNAME.getLabel(), this::personaAssertion);
         delete("auth", this::logout);
