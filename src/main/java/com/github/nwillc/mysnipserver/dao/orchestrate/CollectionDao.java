@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,8 +53,8 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     private final Class<T> tClass;
     private final String collection;
     private final Client client;
-
     private final Cache<String, T> cache;
+    private final AtomicBoolean loaded = new AtomicBoolean(false);
 
     public CollectionDao(Client client, Class<T> tClass) {
         this(client, tClass.getSimpleName(), tClass);
@@ -84,6 +85,10 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @Override
     public Stream<T> findAll() {
+        if (loaded.get()) {
+            return stream(cache.spliterator(), false).map(Cache.Entry::getValue);
+        }
+        loaded.set(true);
         Set<String> keys = stream(client.listCollection(collection)
                 .limit(LIMIT)
                 .withValues(false)
