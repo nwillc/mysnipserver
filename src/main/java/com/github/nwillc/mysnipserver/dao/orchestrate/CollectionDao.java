@@ -54,7 +54,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     private final String collection;
     private final Client client;
     private final Cache<String, T> cache;
-    private final AtomicBoolean loaded = new AtomicBoolean(false);
 
     public CollectionDao(Client client, Class<T> tClass) {
         this(client, tClass.getSimpleName(), tClass);
@@ -85,10 +84,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @Override
     public Stream<T> findAll() {
-        if (loaded.get()) {
-            return stream(cache.spliterator(), false).map(Cache.Entry::getValue);
-        }
-        loaded.set(true);
         Set<String> keys = stream(client.listCollection(collection)
                 .limit(LIMIT)
                 .withValues(false)
