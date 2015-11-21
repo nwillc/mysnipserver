@@ -30,6 +30,7 @@ apply plugin: 'java'
 
 
 repositories {
+    mavenLocal()
     jcenter {
         url 'http://jcenter.bintray.com'
     }
@@ -70,6 +71,10 @@ gradle.projectsEvaluated {
 }
 
 test {
+    useJUnit {
+        excludeCategories 'com.github.nwillc.mysnipserver.IntegrationTest'
+    }
+
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
     }
@@ -84,6 +89,12 @@ test {
 
     testLogging {
         exceptionFormat "full"
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnit {
+        includeCategories 'com.github.nwillc.mysnipserver.IntegrationTest'
     }
 }
 
