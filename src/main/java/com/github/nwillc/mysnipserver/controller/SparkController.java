@@ -21,14 +21,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
-import com.github.nwillc.mysnipserver.util.rest.Version;
 import spark.Route;
 import spark.Spark;
+
+import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 
 /**
  * Isolate as much Spark specific code here as possible.
  */
-public abstract class SparkController<T extends Entity> implements Version {
+public abstract class SparkController<T extends Entity>  {
     private final Dao<T> dao;
     private final ThreadLocal<ObjectMapper> mapper;
 
