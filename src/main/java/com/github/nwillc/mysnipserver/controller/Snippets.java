@@ -52,8 +52,7 @@ public class Snippets extends SparkController<Snippet> {
 
     public List<Snippet> find(Request request, Response response) {
         LOGGER.info("Finding snippets in category: " + KEY.from(request));
-        String query = "category: \"" + KEY.from(request) +"\"";
-        return getDao().find(query).collect(Collectors.toList());
+        return getDao().findAll().filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
     }
 
     public List<Snippet> searchCategory(Request request, Response response) {
