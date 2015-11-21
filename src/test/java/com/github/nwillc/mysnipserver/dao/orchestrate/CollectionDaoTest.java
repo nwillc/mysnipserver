@@ -8,23 +8,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @Category(IntegrationTest.class)
 public class CollectionDaoTest {
-	private static final String ORCH_API_KEY = "57bd3ce4-e827-4d62-a541-01380dd61c86";
-	private Client client;
+	private static final String ORCH_API_KEY = System.getenv("ORCH_API_KEY");
 	private CollectionDao<Snippet> dao;
 
 	@Before
 	public void setUp() throws Exception {
-		client = new OrchestrateClient(ORCH_API_KEY);
+		Client client = new OrchestrateClient(ORCH_API_KEY);
 		dao = new CollectionDao<>(client, "Snippet", Snippet.class);
 	}
 
 	@Test
 	public void shouldFindAll() throws Exception {
-	  	long c;
-		c = dao.findAll().count();
-		c = dao.findAll().count();
+	  	long c = dao.findAll().count();
+		assertThat(dao.getCache()).hasSize((int)c);
 	}
 }

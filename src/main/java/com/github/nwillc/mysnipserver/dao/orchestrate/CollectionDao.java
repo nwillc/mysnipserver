@@ -129,6 +129,10 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
     }
 
+    Cache<String,T>  getCache() {
+        return cache;
+    }
+
     private Cache<String, T> cacheSetup() {
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
 
