@@ -10,5 +10,5 @@ echo Rebuild server...
 ./gradlew -q stage -x test
 
 echo Start server...
-java -cp build/staging:build/staging/* com.github.nwillc.mysnipserver.MySnipServer $*
+java -cp build/staging:build/staging/* -Djava.awt.headless=true com.github.nwillc.mysnipserver.MySnipServer $*
 
