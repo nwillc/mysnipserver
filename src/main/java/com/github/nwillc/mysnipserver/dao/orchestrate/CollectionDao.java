@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,6 +56,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     private final String collection;
     private final Client client;
     private final Cache<String, T> cache;
+    private final AtomicBoolean loaded = new AtomicBoolean(false);
 
     public CollectionDao(Client client, Class<T> tClass) {
         this(client, tClass.getSimpleName(), tClass);
@@ -74,12 +76,16 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @Override
     public Stream<T> findAll() {
-        Set<String> keys = stream(client.listCollection(collection)
-                .limit(LIMIT)
-                .withValues(false)
-                .get(tClass)
-                .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
-        return find(keys);
+        if (loaded.compareAndSet(false, true)) {
+            Set<String> keys = stream(client.listCollection(collection)
+                    .limit(LIMIT)
+                    .withValues(false)
+                    .get(tClass)
+                    .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
+            return find(keys);
+        } else {
+           return stream(cache.spliterator(), false).map(Cache.Entry::getValue);
+        }
     }
 
     @Override
@@ -128,6 +134,10 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
                 .get(tClass)
                 .get();
         return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+    }
+
+    Cache<String,T>  getCache() {
+        return cache;
     }
 
     private Cache<String, T> cacheSetup() {

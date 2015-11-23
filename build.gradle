@@ -30,6 +30,7 @@ apply plugin: 'java'
 
 
 repositories {
+    mavenLocal()
     jcenter {
         url 'http://jcenter.bintray.com'
     }
@@ -51,7 +52,7 @@ dependencies {
             'org.apache.httpcomponents:httpclient:4.5.1',
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.3',
             'javax.cache:cache-api:1.0.0',
-            'com.github.nwillc:simplecache:0.9.1'
+            'com.github.nwillc:simplecache:0.9.3'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:contracts:1.6.7',
             'org.mockito:mockito-core:2.0.31-beta',
@@ -70,6 +71,10 @@ gradle.projectsEvaluated {
 }
 
 test {
+    useJUnit {
+        excludeCategories 'com.github.nwillc.mysnipserver.IntegrationTest'
+    }
+
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
     }
@@ -84,6 +89,12 @@ test {
 
     testLogging {
         exceptionFormat "full"
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnit {
+        includeCategories 'com.github.nwillc.mysnipserver.IntegrationTest'
     }
 }
 
