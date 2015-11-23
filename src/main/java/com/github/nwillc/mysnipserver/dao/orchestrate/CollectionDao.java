@@ -50,6 +50,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     private static final Logger LOGGER = Logger.getLogger(CollectionDao.class.getCanonicalName());
     private static final int LIMIT = 100;
     private static final int STATS_REPORT_SECONDS = 30;
+    private static final boolean REPLACE_FALSE = false;
     private final Class<T> tClass;
     private final String collection;
     private final Client client;
@@ -101,7 +102,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     private Stream<T> find(Set<String> keys) {
         CompletionListenerFuture done = new CompletionListenerFuture();
-        cache.loadAll(keys, false, done);
+        cache.loadAll(keys, REPLACE_FALSE, done);
         try {
             done.get(10, TimeUnit.SECONDS);
         } catch (Exception e) {
