@@ -21,7 +21,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.com.github.nwillc:vplugin:1.2.4"
+        classpath "gradle.plugin.com.github.nwillc:vplugin:1.2.4",
+                'au.com.ish.gradle:release:2.2.2',
+                'org.tmatesoft.sqljet:sqljet:1.1.9'
     }
 }
 
@@ -105,3 +107,10 @@ task stage(type: Copy) {
 }
 
 stage.dependsOn build
+
+release {
+    failOnSnapshotDependencies = true
+    allowLocalModifications = true
+    releaseDryRun = false
+    scm = 'git'
+}
