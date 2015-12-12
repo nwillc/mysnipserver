@@ -25,6 +25,7 @@ public class CollectionDaoTest {
 	@Test
 	public void shouldFindAll() throws Exception {
 	  	long c = dao.findAll().count();
+		assertThat(c).isGreaterThan(0L);
 		assertThat(dao.getCache()).hasSize((int)c);
 	}
 }
