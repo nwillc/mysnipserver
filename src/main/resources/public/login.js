@@ -28,7 +28,7 @@ var myLogin = {
 
     bind: function () {
         console.log("bind");
-        $(myLogin.config.username).bind('keyup', myLogin.enablePersona)
+        $(myLogin.config.username).bind('keyup', myLogin.enablePersona);
         $(myLogin.config.password).bind('keyup', myLogin.login);
         $(myLogin.config.username).focus();
         $(myLogin.config.personaButton).click(myLogin.personaLogin);

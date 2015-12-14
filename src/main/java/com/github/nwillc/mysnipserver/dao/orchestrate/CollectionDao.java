@@ -57,14 +57,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		return Optional.ofNullable(get(key));
 	}
 
-	@CacheResult
-	public T get(@CacheKey String key) {
-		KvObject<T> categoryKvObject = client.kv(collection, key)
-				.get(tClass)
-				.get();
-		return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
-	}
-
 	@Override
 	public Stream<T> findAll() {
 		Set<String> keys = stream(client.listCollection(collection)
@@ -88,13 +80,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 		put(entity.getKey(), entity);
 	}
 
-	@CachePut
-	public void put(@CacheKey String key, @CacheValue T entity) {
-		client.kv(collection, key)
-				.put(entity)
-				.get();
-	}
-
 	@Override
 	@CacheRemove
 	public void delete(@CacheKey final String key) {
@@ -102,6 +87,21 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 				.delete(true)
 				.get();
 	}
+
+    @CachePut
+    public void put(@CacheKey String key, @CacheValue T entity) {
+        client.kv(collection, key)
+                .put(entity)
+                .get();
+    }
+
+    @CacheResult
+    public T get(@CacheKey String key) {
+        KvObject<T> categoryKvObject = client.kv(collection, key)
+                .get(tClass)
+                .get();
+        return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+    }
 
 	private Stream<T> find(Set<String> keys) {
 		return keys.stream().map(this::get).filter(e -> e != null);
