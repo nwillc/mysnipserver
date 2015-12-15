@@ -66,7 +66,7 @@ dependencies {
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.3',
             'javax.cache:cache-api:1.0.0',
             'com.github.nwillc:simplecache:1.0.0',
-            'com.github.nwillc:cache-annotations:0.1.1'
+            'com.github.nwillc:cache-annotations:0.1.2'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:contracts:1.6.7',
             'org.mockito:mockito-core:2.0.31-beta',
