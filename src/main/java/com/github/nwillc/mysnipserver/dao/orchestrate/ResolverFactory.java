@@ -40,7 +40,9 @@ public class ResolverFactory implements CacheResolverFactory {
 					String collection = ((CollectionDao) target).getCollection();
 					cache = cacheManager.getCache(collection);
 					if (cache == null) {
-						cache = cacheManager.createCache(collection, new MutableConfiguration<>());
+                        MutableConfiguration<K,V> configuration = new MutableConfiguration<>();
+                        configuration.setStoreByValue(false);
+						cache = cacheManager.createCache(collection, configuration);
 					}
 				}
 				return cache;
