@@ -55,7 +55,7 @@ configurations {
 }
 
 dependencies {
-    aspectpath 'com.github.nwillc:cache-annotations:0.1.1'
+    aspectpath 'com.github.nwillc:cache-annotations:0.1.2'
     compile 'org.slf4j:slf4j-jdk14:1.7.13',
             "org.aspectj:aspectjrt:1.8.7",
             'com.sparkjava:spark-core:2.3',
@@ -63,12 +63,11 @@ dependencies {
             'io.orchestrate:orchestrate-client:0.12.0',
             'com.google.inject:guice:4.0',
             'org.apache.httpcomponents:httpclient:4.5.1',
-            'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.3',
+            'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.7.0-rc2',
             'javax.cache:cache-api:1.0.0',
-            'com.github.nwillc:simplecache:1.0.2',
-            'com.github.nwillc:cache-annotations:0.1.2'
+            'com.github.nwillc:simplecache:1.0.2'
     testCompile 'junit:junit:4.12',
-            'com.github.nwillc:contracts:1.6.7',
+            'com.github.nwillc:contracts:1.7.1',
             'org.mockito:mockito-core:2.0.31-beta',
             'org.assertj:assertj-core:3.2.0'
 }
