@@ -37,56 +37,56 @@ import static java.util.stream.StreamSupport.stream;
 
 @CacheDefaults(cacheResolverFactory = ResolverFactory.class)
 public class CollectionDao<T extends Entity> implements Dao<T> {
-	private static final int LIMIT = 100;
-	private final Class<T> tClass;
-	private final String collection;
-	private final Client client;
+    private static final int LIMIT = 100;
+    private final Class<T> tClass;
+    private final String collection;
+    private final Client client;
 
-	public CollectionDao(Client client, Class<T> tClass) {
-		this(client, tClass.getSimpleName(), tClass);
-	}
+    public CollectionDao(Client client, Class<T> tClass) {
+        this(client, tClass.getSimpleName(), tClass);
+    }
 
-	public CollectionDao(Client client, String collection, Class<T> tClass) {
-		this.collection = collection;
-		this.tClass = tClass;
-		this.client = client;
-	}
+    public CollectionDao(Client client, String collection, Class<T> tClass) {
+        this.collection = collection;
+        this.tClass = tClass;
+        this.client = client;
+    }
 
-	@Override
-	public Optional<T> findOne(final String key) {
-		return Optional.ofNullable(get(key));
-	}
+    @Override
+    public Optional<T> findOne(final String key) {
+        return Optional.ofNullable(get(key));
+    }
 
-	@Override
-	public Stream<T> findAll() {
-		Set<String> keys = stream(client.listCollection(collection)
-				.limit(LIMIT)
-				.withValues(false)
-				.get(tClass)
-				.get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
-		return find(keys);
-	}
+    @Override
+    public Stream<T> findAll() {
+        Set<String> keys = stream(client.listCollection(collection)
+                .limit(LIMIT)
+                .withValues(false)
+                .get(tClass)
+                .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
+        return find(keys);
+    }
 
-	@Override
-	public Stream<T> find(String query) {
-		Set<String> keys = stream(client.searchCollection(collection)
-				.get(tClass, query)
-				.get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(Collectors.toSet());
-		return find(keys);
-	}
+    @Override
+    public Stream<T> find(String query) {
+        Set<String> keys = stream(client.searchCollection(collection)
+                .get(tClass, query)
+                .get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(Collectors.toSet());
+        return find(keys);
+    }
 
-	@Override
-	public void save(final T entity) {
-		put(entity.getKey(), entity);
-	}
+    @Override
+    public void save(final T entity) {
+        put(entity.getKey(), entity);
+    }
 
-	@Override
-	@CacheRemove
-	public void delete(@CacheKey final String key) {
-		client.kv(collection, key)
-				.delete(true)
-				.get();
-	}
+    @Override
+    @CacheRemove
+    public void delete(@CacheKey final String key) {
+        client.kv(collection, key)
+                .delete(true)
+                .get();
+    }
 
     @CachePut
     public void put(@CacheKey String key, @CacheValue T entity) {
@@ -103,11 +103,11 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
     }
 
-	private Stream<T> find(Set<String> keys) {
-		return keys.stream().map(this::get).filter(e -> e != null);
-	}
+    private Stream<T> find(Set<String> keys) {
+        return keys.stream().map(this::get).filter(e -> e != null);
+    }
 
-	public String getCollection() {
-		return collection;
-	}
+    public String getCollection() {
+        return collection;
+    }
 }

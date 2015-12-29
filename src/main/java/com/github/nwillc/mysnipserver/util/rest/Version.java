@@ -19,7 +19,8 @@ package com.github.nwillc.mysnipserver.util.rest;
 public final class Version {
     private static final String CURRENT_API_VERSION = "v1";
 
-    private Version() {}
+    private Version() {
+    }
 
     public static String versionedPath(String version, String path) {
         return "/" + version + "/" + path;

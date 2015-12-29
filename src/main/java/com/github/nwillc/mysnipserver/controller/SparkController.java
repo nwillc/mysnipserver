@@ -16,11 +16,10 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
+import com.github.nwillc.mysnipserver.util.ToJson;
 import spark.Route;
 import spark.Spark;
 
@@ -29,13 +28,11 @@ import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 /**
  * Isolate as much Spark specific code here as possible.
  */
-public abstract class SparkController<T extends Entity>  {
+public abstract class SparkController<T extends Entity> implements ToJson {
     private final Dao<T> dao;
-    private final ThreadLocal<ObjectMapper> mapper;
 
     public SparkController(Dao<T> dao) {
         this.dao = dao;
-        mapper = ThreadLocal.withInitial(() -> new ObjectMapper().registerModule(new Jdk8Module()));
     }
 
     protected Dao<T> getDao() {
@@ -56,13 +53,5 @@ public abstract class SparkController<T extends Entity>  {
 
     protected void delete(String path, Route route) {
         Spark.delete(versionedPath(path), route, this::toJson);
-    }
-
-    private String toJson(Object obj) {
-        try {
-            return mapper.get().writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("JSON", e);
-        }
     }
 }

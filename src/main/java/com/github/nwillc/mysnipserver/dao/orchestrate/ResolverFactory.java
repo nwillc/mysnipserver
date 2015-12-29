@@ -28,30 +28,30 @@ import javax.cache.configuration.MutableConfiguration;
 import java.lang.annotation.Annotation;
 
 public class ResolverFactory implements CacheResolverFactory {
-	private CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
+    private CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
 
-	public CacheResolver getCacheResolver(CacheMethodDetails<? extends Annotation> cacheMethodDetails) {
-		return new CacheResolver() {
-			@Override
-			public <K, V> Cache<K, V> resolveCache(CacheInvocationContext<? extends Annotation> cacheInvocationContext) {
-				Object target = cacheInvocationContext.getTarget();
-				Cache<K,V> cache = null;
-				if (target instanceof CollectionDao) {
-					String collection = ((CollectionDao) target).getCollection();
-					cache = cacheManager.getCache(collection);
-					if (cache == null) {
-                        MutableConfiguration<K,V> configuration = new MutableConfiguration<>();
+    public CacheResolver getCacheResolver(CacheMethodDetails<? extends Annotation> cacheMethodDetails) {
+        return new CacheResolver() {
+            @Override
+            public <K, V> Cache<K, V> resolveCache(CacheInvocationContext<? extends Annotation> cacheInvocationContext) {
+                Object target = cacheInvocationContext.getTarget();
+                Cache<K, V> cache = null;
+                if (target instanceof CollectionDao) {
+                    String collection = ((CollectionDao) target).getCollection();
+                    cache = cacheManager.getCache(collection);
+                    if (cache == null) {
+                        MutableConfiguration<K, V> configuration = new MutableConfiguration<>();
                         configuration.setStoreByValue(false);
-						cache = cacheManager.createCache(collection, configuration);
-					}
-				}
-				return cache;
-			}
-		};
-	}
+                        cache = cacheManager.createCache(collection, configuration);
+                    }
+                }
+                return cache;
+            }
+        };
+    }
 
-	@Override
-	public CacheResolver getExceptionCacheResolver(CacheMethodDetails<CacheResult> cacheMethodDetails) {
-		return null;
-	}
+    @Override
+    public CacheResolver getExceptionCacheResolver(CacheMethodDetails<CacheResult> cacheMethodDetails) {
+        return null;
+    }
 }

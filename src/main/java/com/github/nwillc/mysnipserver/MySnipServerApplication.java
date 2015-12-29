@@ -23,19 +23,23 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.mysnipserver.util.ToJson;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.inject.Inject;
 import spark.servlet.SparkApplication;
 
+import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static spark.Spark.*;
 
-public class MySnipServerApplication implements SparkApplication {
+public class MySnipServerApplication implements SparkApplication, ToJson {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
     private final Dao<User> userDao;
+    private String properties = "";
 
     @Inject
     public MySnipServerApplication(Dao<Category> categoriesDao,
@@ -44,6 +48,13 @@ public class MySnipServerApplication implements SparkApplication {
         this.categoriesDao = categoriesDao;
         this.snippetDao = snippetDao;
         this.userDao = userDao;
+        Properties buildProperties = new Properties();
+        try {
+            buildProperties.load(getClass().getResourceAsStream("/build.properties"));
+            this.properties = toJson(buildProperties);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed getting build properties", e);
+        }
     }
 
     @Override
@@ -59,6 +70,7 @@ public class MySnipServerApplication implements SparkApplication {
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");
+        get("/properties", (request, response) -> properties);
 
         exception(HttpException.class, (e, request, response) -> {
             response.status(((HttpException) e).getCode().code);

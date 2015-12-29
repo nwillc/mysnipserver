@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 /*
  * Copyright (c) 2015,  nwillc@gmail.com
  *
@@ -16,6 +18,7 @@
 
 buildscript {
     repositories {
+	mavenLocal()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -117,7 +120,29 @@ task stage(type: Copy) {
     into 'build/staging'
 }
 
+task buildProperties() {
+    Properties props = new Properties()
+    File propFile = new File(Paths.get(project.rootDir.toString(), "src", "main", "resources", "build.properties").toString())
+    props.setProperty('user.name', System.getProperty("user.name"))
+    props.setProperty("java.vendor", System.getProperty("java.vendor"))
+    props.setProperty("java.version", System.getProperty("java.version"))
+    props.setProperty('built', new Date().toString())
+    props.setProperty('project.version', project.version.toString())
+    props.setProperty('source.compatibility', sourceCompatibility.toString())
+    props.setProperty('gradle.version', gradle.gradleVersion)
+    def jars = "";
+    sourceSets.main.runtimeClasspath.each { jar ->
+        if (jar.getName().endsWith(".jar")) {
+            jars += jar.getName()
+            jars += ','
+        }
+    }
+    props.setProperty('dependencies', jars)
+    props.store(propFile.newWriter(),null)
+}
+
 stage.dependsOn build
+build.dependsOn buildProperties
 
 release {
     failOnSnapshotDependencies = true
