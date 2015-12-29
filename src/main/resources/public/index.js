@@ -27,7 +27,8 @@ var myPresentation = {
             body: $('#body'),
             bodyInput: $('#bodyInput'),
             searchDialog: $('#searchCategoryDialog'),
-            query: $('#query')
+            query: $('#query'),
+            buildInfoDialog: $('#buildInfoDialog')
         };
         $.extend(myPresentation.config, config);
         myPresentation.bind();
@@ -39,6 +40,8 @@ var myPresentation = {
         $('#tabs').tabs();
         $(myPresentation.config.searchDialog).dialog({ width: 500 });
         $(myPresentation.config.searchDialog).dialog('close');
+        $(myPresentation.config.buildInfoDialog).dialog({ height: 200, width: 500 });
+        $(myPresentation.config.buildInfoDialog).dialog('close');
         $(myPresentation.config.categories).change(myPresentation.loadAllTitles);
         $(myPresentation.config.titles).change(myPresentation.loadBody);
         $('#saveSnippetButton').click(myPresentation.saveSnippet);
@@ -48,6 +51,7 @@ var myPresentation = {
         $('#deleteCategoryButton').click(myPresentation.deleteCategory);
         $('#searchButton').click(myPresentation.openSearch);
         $('#performSearch').click(myPresentation.performSearch);
+        $('#buildInfoButton').click(myPresentation.buildInfo);
     },
 
     loadCategories: function () {
@@ -184,6 +188,14 @@ var myPresentation = {
             success: function () {
                 window.location.replace("/login.html");
             }
+        });
+    },
+
+    buildInfo: function () {
+        console.log("build info");
+        $.get("properties", function (data) {
+            $(myPresentation.config.buildInfoDialog).dialog('open');
+            $('#buildInfo').html(data);
         });
     }
 
