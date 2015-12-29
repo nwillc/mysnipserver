@@ -23,18 +23,20 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
-import com.github.nwillc.mysnipserver.util.ToJson;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.inject.Inject;
 import spark.servlet.SparkApplication;
 
-import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
-public class MySnipServerApplication implements SparkApplication, ToJson {
+public class MySnipServerApplication implements SparkApplication {
     private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
@@ -48,12 +50,13 @@ public class MySnipServerApplication implements SparkApplication, ToJson {
         this.categoriesDao = categoriesDao;
         this.snippetDao = snippetDao;
         this.userDao = userDao;
-        Properties buildProperties = new Properties();
-        try {
-            buildProperties.load(getClass().getResourceAsStream("/build.properties"));
-            this.properties = toJson(buildProperties);
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed getting build properties", e);
+        try (
+                final InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/build.json"));
+                final BufferedReader bufferedReader = new BufferedReader(isr)
+            ) {
+                properties = bufferedReader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Could not load build info", e);
         }
     }
 
