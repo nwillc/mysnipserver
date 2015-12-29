@@ -4,3 +4,4 @@ mysnipserver.iml
 .idea
 env.*
 .ruby-version
+src/main/resources/build.properties
