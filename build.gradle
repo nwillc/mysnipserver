@@ -26,7 +26,6 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.github.nwillc:vplugin:1.2.4",
-                "com.github.nwillc:buildInfo:0.0.1",
                 "nl.eveoh:gradle-aspectj:1.6",
                 "gradle.plugin.com.github.nwillc:buildinfo:0.0.2",
                 'au.com.ish.gradle:release:2.2.2',
