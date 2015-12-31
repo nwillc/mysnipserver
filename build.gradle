@@ -14,9 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import java.nio.file.Paths
-import groovy.json.JsonOutput
-
 buildscript {
     repositories {
         mavenLocal()
@@ -29,7 +26,9 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.github.nwillc:vplugin:1.2.4",
+                "com.github.nwillc:buildInfo:0.0.1",
                 "nl.eveoh:gradle-aspectj:1.6",
+                "gradle.plugin.com.github.nwillc:buildinfo:0.0.2",
                 'au.com.ish.gradle:release:2.2.2',
                 'org.tmatesoft.sqljet:sqljet:1.1.9'
     }
@@ -39,11 +38,13 @@ project.ext {
     aspectjVersion = "1.8.7"
 }
 
+apply plugin: "com.github.nwillc.buildInfo"
 apply plugin: "com.github.nwillc.vplugin"
 apply plugin: 'java'
 apply plugin: 'release'
 apply plugin: "aspectj"
 apply plugin: 'groovy'
+
 
 repositories {
     mavenLocal()
@@ -122,29 +123,9 @@ task stage(type: Copy) {
     into 'build/staging'
 }
 
-task buildInfo() {
-    def buildInfo = [:]
-    buildInfo['user.name'] = System.getProperty("user.name")
-    buildInfo['java.vendor'] = System.getProperty("java.vendor")
-    buildInfo['java.version'] = System.getProperty("java.version")
-    buildInfo['build.date'] = new Date()
-    buildInfo['project.version'] = project.version
-    buildInfo['project.name'] = project.name
-    buildInfo['source.compatibility'] = sourceCompatibility.toString()
-    buildInfo['target.compatibility'] = targetCompatibility.toString()
-    def dependencies = []
-    sourceSets.main.runtimeClasspath.each { item ->
-        if (item.getName().endsWith(".jar")) {
-            dependencies.add(item.getName())
-        }
-    }
-    buildInfo['dependencies'] = dependencies
-    new File(Paths.get(project.rootDir.toString(), "src", "main", "resources", "build.json").toString()).write(JsonOutput.prettyPrint(JsonOutput.toJson(buildInfo)))
-}
 
 stage.dependsOn build
 build.dependsOn buildInfo
-
 
 release {
     failOnSnapshotDependencies = true
