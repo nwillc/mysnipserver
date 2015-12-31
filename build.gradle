@@ -38,7 +38,7 @@ project.ext {
     aspectjVersion = "1.8.7"
 }
 
-apply plugin: "com.github.nwillc.buildInfo"
+apply plugin: "com.github.nwillc.buildinfo"
 apply plugin: "com.github.nwillc.vplugin"
 apply plugin: 'java'
 apply plugin: 'release'
