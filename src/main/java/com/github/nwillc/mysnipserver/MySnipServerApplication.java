@@ -55,7 +55,7 @@ public class MySnipServerApplication implements SparkApplication {
                 final BufferedReader bufferedReader = new BufferedReader(isr)
             ) {
                 properties = bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Could not load build info", e);
         }
     }
