@@ -127,7 +127,7 @@ task stage(type: Copy) {
 
 
 stage.dependsOn build
-build.dependsOn buildInfo
+processResources.dependsOn buildInfo
 
 release {
     failOnSnapshotDependencies = true
