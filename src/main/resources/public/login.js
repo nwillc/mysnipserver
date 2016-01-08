@@ -14,45 +14,40 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-var myLogin = {
-    init: function (config) {
-        console.log("init");
-        myLogin.config = {
-            username: $('#username'),
-            password: $('#password'),
-            personaButton: $('#personaButton')
-        };
-        $.extend(myLogin.config, config);
-        myLogin.bind();
-    },
+function Login() {
+    // Instance variables
+    this.username = $('#username');
+    $(this.username).focus();
+    this.password = $('#password');
+    this.personaButton = $('#personaButton');
+    $(this.personaButton).prop('disabled', true);
 
-    bind: function () {
-        console.log("bind");
-        $(myLogin.config.username).bind('keyup', myLogin.enablePersona);
-        $(myLogin.config.password).bind('keyup', myLogin.login);
-        $(myLogin.config.username).focus();
-        $(myLogin.config.personaButton).click(myLogin.personaLogin);
-        myLogin.enablePersona();
-    },
+    // Event handlers
+    this.enablePersona = function (event) {
+        $(event.data.personaButton).prop('disabled', $(event.data.username).val().length === 0);
+    };
 
-    enablePersona: function () {
-        $(myLogin.config.personaButton).prop('disabled', $(myLogin.config.username).val().length === 0);
-    },
+    this.personaLogin = function (event) {
+         myPersona.login($(event.data.username).val());
+    };
 
-    personaLogin: function () {
-        myPersona.login($(myLogin.config.username).val());
-    },
-
-    login: function (e) {
-        if (e.keyCode === 13) {
-            $.get("v1/auth/" + $(myLogin.config.username).val() + "/" + $(myLogin.config.password).val(), function () {
-                window.location.replace("/");
+    this.login = function (event) {
+        if (event.keyCode === 13) {
+            $.get("v1/auth/" + $(event.data.username).val() + "/" + $(event.data.password).val(), function () {
+                 window.location.replace("/");
             });
-        }
-    }
+        };
+    };
+
+    // Bindings
+    $(this.username).bind('keyup', this, this.enablePersona);
+    $(this.password).bind('keyup', this, this.login);
+    $(this.personaButton).click(this, this.personaLogin);
 };
 
+var myLogin;
+
 $(document).ready(function () {
-    myLogin.init();
+    myLogin = new Login();
 });
 
