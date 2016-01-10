@@ -23,28 +23,27 @@ function Login() {
     $(this.personaButton).prop('disabled', true);
 
     // Event handlers
-    this.enablePersona = function (event) {
-        $(event.data.personaButton).prop('disabled', $(event.data.username).val().length === 0);
+    this.enablePersona = function () {
+        $(this.personaButton).prop('disabled', $(this.username).val().length === 0);
     };
 
-    this.personaLogin = function (event) {
-         myPersona.login($(event.data.username).val());
+    this.personaLogin = function () {
+         myPersona.login($(this.username).val());
     };
 
     this.login = function (event) {
         if (event.keyCode === 13) {
-            $.get("v1/auth/" + $(event.data.username).val() + "/" + $(event.data.password).val(), function () {
+            $.get("v1/auth/" + $(this.username).val() + "/" + $(this.password).val(), function () {
                  window.location.replace("/");
             });
-        };
+        }
     };
 
     // Bindings
-    $(this.username).bind('keyup', this, this.enablePersona);
-    $(this.password).bind('keyup', this, this.login);
-    $(this.personaButton).click(this, this.personaLogin);
-};
-
+    $(this.username).bind('keyup', this.enablePersona.bind(this));
+    $(this.password).bind('keyup', this.login.bind(this));
+    $(this.personaButton).click(this.personaLogin.bind(this));
+}
 var myLogin;
 
 $(document).ready(function () {
