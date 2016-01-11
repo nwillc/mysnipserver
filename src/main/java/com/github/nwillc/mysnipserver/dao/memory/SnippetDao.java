@@ -34,6 +34,7 @@ public class SnippetDao extends MemoryBackedDao<Snippet> {
         java.ifPresent(c -> {
             save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
             save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));
+            save(new Snippet(c.getKey(), "jdk version", "java -version;\n"));
         });
     }
 }

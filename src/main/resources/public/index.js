@@ -42,7 +42,7 @@ APP.Home = function () {
             var list = JSON.parse(data);
             $(that.categories).empty();
             list.sort(function (a, b) {
-                return a.name.toLowerCase() > b.name.toLowerCase();
+                return a.name.localeCompare(b.name);
             }).forEach(function (element) {
                 that.categories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
@@ -51,7 +51,7 @@ APP.Home = function () {
             }, 1);
             $(that.snippetCategories).empty();
             list.sort(function (a, b) {
-                return a.name.toLowerCase() > b.name.toLowerCase();
+                return a.name.localeCompare(b.name);
             }).forEach(function (element) {
                 that.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
@@ -74,7 +74,7 @@ APP.Home = function () {
         $('option', this.titles).remove();
         $(this.body).val('');
         list.sort(function (a, b) {
-            return a.title.toLowerCase() > b.title.toLowerCase();
+            return a.title.localeCompare(b.title);
         }).forEach(function (element) {
             that.titles.append($("<option></option>").attr("value", element.key).text(element.title));
         })
