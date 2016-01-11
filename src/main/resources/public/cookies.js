@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,  nwillc@gmail.com
+ * Copyright (c) 2016,  nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,7 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-var Cookies = {
+var APP = APP || {};
+
+APP.cookies = {
     set: function (key, value) {
         var expires = new Date();
         expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,  nwillc@gmail.com
+ * Copyright (c) 2016,  nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,7 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-function Login() {
+var APP = APP || {};
+
+APP.Login = function () {
     // Instance variables
     this.username = $('#username');
     $(this.username).focus();
@@ -28,7 +30,7 @@ function Login() {
     };
 
     this.personaLogin = function () {
-         myPersona.login($(this.username).val());
+         APP.myPersona.login($(this.username).val());
     };
 
     this.login = function (event) {
@@ -46,6 +48,6 @@ function Login() {
 }
 
 $(document).ready(function () {
-   var myLogin = new Login();
+   new APP.Login();
 });
 

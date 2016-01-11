@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,  nwillc@gmail.com
+ * Copyright (c) 2016,  nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,31 +14,33 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-var myPersona = {
+var APP = APP || {};
+
+APP.myPersona = {
 
     login: function (username) {
         console.log("Logging in " + username + " via persona.");
-        Cookies.set("username", username);
+        APP.cookies.set("username", username);
         navigator.id.watch({
             loggedInUser: username,
-            onlogin: myPersona.loginHandler,
-            onlogout: myPersona.logoutHandler
+            onlogin: APP.myPersona.loginHandler,
+            onlogout: APP.myPersona.logoutHandler
         });
         navigator.id.request();
     },
 
     logout: function () {
         navigator.id.watch({
-            loggedInUser: Cookies.get("username"),
-            onlogin: myPersona.loginHandler,
-            onlogout: myPersona.logoutHandler
+            loggedInUser: APP.cookies.get("username"),
+            onlogin: APP.myPersona.loginHandler,
+            onlogout: APP.myPersona.logoutHandler
         });
         navigator.id.logout();
     },
 
     loginHandler: function (assertion) {
         console.log("Assertion: " + assertion);
-        $.post('v1/auth/' + Cookies.get("username"), JSON.stringify({
+        $.post('v1/auth/' + APP.cookies.get("username"), JSON.stringify({
             assertion: assertion
         }), function () {
             console.log('Passed.');
@@ -51,8 +53,8 @@ var myPersona = {
     logoutHandler: function () {
         navigator.id.watch({
             loggedInUser: document.cookie,
-            onlogin: myPersona.loginHandler,
-            onlogout: myPersona.logoutHandler
+            onlogin: APP.myPersona.loginHandler,
+            onlogout: APP.myPersona.logoutHandler
         });
         navigator.id.logout();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015,  nwillc@gmail.com
+ * Copyright (c) 2016,  nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,11 +14,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-var myPresentation = {
+var APP = APP || {};
+
+APP.home = {
 
     init: function (config) {
         console.log("init");
-        myPresentation.config = {
+        APP.home.config = {
             categories: $('#browseCategories'),
             snippetCategories: $('#snippetCategories'),
             category: $('#category'),
@@ -30,90 +32,90 @@ var myPresentation = {
             query: $('#query'),
             buildInfoDialog: $('#buildInfoDialog')
         };
-        $.extend(myPresentation.config, config);
-        myPresentation.bind();
-        myPresentation.loadCategories();
+        $.extend(APP.home.config, config);
+        APP.home.bind();
+        APP.home.loadCategories();
     },
 
     bind: function () {
         console.log("bind");
         $('#tabs').tabs();
-        $(myPresentation.config.searchDialog).dialog({ width: 500 });
-        $(myPresentation.config.searchDialog).dialog('close');
-        $(myPresentation.config.buildInfoDialog).dialog({ height: 200, width: 500 });
-        $(myPresentation.config.buildInfoDialog).dialog('close');
-        $(myPresentation.config.categories).change(myPresentation.loadAllTitles);
-        $(myPresentation.config.titles).change(myPresentation.loadBody);
-        $('#saveSnippetButton').click(myPresentation.saveSnippet);
-        $('#logoutButton').click(myPresentation.logout);
-        $('#deleteButton').click(myPresentation.deleteSnippet);
-        $('#saveCategoryButton').click(myPresentation.saveCategory);
-        $('#deleteCategoryButton').click(myPresentation.deleteCategory);
-        $('#searchButton').click(myPresentation.openSearch);
-        $('#performSearch').click(myPresentation.performSearch);
-        $('#buildInfoButton').click(myPresentation.buildInfo);
+        $(APP.home.config.searchDialog).dialog({ width: 500 });
+        $(APP.home.config.searchDialog).dialog('close');
+        $(APP.home.config.buildInfoDialog).dialog({ height: 200, width: 500 });
+        $(APP.home.config.buildInfoDialog).dialog('close');
+        $(APP.home.config.categories).change(APP.home.loadAllTitles);
+        $(APP.home.config.titles).change(APP.home.loadBody);
+        $('#saveSnippetButton').click(APP.home.saveSnippet);
+        $('#logoutButton').click(APP.home.logout);
+        $('#deleteButton').click(APP.home.deleteSnippet);
+        $('#saveCategoryButton').click(APP.home.saveCategory);
+        $('#deleteCategoryButton').click(APP.home.deleteCategory);
+        $('#searchButton').click(APP.home.openSearch);
+        $('#performSearch').click(APP.home.performSearch);
+        $('#buildInfoButton').click(APP.home.buildInfo);
     },
 
     loadCategories: function () {
         console.log("loadCategories");
         $.get("v1/categories", function (data) {
             var list = JSON.parse(data);
-            $(myPresentation.config.categories).empty();
+            $(APP.home.config.categories).empty();
             $(list).sort(function (a, b) {
                 return a.name.toLowerCase() > b.name.toLowerCase();
             }).each(function () {
-                myPresentation.config.categories.append($("<option></option>").attr("value", this.key).text(this.name));
+                APP.home.config.categories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
             window.setTimeout(function () {
-                $(myPresentation.config.categories).change();
+                $(APP.home.config.categories).change();
             }, 1);
-            $(myPresentation.config.snippetCategories).empty();
+            $(APP.home.config.snippetCategories).empty();
             $(list).sort(function (a, b) {
                 return a.name.toLowerCase() > b.name.toLowerCase();
             }).each(function () {
-                myPresentation.config.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
+                APP.home.config.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
         });
     },
 
     loadAllTitles: function () {
         console.log("loadAllTitles");
-        var category = $(myPresentation.config.categories).val();
+        var category = $(APP.home.config.categories).val();
         console.log("Selected Category: " + category);
         $.get("v1/snippets/category/" + category, function (data) {
-            myPresentation.loadTitles(JSON.parse(data));
+            APP.home.loadTitles(JSON.parse(data));
         })
     },
 
     loadTitles: function (list) {
         console.log("loadTitles");
-        $('option', myPresentation.config.titles).remove();
-        $(myPresentation.config.body).val('');
+        $('option', APP.home.config.titles).remove();
+        $(APP.home.config.body).val('');
         $(list).sort(function (a, b) {
             return a.title.toLowerCase() > b.title.toLowerCase();
         }).each(function () {
-            myPresentation.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
+            APP.home.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
         })
     },
 
     loadBody: function () {
         console.log("loadBody");
-        var category = $(myPresentation.config.categories).val();
-        var title = $(myPresentation.config.titles).val();
+        var category = $(APP.home.config.categories).val();
+        var title = $(APP.home.config.titles).val();
         console.log("Selected Category: " + category + " Title: " + title);
         $.get("v1/snippets/" + title, function (data, status) {
             console.log("Status: " + status + " Data: " + data);
             var found = JSON.parse(data);
-            $(myPresentation.config.body).val(found.body);
+            $(APP.home.config.body).val(found.body);
         })
     },
 
     saveCategory: function () {
         console.log("saveCategory");
         $.post("v1/categories", JSON.stringify({
-            name: $(myPresentation.config.category).val()
+            name: $(APP.home.config.category).val()
         }), function () {
-            myPresentation.loadCategories();
+            APP.home.loadCategories();
             $('#category').val('');
         }).fail(function () {
             alert("Failed saving category");
@@ -123,57 +125,57 @@ var myPresentation = {
     saveSnippet: function () {
         console.log("Save Snippet");
         $.post('v1/snippets', JSON.stringify({
-            category: $(myPresentation.config.snippetCategories).val(),
-            title: $(myPresentation.config.title).val(),
-            body: $(myPresentation.config.bodyInput).val()
+            category: $(APP.home.config.snippetCategories).val(),
+            title: $(APP.home.config.title).val(),
+            body: $(APP.home.config.bodyInput).val()
         }), function () {
-            myPresentation.loadCategories();
+            APP.home.loadCategories();
         }).fail(function () {
             alert("Failed saving snippet.")
         });
-        $(myPresentation.config.title).val('');
-        $(myPresentation.config.bodyInput).val('');
+        $(APP.home.config.title).val('');
+        $(APP.home.config.bodyInput).val('');
     },
 
     deleteSnippet: function () {
         var selected = $(titles).find("option:selected");
-        console.log("Delete Snippet: " + $(myPresentation.config.categories).val() + ':'
+        console.log("Delete Snippet: " + $(APP.home.config.categories).val() + ':'
             + $(selected).val());
         $.ajax({
             url: 'v1/snippets/' + $(selected).val(),
             type: 'DELETE',
             success: function () {
                 console.log('success');
-                myPresentation.loadCategories();
+                APP.home.loadCategories();
             }
         });
     },
 
     deleteCategory: function () {
-        console.log("Delete Category: " + $(myPresentation.config.categories).val());
+        console.log("Delete Category: " + $(APP.home.config.categories).val());
         $.ajax({
-            url: 'v1/categories/' + $(myPresentation.config.categories).val(),
+            url: 'v1/categories/' + $(APP.home.config.categories).val(),
             type: 'DELETE',
             success: function () {
                 console.log('success');
-                myPresentation.loadCategories();
+                APP.home.loadCategories();
             }
         });
     },
 
     openSearch: function () {
-        $(myPresentation.config.searchDialog).dialog('open');
+        $(APP.home.config.searchDialog).dialog('open');
     },
 
     performSearch: function () {
         console.log("loadAllTitles");
-        var category = $(myPresentation.config.categories).val();
+        var category = $(APP.home.config.categories).val();
         console.log("Selected Category: " + category);
         $.post("v1/snippets/category/" + category, JSON.stringify({
             query: $(query).val()
         }), function (data) {
-            myPresentation.loadTitles(JSON.parse(data));
-            $(myPresentation.config.searchDialog).dialog('close');
+            APP.home.loadTitles(JSON.parse(data));
+            $(APP.home.config.searchDialog).dialog('close');
         }).fail(function () {
             alert("Failed searching snippets.")
         });
@@ -181,7 +183,7 @@ var myPresentation = {
 
     logout: function () {
         console.log("logout");
-        myPersona.logout();
+        APP.myPersona.logout();
         $.ajax({
             url: 'v1/auth',
             type: 'DELETE',
@@ -194,7 +196,7 @@ var myPresentation = {
     buildInfo: function () {
         console.log("build info");
         $.get("properties", function (data) {
-            $(myPresentation.config.buildInfoDialog).dialog('open');
+            $(APP.home.config.buildInfoDialog).dialog('open');
             $('#buildInfo').html(data);
         });
     }
@@ -202,5 +204,5 @@ var myPresentation = {
 };
 
 $(document).ready(function () {
-    myPresentation.init();
+    APP.home.init();
 });
