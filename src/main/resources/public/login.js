@@ -24,7 +24,7 @@ function Login() {
 
     // Event handlers
     this.enablePersona = function () {
-        $(this.personaButton).prop('disabled', $(this.username).val().length === 0);
+        $(this.personaButton).prop('disabled', !$(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i));
     };
 
     this.personaLogin = function () {
@@ -44,9 +44,8 @@ function Login() {
     $(this.password).bind('keyup', this.login.bind(this));
     $(this.personaButton).click(this.personaLogin.bind(this));
 }
-var myLogin;
 
 $(document).ready(function () {
-    myLogin = new Login();
+   var myLogin = new Login();
 });
 
