@@ -28,10 +28,10 @@ APP.Home = function () {
     this.bodyInput = $('#bodyInput');
     this.query = $('#query');
     this.searchDialog = $('#searchCategoryDialog');
-    $(this.searchDialog).dialog({ width: 500 });
+    $(this.searchDialog).dialog({width: 500});
     $(this.searchDialog).dialog('close');
     this.buildInfoDialog = $('#buildInfoDialog');
-    $(this.buildInfoDialog).dialog({ height: 200, width: 500 });
+    $(this.buildInfoDialog).dialog({height: 200, width: 500});
     $(this.buildInfoDialog).dialog('close');
 
     // Functions
@@ -41,19 +41,19 @@ APP.Home = function () {
         $.get("v1/categories", function (data) {
             var list = JSON.parse(data);
             $(that.categories).empty();
-            $(list).sort(function (a, b) {
+            list.sort(function (a, b) {
                 return a.name.toLowerCase() > b.name.toLowerCase();
-            }).each(function () {
-                that.categories.append($("<option></option>").attr("value", this.key).text(this.name));
+            }).forEach(function (element) {
+                that.categories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
             window.setTimeout(function () {
                 $(that.categories).change();
             }, 1);
             $(that.snippetCategories).empty();
-            $(list).sort(function (a, b) {
+            list.sort(function (a, b) {
                 return a.name.toLowerCase() > b.name.toLowerCase();
-            }).each(function () {
-                that.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
+            }).forEach(function (element) {
+                that.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
         });
     };
@@ -73,10 +73,10 @@ APP.Home = function () {
         console.log("loadTitles");
         $('option', this.titles).remove();
         $(this.body).val('');
-        $(list).sort(function (a, b) {
+        list.sort(function (a, b) {
             return a.title.toLowerCase() > b.title.toLowerCase();
-        }).each(function () {
-            that.titles.append($("<option></option>").attr("value", this.key).text(this.title));
+        }).forEach(function (element) {
+            that.titles.append($("<option></option>").attr("value", element.key).text(element.title));
         })
     };
 

@@ -30,13 +30,13 @@ APP.Login = function () {
     };
 
     this.personaLogin = function () {
-         APP.myPersona.login($(this.username).val());
+        APP.myPersona.login($(this.username).val());
     };
 
     this.login = function (event) {
         if (event.keyCode === 13) {
             $.get("v1/auth/" + $(this.username).val() + "/" + $(this.password).val(), function () {
-                 window.location.replace("/");
+                window.location.replace("/");
             });
         }
     };
@@ -48,6 +48,6 @@ APP.Login = function () {
 }
 
 $(document).ready(function () {
-   new APP.Login();
+    new APP.Login();
 });
 
