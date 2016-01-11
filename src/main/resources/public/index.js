@@ -16,172 +16,160 @@
 
 var APP = APP || {};
 
-APP.home = {
+APP.Home = function () {
+    // Instance variables and initialization
+    $('#tabs').tabs();
+    this.categories = $('#browseCategories');
+    this.snippetCategories = $('#snippetCategories');
+    this.category = $('#category');
+    this.titles = $('#titles');
+    this.title = $('#title');
+    this.body = $('#body');
+    this.bodyInput = $('#bodyInput');
+    this.query = $('#query');
+    this.searchDialog = $('#searchCategoryDialog');
+    $(this.searchDialog).dialog({ width: 500 });
+    $(this.searchDialog).dialog('close');
+    this.buildInfoDialog = $('#buildInfoDialog');
+    $(this.buildInfoDialog).dialog({ height: 200, width: 500 });
+    $(this.buildInfoDialog).dialog('close');
 
-    init: function (config) {
-        console.log("init");
-        APP.home.config = {
-            categories: $('#browseCategories'),
-            snippetCategories: $('#snippetCategories'),
-            category: $('#category'),
-            titles: $('#titles'),
-            title: $('#title'),
-            body: $('#body'),
-            bodyInput: $('#bodyInput'),
-            searchDialog: $('#searchCategoryDialog'),
-            query: $('#query'),
-            buildInfoDialog: $('#buildInfoDialog')
-        };
-        $.extend(APP.home.config, config);
-        APP.home.bind();
-        APP.home.loadCategories();
-    },
-
-    bind: function () {
-        console.log("bind");
-        $('#tabs').tabs();
-        $(APP.home.config.searchDialog).dialog({ width: 500 });
-        $(APP.home.config.searchDialog).dialog('close');
-        $(APP.home.config.buildInfoDialog).dialog({ height: 200, width: 500 });
-        $(APP.home.config.buildInfoDialog).dialog('close');
-        $(APP.home.config.categories).change(APP.home.loadAllTitles);
-        $(APP.home.config.titles).change(APP.home.loadBody);
-        $('#saveSnippetButton').click(APP.home.saveSnippet);
-        $('#logoutButton').click(APP.home.logout);
-        $('#deleteButton').click(APP.home.deleteSnippet);
-        $('#saveCategoryButton').click(APP.home.saveCategory);
-        $('#deleteCategoryButton').click(APP.home.deleteCategory);
-        $('#searchButton').click(APP.home.openSearch);
-        $('#performSearch').click(APP.home.performSearch);
-        $('#buildInfoButton').click(APP.home.buildInfo);
-    },
-
-    loadCategories: function () {
+    // Functions
+    this.loadCategories = function () {
+        var that = this;
         console.log("loadCategories");
         $.get("v1/categories", function (data) {
             var list = JSON.parse(data);
-            $(APP.home.config.categories).empty();
+            $(that.categories).empty();
             $(list).sort(function (a, b) {
                 return a.name.toLowerCase() > b.name.toLowerCase();
             }).each(function () {
-                APP.home.config.categories.append($("<option></option>").attr("value", this.key).text(this.name));
+                that.categories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
             window.setTimeout(function () {
-                $(APP.home.config.categories).change();
+                $(that.categories).change();
             }, 1);
-            $(APP.home.config.snippetCategories).empty();
+            $(that.snippetCategories).empty();
             $(list).sort(function (a, b) {
                 return a.name.toLowerCase() > b.name.toLowerCase();
             }).each(function () {
-                APP.home.config.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
+                that.snippetCategories.append($("<option></option>").attr("value", this.key).text(this.name));
             });
         });
-    },
+    };
 
-    loadAllTitles: function () {
+    this.loadAllTitles = function () {
+        var that = this;
         console.log("loadAllTitles");
-        var category = $(APP.home.config.categories).val();
+        var category = $(this.categories).val();
         console.log("Selected Category: " + category);
         $.get("v1/snippets/category/" + category, function (data) {
-            APP.home.loadTitles(JSON.parse(data));
+            that.loadTitles(JSON.parse(data));
         })
-    },
+    };
 
-    loadTitles: function (list) {
+    this.loadTitles = function (list) {
+        var that = this;
         console.log("loadTitles");
-        $('option', APP.home.config.titles).remove();
-        $(APP.home.config.body).val('');
+        $('option', this.titles).remove();
+        $(this.body).val('');
         $(list).sort(function (a, b) {
             return a.title.toLowerCase() > b.title.toLowerCase();
         }).each(function () {
-            APP.home.config.titles.append($("<option></option>").attr("value", this.key).text(this.title));
+            that.titles.append($("<option></option>").attr("value", this.key).text(this.title));
         })
-    },
+    };
 
-    loadBody: function () {
+    this.loadBody = function () {
+        var that = this;
         console.log("loadBody");
-        var category = $(APP.home.config.categories).val();
-        var title = $(APP.home.config.titles).val();
+        var category = $(this.categories).val();
+        var title = $(this.titles).val();
         console.log("Selected Category: " + category + " Title: " + title);
         $.get("v1/snippets/" + title, function (data, status) {
             console.log("Status: " + status + " Data: " + data);
             var found = JSON.parse(data);
-            $(APP.home.config.body).val(found.body);
+            $(that.body).val(found.body);
         })
-    },
+    };
 
-    saveCategory: function () {
+    this.saveCategory = function () {
+        var that = this;
         console.log("saveCategory");
         $.post("v1/categories", JSON.stringify({
-            name: $(APP.home.config.category).val()
+            name: $(this.category).val()
         }), function () {
-            APP.home.loadCategories();
+            that.loadCategories();
             $('#category').val('');
         }).fail(function () {
             alert("Failed saving category");
         });
-    },
+    };
 
-    saveSnippet: function () {
+    this.saveSnippet = function () {
+        var that = this;
         console.log("Save Snippet");
         $.post('v1/snippets', JSON.stringify({
-            category: $(APP.home.config.snippetCategories).val(),
-            title: $(APP.home.config.title).val(),
-            body: $(APP.home.config.bodyInput).val()
+            category: $(this.snippetCategories).val(),
+            title: $(this.title).val(),
+            body: $(this.bodyInput).val()
         }), function () {
-            APP.home.loadCategories();
+            that.loadCategories();
         }).fail(function () {
             alert("Failed saving snippet.")
         });
-        $(APP.home.config.title).val('');
-        $(APP.home.config.bodyInput).val('');
-    },
+        $(this.title).val('');
+        $(this.bodyInput).val('');
+    };
 
-    deleteSnippet: function () {
+    this.deleteSnippet = function () {
+        var that = this;
         var selected = $(titles).find("option:selected");
-        console.log("Delete Snippet: " + $(APP.home.config.categories).val() + ':'
+        console.log("Delete Snippet: " + $(this.categories).val() + ':'
             + $(selected).val());
         $.ajax({
             url: 'v1/snippets/' + $(selected).val(),
             type: 'DELETE',
             success: function () {
                 console.log('success');
-                APP.home.loadCategories();
+                that.loadCategories();
             }
         });
-    },
+    };
 
-    deleteCategory: function () {
-        console.log("Delete Category: " + $(APP.home.config.categories).val());
+    this.deleteCategory = function () {
+        var that = this;
+        console.log("Delete Category: " + $(this.categories).val());
         $.ajax({
-            url: 'v1/categories/' + $(APP.home.config.categories).val(),
+            url: 'v1/categories/' + $(this.categories).val(),
             type: 'DELETE',
             success: function () {
                 console.log('success');
-                APP.home.loadCategories();
+                that.loadCategories();
             }
         });
-    },
+    };
 
-    openSearch: function () {
-        $(APP.home.config.searchDialog).dialog('open');
-    },
+    this.openSearch = function () {
+        $(this.searchDialog).dialog('open');
+    };
 
-    performSearch: function () {
+    this.performSearch = function () {
+        var that = this;
         console.log("loadAllTitles");
-        var category = $(APP.home.config.categories).val();
+        var category = $(this.categories).val();
         console.log("Selected Category: " + category);
         $.post("v1/snippets/category/" + category, JSON.stringify({
             query: $(query).val()
         }), function (data) {
-            APP.home.loadTitles(JSON.parse(data));
-            $(APP.home.config.searchDialog).dialog('close');
+            that.loadTitles(JSON.parse(data));
+            $(that.searchDialog).dialog('close');
         }).fail(function () {
             alert("Failed searching snippets.")
         });
-    },
+    };
 
-    logout: function () {
+    this.logout = function () {
         console.log("logout");
         APP.myPersona.logout();
         $.ajax({
@@ -191,18 +179,33 @@ APP.home = {
                 window.location.replace("/login.html");
             }
         });
-    },
+    };
 
-    buildInfo: function () {
+    this.buildInfo = function () {
+        var that = this;
         console.log("build info");
         $.get("properties", function (data) {
-            $(APP.home.config.buildInfoDialog).dialog('open');
+            $(that.buildInfoDialog).dialog('open');
             $('#buildInfo').html(data);
         });
-    }
+    };
 
+    // Bindings
+    $(this.categories).change(this.loadAllTitles.bind(this));
+    $(this.titles).change(this.loadBody.bind(this));
+    $('#saveSnippetButton').click(this.saveSnippet.bind(this));
+    $('#logoutButton').click(this.logout.bind(this));
+    $('#deleteButton').click(this.deleteSnippet.bind(this));
+    $('#saveCategoryButton').click(this.saveCategory.bind(this));
+    $('#deleteCategoryButton').click(this.deleteCategory.bind(this));
+    $('#searchButton').click(this.openSearch.bind(this));
+    $('#performSearch').click(this.performSearch.bind(this));
+    $('#buildInfoButton').click(this.buildInfo.bind(this));
+
+    // Go!
+    this.loadCategories();
 };
 
 $(document).ready(function () {
-    APP.home.init();
+    new APP.Home();
 });
