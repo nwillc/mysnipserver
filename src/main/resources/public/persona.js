@@ -16,15 +16,15 @@
 
 var APP = APP || {};
 
-APP.myPersona = {
+APP.persona = {
 
     login: function (username) {
         console.log("Logging in " + username + " via persona.");
         APP.cookies.set("username", username);
         navigator.id.watch({
             loggedInUser: username,
-            onlogin: APP.myPersona.loginHandler,
-            onlogout: APP.myPersona.logoutHandler
+            onlogin: APP.persona.loginHandler,
+            onlogout: APP.persona.logoutHandler
         });
         navigator.id.request();
     },
@@ -32,8 +32,8 @@ APP.myPersona = {
     logout: function () {
         navigator.id.watch({
             loggedInUser: APP.cookies.get("username"),
-            onlogin: APP.myPersona.loginHandler,
-            onlogout: APP.myPersona.logoutHandler
+            onlogin: APP.persona.loginHandler,
+            onlogout: APP.persona.logoutHandler
         });
         navigator.id.logout();
     },
@@ -53,8 +53,8 @@ APP.myPersona = {
     logoutHandler: function () {
         navigator.id.watch({
             loggedInUser: document.cookie,
-            onlogin: APP.myPersona.loginHandler,
-            onlogout: APP.myPersona.logoutHandler
+            onlogin: APP.persona.loginHandler,
+            onlogout: APP.persona.logoutHandler
         });
         navigator.id.logout();
     }

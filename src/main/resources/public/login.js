@@ -30,7 +30,7 @@ APP.Login = function () {
     };
 
     this.personaLogin = function () {
-        APP.myPersona.login($(this.username).val());
+        APP.persona.login($(this.username).val());
     };
 
     this.login = function (event) {
@@ -45,7 +45,7 @@ APP.Login = function () {
     $(this.username).bind('keyup', this.enablePersona.bind(this));
     $(this.password).bind('keyup', this.login.bind(this));
     $(this.personaButton).click(this.personaLogin.bind(this));
-}
+};
 
 $(document).ready(function () {
     new APP.Login();
