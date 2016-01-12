@@ -39,20 +39,18 @@ APP.Home = function () {
         var that = this;
         console.log("loadCategories");
         $.get("v1/categories", function (data) {
-            var list = JSON.parse(data);
-            $(that.categories).empty();
-            list.sort(function (a, b) {
+            var list = JSON.parse(data).sort(function (a, b) {
                 return a.name.localeCompare(b.name);
-            }).forEach(function (element) {
+            });
+            $(that.categories).empty();
+            list.forEach(function (element) {
                 that.categories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
             window.setTimeout(function () {
                 $(that.categories).change();
             }, 1);
             $(that.snippetCategories).empty();
-            list.sort(function (a, b) {
-                return a.name.localeCompare(b.name);
-            }).forEach(function (element) {
+            list.forEach(function (element) {
                 that.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
         });
