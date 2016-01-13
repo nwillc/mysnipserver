@@ -44,6 +44,14 @@
         var login = new APP.Login();
         assert.ok($('#personaButton').prop('disabled'));
     });
+    QUnit.test("Test invalid email enables.", function (assert) {
+        var login = new APP.Login();
+        var email = "foobar.com";
+        var username = $('#username');
+        username.val(email);
+        login.enablePersona();
+        assert.ok($('#personaButton').prop('disabled'));
+    });
     QUnit.test("Test valid email enables.", function (assert) {
         var login = new APP.Login();
         var email = "foo@bar.com";
