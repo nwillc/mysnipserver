@@ -22,11 +22,13 @@ APP.Login = function () {
     $(this.username).focus();
     this.password = $('#password');
     this.personaButton = $('#personaButton');
-    $(this.personaButton).prop('disabled', true);
+    $(this.personaButton).attr('disabled', 'disabled');
 
     // Event handlers
     this.enablePersona = function () {
-        $(this.personaButton).prop('disabled', !$(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i));
+        if ($(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
+             $(this.personaButton).removeAttr('disabled');
+        }
     };
 
     this.personaLogin = function () {
@@ -42,8 +44,8 @@ APP.Login = function () {
     };
 
     // Bindings
-    $(this.username).bind('keyup', this.enablePersona.bind(this));
-    $(this.password).bind('keyup', this.login.bind(this));
+    $(this.username).keyup(this.enablePersona.bind(this));
+    $(this.password).keyup(this.login.bind(this));
     $(this.personaButton).click(this.personaLogin.bind(this));
 };
 
