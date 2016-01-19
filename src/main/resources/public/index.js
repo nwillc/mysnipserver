@@ -37,21 +37,19 @@ APP.Home = function () {
     // Functions
     this.loadCategories = () => {
         console.log("loadCategories");
-        $.get("v1/categories", (data) => {
+        $.get("v1/categories", data => {
             var list = JSON.parse(data).sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
             $(this.categories).empty();
-            list.forEach((element) => {
-                this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
-            });
+            list.forEach(element =>
+                this.categories.append($("<option></option>").attr("value", element.key).text(element.name)));
             window.setTimeout(() => {
                 $(this.categories).change();
             }, 1);
             $(this.snippetCategories).empty();
-            list.forEach((element) => {
-                this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
-            });
+            list.forEach(element =>
+                this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name)));
         });
     };
 
@@ -59,20 +57,15 @@ APP.Home = function () {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
         console.log("Selected Category: " + category);
-        $.get("v1/snippets/category/" + category, (data) => {
-            this.loadTitles(JSON.parse(data));
-        })
+        $.get("v1/snippets/category/" + category, data => this.loadTitles(JSON.parse(data)));
     };
 
     this.loadTitles = (list) => {
         console.log("loadTitles");
         $('option', this.titles).remove();
         $(this.body).val('');
-        list.sort((a, b) => {
-            return a.title.localeCompare(b.title);
-        }).forEach((element) => {
-            this.titles.append($("<option></option>").attr("value", element.key).text(element.title));
-        })
+        list.sort((a, b) => a.title.localeCompare(b.title)).forEach(element =>
+            this.titles.append($("<option></option>").attr("value", element.key).text(element.title)));
     };
 
     this.loadBody = () => {
@@ -94,9 +87,7 @@ APP.Home = function () {
         }), () => {
             this.loadCategories();
             $('#category').val('');
-        }).fail(() => {
-            alert("Failed saving category");
-        });
+        }).fail(() => alert("Failed saving category"));
     };
 
     this.saveSnippet = () => {
@@ -105,11 +96,7 @@ APP.Home = function () {
             category: $(this.snippetCategories).val(),
             title: $(this.title).val(),
             body: $(this.bodyInput).val()
-        }), () => {
-            this.loadCategories();
-        }).fail(() => {
-            alert("Failed saving snippet.")
-        });
+        }), () => this.loadCategories()).fail(() => alert("Failed saving snippet."));
         $(this.title).val('');
         $(this.bodyInput).val('');
     };
@@ -121,10 +108,7 @@ APP.Home = function () {
         $.ajax({
             url: 'v1/snippets/' + $(selected).val(),
             type: 'DELETE',
-            success: () => {
-                console.log('success');
-                this.loadCategories();
-            }
+            success: () => this.loadCategories()
         });
     };
 
@@ -133,10 +117,7 @@ APP.Home = function () {
         $.ajax({
             url: 'v1/categories/' + $(this.categories).val(),
             type: 'DELETE',
-            success: () => {
-                console.log('success');
-                this.loadCategories();
-            }
+            success: () => this.loadCategories()
         });
     };
 
@@ -150,12 +131,10 @@ APP.Home = function () {
         console.log("Selected Category: " + category);
         $.post("v1/snippets/category/" + category, JSON.stringify({
             query: $(query).val()
-        }), (data) => {
+        }), data => {
             this.loadTitles(JSON.parse(data));
             $(this.searchDialog).dialog('close');
-        }).fail(() => {
-            alert("Failed searching snippets.")
-        });
+        }).fail(() => alert("Failed searching snippets."));
     };
 
     this.logout = () => {
@@ -164,15 +143,13 @@ APP.Home = function () {
         $.ajax({
             url: 'v1/auth',
             type: 'DELETE',
-            success: () => {
-                window.location.replace("/login.html");
-            }
+            success: () => window.location.replace("/login.html")
         });
     };
 
     this.buildInfo = () => {
         console.log("build info");
-        $.get("properties", (data) => {
+        $.get("properties", data => {
             $(this.buildInfoDialog).dialog('open');
             $('#buildInfo').html(data);
         });
