@@ -35,175 +35,165 @@ APP.Home = function () {
     $(this.buildInfoDialog).dialog('close');
 
     // Functions
-    this.loadCategories = function () {
-        var that = this;
+    this.loadCategories = () => {
         console.log("loadCategories");
-        $.get("v1/categories", function (data) {
-            var list = JSON.parse(data).sort(function (a, b) {
+        $.get("v1/categories", (data) => {
+            var list = JSON.parse(data).sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
-            $(that.categories).empty();
-            list.forEach(function (element) {
-                that.categories.append($("<option></option>").attr("value", element.key).text(element.name));
+            $(this.categories).empty();
+            list.forEach((element) => {
+                this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
-            window.setTimeout(function () {
-                $(that.categories).change();
+            window.setTimeout(() => {
+                $(this.categories).change();
             }, 1);
-            $(that.snippetCategories).empty();
-            list.forEach(function (element) {
-                that.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+            $(this.snippetCategories).empty();
+            list.forEach((element) => {
+                this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
             });
         });
     };
 
-    this.loadAllTitles = function () {
-        var that = this;
+    this.loadAllTitles = () => {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
         console.log("Selected Category: " + category);
-        $.get("v1/snippets/category/" + category, function (data) {
-            that.loadTitles(JSON.parse(data));
+        $.get("v1/snippets/category/" + category, (data) => {
+            this.loadTitles(JSON.parse(data));
         })
     };
 
-    this.loadTitles = function (list) {
-        var that = this;
+    this.loadTitles = (list) => {
         console.log("loadTitles");
         $('option', this.titles).remove();
         $(this.body).val('');
-        list.sort(function (a, b) {
+        list.sort((a, b) => {
             return a.title.localeCompare(b.title);
-        }).forEach(function (element) {
-            that.titles.append($("<option></option>").attr("value", element.key).text(element.title));
+        }).forEach((element) => {
+            this.titles.append($("<option></option>").attr("value", element.key).text(element.title));
         })
     };
 
-    this.loadBody = function () {
-        var that = this;
+    this.loadBody = () => {
         console.log("loadBody");
         var category = $(this.categories).val();
         var title = $(this.titles).val();
         console.log("Selected Category: " + category + " Title: " + title);
-        $.get("v1/snippets/" + title, function (data, status) {
+        $.get("v1/snippets/" + title, (data, status) => {
             console.log("Status: " + status + " Data: " + data);
             var found = JSON.parse(data);
-            $(that.body).val(found.body);
+            $(this.body).val(found.body);
         })
     };
 
-    this.saveCategory = function () {
-        var that = this;
+    this.saveCategory = () => {
         console.log("saveCategory");
         $.post("v1/categories", JSON.stringify({
             name: $(this.category).val()
-        }), function () {
-            that.loadCategories();
+        }), () => {
+            this.loadCategories();
             $('#category').val('');
-        }).fail(function () {
+        }).fail(() => {
             alert("Failed saving category");
         });
     };
 
-    this.saveSnippet = function () {
-        var that = this;
+    this.saveSnippet = () => {
         console.log("Save Snippet");
         $.post('v1/snippets', JSON.stringify({
             category: $(this.snippetCategories).val(),
             title: $(this.title).val(),
             body: $(this.bodyInput).val()
-        }), function () {
-            that.loadCategories();
-        }).fail(function () {
+        }), () => {
+            this.loadCategories();
+        }).fail(() => {
             alert("Failed saving snippet.")
         });
         $(this.title).val('');
         $(this.bodyInput).val('');
     };
 
-    this.deleteSnippet = function () {
-        var that = this;
+    this.deleteSnippet = () => {
         var selected = $(titles).find("option:selected");
         console.log("Delete Snippet: " + $(this.categories).val() + ':'
             + $(selected).val());
         $.ajax({
             url: 'v1/snippets/' + $(selected).val(),
             type: 'DELETE',
-            success: function () {
+            success: () => {
                 console.log('success');
-                that.loadCategories();
+                this.loadCategories();
             }
         });
     };
 
-    this.deleteCategory = function () {
-        var that = this;
+    this.deleteCategory = () => {
         console.log("Delete Category: " + $(this.categories).val());
         $.ajax({
             url: 'v1/categories/' + $(this.categories).val(),
             type: 'DELETE',
-            success: function () {
+            success: () => {
                 console.log('success');
-                that.loadCategories();
+                this.loadCategories();
             }
         });
     };
 
-    this.openSearch = function () {
+    this.openSearch = () => {
         $(this.searchDialog).dialog('open');
     };
 
-    this.performSearch = function () {
-        var that = this;
+    this.performSearch = () => {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
         console.log("Selected Category: " + category);
         $.post("v1/snippets/category/" + category, JSON.stringify({
             query: $(query).val()
-        }), function (data) {
-            that.loadTitles(JSON.parse(data));
-            $(that.searchDialog).dialog('close');
-        }).fail(function () {
+        }), (data) => {
+            this.loadTitles(JSON.parse(data));
+            $(this.searchDialog).dialog('close');
+        }).fail(() => {
             alert("Failed searching snippets.")
         });
     };
 
-    this.logout = function () {
+    this.logout = () => {
         console.log("logout");
         APP.persona.logout();
         $.ajax({
             url: 'v1/auth',
             type: 'DELETE',
-            success: function () {
+            success: () => {
                 window.location.replace("/login.html");
             }
         });
     };
 
-    this.buildInfo = function () {
-        var that = this;
+    this.buildInfo = () => {
         console.log("build info");
-        $.get("properties", function (data) {
-            $(that.buildInfoDialog).dialog('open');
+        $.get("properties", (data) => {
+            $(this.buildInfoDialog).dialog('open');
             $('#buildInfo').html(data);
         });
     };
 
     // Bindings
-    $(this.categories).change(this.loadAllTitles.bind(this));
-    $(this.titles).change(this.loadBody.bind(this));
-    $('#saveSnippetButton').click(this.saveSnippet.bind(this));
-    $('#logoutButton').click(this.logout.bind(this));
-    $('#deleteButton').click(this.deleteSnippet.bind(this));
-    $('#saveCategoryButton').click(this.saveCategory.bind(this));
-    $('#deleteCategoryButton').click(this.deleteCategory.bind(this));
-    $('#searchButton').click(this.openSearch.bind(this));
-    $('#performSearch').click(this.performSearch.bind(this));
-    $('#buildInfoButton').click(this.buildInfo.bind(this));
+    $(this.categories).change(this.loadAllTitles);
+    $(this.titles).change(this.loadBody);
+    $('#saveSnippetButton').click(this.saveSnippet);
+    $('#logoutButton').click(this.logout);
+    $('#deleteButton').click(this.deleteSnippet);
+    $('#saveCategoryButton').click(this.saveCategory);
+    $('#deleteCategoryButton').click(this.deleteCategory);
+    $('#searchButton').click(this.openSearch);
+    $('#performSearch').click(this.performSearch);
+    $('#buildInfoButton').click(this.buildInfo);
 
     // Go!
     this.loadCategories();
 };
 
-$(document).ready(function () {
+$(document).ready(() => {
     new APP.Home();
 });

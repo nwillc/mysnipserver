@@ -25,28 +25,28 @@ APP.Login = function () {
     $(this.personaButton).attr('disabled', 'disabled');
 
     // Event handlers
-    this.enablePersona = function () {
+    this.enablePersona = () => {
         if ($(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
              $(this.personaButton).removeAttr('disabled');
         }
-    };
+    }
 
-    this.personaLogin = function () {
+    this.personaLogin = () => {
         APP.persona.login($(this.username).val());
-    };
+    }
 
-    this.login = function (event) {
+    this.login = (event) => {
         if (event.keyCode === 13) {
             $.get("v1/auth/" + $(this.username).val() + "/" + $(this.password).val(), function () {
                 window.location.replace("/");
             });
         }
-    };
+    }
 
     // Bindings
-    $(this.username).keyup(this.enablePersona.bind(this));
-    $(this.password).keyup(this.login.bind(this));
-    $(this.personaButton).click(this.personaLogin.bind(this));
+    $(this.username).keyup(this.enablePersona);
+    $(this.password).keyup(this.login);
+    $(this.personaButton).click(this.personaLogin);
 };
 
 $(document).ready(function () {
