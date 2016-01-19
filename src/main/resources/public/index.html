@@ -20,10 +20,16 @@
         select {
             width: 200px;
         }
+
+        #toolbar {
+            right: 4px;
+            padding: 4px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-<div align="right">
+<div class="ui-widget-header ui-corner-all" align="right">
     <button id="buildInfoButton">About</button>
     <button id="logoutButton">Logout</button>
 </div>
@@ -34,15 +40,19 @@
         <li><a href="#categoryTab">Category</a></li>
     </ul>
     <div id="browseTab">
+        <div align="right">
+            <div id="toolbar" class="ui-widget-header ui-corner-all">
+                <button id="deleteButton">Delete Snippet</button>
+                <button id="deleteCategoryButton">Delete Category</button>
+                <button id="searchButton">Search</button>
+            </div>
+        </div>
         <label for="browseCategories">Category:</label>
         <select id="browseCategories"></select>
         <label for="titles">Titles:</label>
         <select id="titles" size="5" style="width: 46em;"></select>
         <label for="body">Snippet:</label>
         <textarea id="body" rows="5" cols="80"></textarea><br>
-        <button id="deleteButton">Delete Snippet</button>
-        <button id="deleteCategoryButton">Delete Category</button>
-        <button id="searchButton">Search</button>
     </div>
     <div id="snippetTab">
         <label for="snippetCategories">Category:</label>
