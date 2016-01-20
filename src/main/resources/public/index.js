@@ -75,8 +75,8 @@ APP.Home = function () {
         console.log("Selected Category: " + category + " Title: " + title);
         $.get("v1/snippets/" + title, (data, status) => {
             console.log("Status: " + status + " Data: " + data);
-            var found = JSON.parse(data);
-            $(this.body).val(found.body);
+            var snippet = JSON.parse(data);
+            $(this.body).val(snippet.body);
         })
     };
 
@@ -156,7 +156,13 @@ APP.Home = function () {
     };
 
     this.updateSnippet = () => {
-        alert("Whoopie!");
+         console.log("Update Snippet");
+         $.post('v1/snippets', JSON.stringify({
+             key: $(this.titles).val(),
+             category: $(this.categories).val(),
+             title: $(this.titles).children(":selected").text(),
+             body: $(this.body).val()
+          })).fail(() => alert("Failed updating snippet."));
     };
 
     this.moveSnippet = () => {
