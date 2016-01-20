@@ -155,6 +155,14 @@ APP.Home = function () {
         });
     };
 
+    this.updateSnippet = () => {
+        alert("Whoopie!");
+    };
+
+    this.moveSnippet = () => {
+        alert("Yahoooo!");
+    };
+
     // Bindings
     $(this.categories).change(this.loadAllTitles);
     $(this.titles).change(this.loadBody);
@@ -166,6 +174,8 @@ APP.Home = function () {
     $('#searchButton').click(this.openSearch);
     $('#performSearch').click(this.performSearch);
     $('#buildInfoButton').click(this.buildInfo);
+    $('#updateButton').click(this.updateSnippet);
+    $('#moveButton').click(this.moveSnippet);
 
     // Go!
     this.loadCategories();

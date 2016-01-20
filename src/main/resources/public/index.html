@@ -20,17 +20,12 @@
         select {
             width: 200px;
         }
-
-        #toolbar {
-            padding: 4px;
-            display: inline-block;
-        }
     </style>
 </head>
 <body>
-<div class="ui-widget-header ui-corner-all" align="right">
-    <button id="buildInfoButton">About</button>
+<div class="ui-widget-header ui-corner-all" align="left">
     <button id="logoutButton">Logout</button>
+    <button id="buildInfoButton">About Snippets</button>
 </div>
 <div id="tabs">
     <ul>
@@ -39,8 +34,10 @@
         <li><a href="#categoryTab">Category</a></li>
     </ul>
     <div id="browseTab">
-        <div align="right">
-            <div id="toolbar" class="ui-widget-header ui-corner-all">
+        <div align="left">
+            <div  class="ui-widget-header ui-corner-all">
+                <button id="updateButton">Update Snippet</button>
+                <button id="moveButton">Move Snippet</button>
                 <button id="deleteButton">Delete Snippet</button>
                 <button id="deleteCategoryButton">Delete Category</button>
                 <button id="searchButton">Search</button>
@@ -54,19 +51,26 @@
         <textarea id="body" rows="5" cols="80"></textarea><br>
     </div>
     <div id="snippetTab">
+        <div align="left">
+            <div  class="ui-widget-header ui-corner-all">
+                <button id="saveSnippetButton">Save Snippet</button>
+            </div>
+        </div>
         <label for="snippetCategories">Category:</label>
         <select id="snippetCategories"></select>
         <label for="title">Title:</label>
         <input size="80" type="text" id="title">
         <label for="bodyInput">Snippet:</label>
         <textarea id="bodyInput" rows="10" cols="80"></textarea>
-        <br>
-        <button id="saveSnippetButton">Save</button>
     </div>
     <div id="categoryTab">
+        <div align="left">
+            <div  class="ui-widget-header ui-corner-all">
+                <button id="saveCategoryButton">Save Category</button>
+            </div>
+        </div>
         <label for="category">Category:</label>
         <input type="text" id="category"><br>
-        <button id="saveCategoryButton">Save</button>
     </div>
 </div>
 <div id="searchCategoryDialog" title="Search">

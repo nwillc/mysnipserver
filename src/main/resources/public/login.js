@@ -19,16 +19,16 @@ var APP = APP || {};
 APP.Login = function () {
     // Instance variables
     this.username = $('#username');
-    $(this.username).focus();
     this.password = $('#password');
     this.personaButton = $('#personaButton');
-    $(this.personaButton).attr('disabled', 'disabled');
+
 
     // Event handlers
-    this.enablePersona = () => {
-        if ($(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
-             $(this.personaButton).removeAttr('disabled');
-        }
+    this.validUsername = () => {
+        var notValid = !$(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
+
+        $(this.password).prop('disabled', notValid);
+        $(this.personaButton).prop('disabled', notValid);
     }
 
     this.personaLogin = () => {
@@ -44,9 +44,13 @@ APP.Login = function () {
     }
 
     // Bindings
-    $(this.username).keyup(this.enablePersona);
+    $(this.username).keyup(this.validUsername);
     $(this.password).keyup(this.login);
     $(this.personaButton).click(this.personaLogin);
+
+    // Go!
+    this.validUsername();
+    $(this.username).focus();
 };
 
 $(document).ready(function () {
