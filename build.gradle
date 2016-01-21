@@ -74,10 +74,11 @@ dependencies {
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.7.0',
             'javax.cache:cache-api:1.0.0',
             'com.github.nwillc:cache-annotations:0.1.3',
-            'com.github.nwillc:simplecache:1.0.3'
+            'com.github.nwillc:simplecache:1.0.3',
+            'com.google.api-client:google-api-client:1.21.0'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.7.3',
-            'org.mockito:mockito-core:2.0.36-beta',
+            'org.mockito:mockito-core:2.0.40-beta',
             'org.assertj:assertj-core:3.3.0'
 }
 

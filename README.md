@@ -6,7 +6,7 @@ This is a simple snippets app. It is a RESTful server based on:
 - Java Spark RESTful servlet
 - Orchestrate persistence 
 - JSR 107 Caching (my SimpleCache & cache-annotations)   
-- Persona authentication
+- Google authentication
 - jQuery UI
 
 It gets deployed, when tests pass, by Travis-ci to OpenShift.
