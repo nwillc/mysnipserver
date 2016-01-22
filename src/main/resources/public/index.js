@@ -139,7 +139,6 @@ APP.Home = function () {
 
     this.logout = () => {
         console.log("logout");
-        APP.persona.logout();
         $.ajax({
             url: 'v1/auth',
             type: 'DELETE',

@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
     <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="//login.persona.org/include.js"></script>
+    <script src="//apis.google.com/js/platform.js" async defer></script>
     <script src="cookies.js"></script>
-    <script src="persona.js"></script>
     <script src="login.js"></script>
     <style>
         .center-box {
             width: 300px;
-            height: 6em;
+            height: 4em;
             background-color: #d9d9d9;
             border: 1px solid black;
             position: fixed;
             margin-left: -150px; /* half of width */
-            margin-top: -3em; /* half of height */
+            margin-top: -2em; /* half of height */
             top: 50%;
             left: 50%;
         }
-        button {
-            padding-top:4px;
+        .bottom-box {
+            width: 80px;
+            position: fixed;
+            margin-left: -40px;
+            top: 80%;
+            left: 50%;
         }
     </style>
 </head>
@@ -36,9 +42,16 @@
         <th align="right">Password:</th>
         <td><input size="20" id="password" type="password"></td>
     </tr>
+</table>
+<table class="bottom-box">
     <tr>
-        <td colspan="2" align="center">
-            <button id="personaButton" ><img height="16" src="persona.png" width="16" /> Login With Persona</button>
+        <td align="center">
+            - OR -
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
         </td>
     </tr>
 </table>

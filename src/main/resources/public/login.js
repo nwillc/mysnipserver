@@ -16,24 +16,19 @@
 
 var APP = APP || {};
 
-APP.Login = function () {
+APP.UserNameValidator = function () {
+    "use strict";
     // Instance variables
     this.username = $('#username');
     this.password = $('#password');
-    this.personaButton = $('#personaButton');
-
 
     // Event handlers
     this.validUsername = () => {
         var notValid = !$(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
 
         $(this.password).prop('disabled', notValid);
-        $(this.personaButton).prop('disabled', notValid);
-    }
-
-    this.personaLogin = () => {
-        APP.persona.login($(this.username).val());
-    }
+        $(this.authButton).prop('disabled', notValid);
+    };
 
     this.login = (event) => {
         if (event.keyCode === 13) {
@@ -41,19 +36,28 @@ APP.Login = function () {
                 window.location.replace("/");
             });
         }
-    }
+    };
 
     // Bindings
     $(this.username).keyup(this.validUsername);
     $(this.password).keyup(this.login);
-    $(this.personaButton).click(this.personaLogin);
 
     // Go!
     this.validUsername();
     $(this.username).focus();
 };
 
+function onSignIn(googleUser) {
+    "use strict";
+    var profile = googleUser.getBasicProfile();
+    $.post("v1/auth/" + profile.getEmail(), JSON.stringify({
+        token: googleUser.getAuthResponse().id_token
+    }), success => {
+        window.location.replace("/");
+    });
+}
+
 $(document).ready(function () {
-    new APP.Login();
+    new APP.UserNameValidator();
 });
 
