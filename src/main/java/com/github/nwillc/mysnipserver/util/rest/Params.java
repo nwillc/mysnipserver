@@ -21,7 +21,8 @@ import spark.Request;
 public enum Params {
     KEY,
     USERNAME,
-    PASSWORD;
+    PASSWORD,
+    TOKEN;
 
     public String getLabel() {
         return ":" + name().toLowerCase();

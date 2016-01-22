@@ -49,11 +49,8 @@ APP.UserNameValidator = function () {
 
 function onSignIn(googleUser) {
     "use strict";
-    var profile = googleUser.getBasicProfile();
-    $.post("v1/auth/" + profile.getEmail(), JSON.stringify({
-        token: googleUser.getAuthResponse().id_token
-    }), success => {
-        window.location.replace("/");
+    $.get("v1/auth/" + googleUser.getAuthResponse().id_token, function () {
+            window.location.replace("/");
     });
 }
 
