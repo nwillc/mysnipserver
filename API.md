@@ -19,5 +19,5 @@ All paths are versioned with the version number (v#).
 ## Delete
 - /v#/categories/:key
 - /v#/snippets/:key
-- /v#/auth
+- /v#/auth/:token
 

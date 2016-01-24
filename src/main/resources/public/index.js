@@ -140,7 +140,7 @@ APP.Home = function () {
     this.logout = () => {
         console.log("logout");
         $.ajax({
-            url: 'v1/auth',
+            url: 'v1/auth/' + APP.cookies.get("token"),
             type: 'DELETE',
             success: () => window.location.replace("/login.html")
         });
