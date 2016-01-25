@@ -140,7 +140,7 @@ APP.Home = function () {
     this.logout = () => {
         console.log("logout");
         $.ajax({
-            url: 'v1/auth/' + APP.cookies.get("token"),
+            url: 'v1/auth',
             type: 'DELETE',
             success: () => window.location.replace("/login.html")
         });
@@ -172,7 +172,6 @@ APP.Home = function () {
     $(this.categories).change(this.loadAllTitles);
     $(this.titles).change(this.loadBody);
     $('#saveSnippetButton').click(this.saveSnippet);
-    $('#logoutButton').click(this.logout);
     $('#deleteButton').click(this.deleteSnippet);
     $('#saveCategoryButton').click(this.saveCategory);
     $('#deleteCategoryButton').click(this.deleteCategory);
@@ -187,5 +186,5 @@ APP.Home = function () {
 };
 
 $(document).ready(() => {
-    new APP.Home();
+    APP.home = new APP.Home();
 });

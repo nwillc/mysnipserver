@@ -12,11 +12,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 public final class GoogleIdTokenUtil {
-    private static Logger LOGGER = Logger.getLogger(GoogleIdTokenUtil.class.getName());
-    private static final String CLIENT_ID = System.getenv("CLIENT_ID");
+     private static final String CLIENT_ID = System.getenv("CLIENT_ID");
     private static final String ISSUER = "accounts.google.com";
 
     private GoogleIdTokenUtil() {}
@@ -35,7 +33,4 @@ public final class GoogleIdTokenUtil {
         return Optional.empty();
     }
 
-    static public void logout(final String googleTokenId) {
-         LOGGER.info("Logout " + googleTokenId);
-    }
 }

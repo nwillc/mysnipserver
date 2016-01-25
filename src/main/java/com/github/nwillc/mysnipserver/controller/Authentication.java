@@ -55,7 +55,7 @@ public class Authentication extends SparkController<User> {
         }
         get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
         get("auth/" + TOKEN.getLabel(), this::googleAuth);
-        delete("auth/" + TOKEN.getLabel(), this::logout);
+        delete("auth", this::logout);
     }
 
     private void check(Request request, Response response) {
@@ -75,7 +75,6 @@ public class Authentication extends SparkController<User> {
 
     private Boolean logout(Request request, Response response) {
         request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
-        GoogleIdTokenUtil.logout(TOKEN.from(request));
         return Boolean.TRUE;
     }
 
