@@ -14,6 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+function gapiAuth2Load () {
+    "use strict";
+    console.log("Loading gapi auth2");
+    gapi.load('auth2', function() {
+        gapi.auth2.init();
+    });
+}
+
+function gapiSignOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out of Google.');
+        APP.home.logout();
+    });
+}
+
 var APP = APP || {};
 
 APP.Home = function () {
@@ -180,6 +196,7 @@ APP.Home = function () {
     $('#buildInfoButton').click(this.buildInfo);
     $('#updateButton').click(this.updateSnippet);
     $('#moveButton').click(this.moveSnippet);
+    $('#logoutButton').click(gapiSignOut);
 
     // Go!
     this.loadCategories();
