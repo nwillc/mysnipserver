@@ -30,6 +30,7 @@ import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +38,7 @@ import static java.util.stream.StreamSupport.stream;
 
 @CacheDefaults(cacheResolverFactory = ResolverFactory.class)
 public class CollectionDao<T extends Entity> implements Dao<T> {
+    private static final Logger LOGGER = Logger.getLogger(CollectionDao.class.getName());
     private static final int LIMIT = 100;
     private final Class<T> tClass;
     private final String collection;
@@ -90,6 +92,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @CachePut
     public void put(@CacheKey String key, @CacheValue T entity) {
+        LOGGER.info("Writing out to orchestrate");
         client.kv(collection, key)
                 .put(entity)
                 .get();
