@@ -36,4 +36,11 @@ public abstract class Entity {
     public void setKey(String key) {
         this.key = key;
     }
+
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "key='" + key + '\'' +
+                '}';
+    }
 }

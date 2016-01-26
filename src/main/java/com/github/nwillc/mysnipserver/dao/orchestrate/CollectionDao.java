@@ -92,7 +92,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @CachePut
     public void put(@CacheKey String key, @CacheValue T entity) {
-        LOGGER.info("Writing out to orchestrate");
+        LOGGER.info("Writing out to orchestrate: " + entity);
         client.kv(collection, key)
                 .put(entity)
                 .get();

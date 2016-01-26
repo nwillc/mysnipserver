@@ -67,7 +67,9 @@ public class Snippets extends SparkController<Snippet> {
     }
 
     public Snippet findOne(Request request, Response response) {
-        return getDao().findOne(KEY.from(request)).orElseThrow(() -> new HttpException(HttpStatusCode.NOT_FOUND));
+        Snippet snippet = getDao().findOne(KEY.from(request)).orElseThrow(() -> new HttpException(HttpStatusCode.NOT_FOUND));
+        LOGGER.info("Returning: " + snippet);
+        return snippet;
     }
 
     public Boolean delete(Request request, Response response) {

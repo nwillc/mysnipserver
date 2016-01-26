@@ -58,8 +58,8 @@ public class Snippet extends Entity {
 
     @Override
     public String toString() {
-        return "Entry{" +
-                "key='" + getKey() + '\'' +
+        return getClass().getName() +
+                "{key='" + getKey() + '\'' +
                 ", category='" + category + '\'' +
                 ", title='" + title + '\'' +
                 ", body='" + body + '\'' +
