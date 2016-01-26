@@ -39,7 +39,7 @@ public abstract class SparkController<T extends Entity> implements ToJson {
         return dao;
     }
 
-    public ThreadLocal<ObjectMapper> getMapper() {
+    protected ThreadLocal<ObjectMapper> getMapper() {
         return mapper;
     }
 

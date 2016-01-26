@@ -45,17 +45,17 @@ public class Snippets extends SparkController<Snippet> {
         delete("snippets/" + KEY.getLabel(), this::delete);
     }
 
-    public List<Snippet> findAll(Request request, Response response) {
+    private List<Snippet> findAll(Request request, Response response) {
         LOGGER.info("Requesting all");
         return getDao().findAll().collect(Collectors.toList());
     }
 
-    public List<Snippet> find(Request request, Response response) {
+    private List<Snippet> find(Request request, Response response) {
         LOGGER.info("Finding snippets in category: " + KEY.from(request));
         return getDao().findAll().filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
     }
 
-    public List<Snippet> searchCategory(Request request, Response response) {
+    private List<Snippet> searchCategory(Request request, Response response) {
         try {
             final Query query = getMapper().get().readValue(request.body(), Query.class);
             LOGGER.info("Searching category: " + KEY.from(request) + " with query: " + query.getQuery());
@@ -66,19 +66,19 @@ public class Snippets extends SparkController<Snippet> {
 
     }
 
-    public Snippet findOne(Request request, Response response) {
+    private Snippet findOne(Request request, Response response) {
         Snippet snippet = getDao().findOne(KEY.from(request)).orElseThrow(() -> new HttpException(HttpStatusCode.NOT_FOUND));
         LOGGER.info("Returning: " + snippet);
         return snippet;
     }
 
-    public Boolean delete(Request request, Response response) {
+    private Boolean delete(Request request, Response response) {
         LOGGER.info("Delete snippet: " + KEY.from(request));
         getDao().delete(KEY.from(request));
         return Boolean.TRUE;
     }
 
-    public Boolean save(Request request, Response response) {
+    private Boolean save(Request request, Response response) {
         try {
             final Snippet snippet = getMapper().get().readValue(request.body(), Snippet.class);
             LOGGER.info("Saving snippet: " + snippet);
