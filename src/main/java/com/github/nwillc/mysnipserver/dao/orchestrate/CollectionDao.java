@@ -83,14 +83,14 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     }
 
     @Override
-    @CacheRemove
+    @CacheRemove(afterInvocation = false)
     public void delete(@CacheKey final String key) {
         client.kv(collection, key)
                 .delete(true)
                 .get();
     }
 
-    @CachePut
+    @CachePut(afterInvocation = false)
     public void put(@CacheKey String key, @CacheValue T entity) {
         LOGGER.info("Writing out to orchestrate: " + entity);
         client.kv(collection, key)
