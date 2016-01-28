@@ -28,7 +28,7 @@ import javax.cache.configuration.MutableConfiguration;
 import java.lang.annotation.Annotation;
 
 public class ResolverFactory implements CacheResolverFactory {
-    private CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
+    private final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
 
     public CacheResolver getCacheResolver(CacheMethodDetails<? extends Annotation> cacheMethodDetails) {
         return new CacheResolver() {
