@@ -83,6 +83,7 @@ public class Snippets extends SparkController<Snippet> {
             final Snippet snippet = getMapper().get().readValue(request.body(), Snippet.class);
             LOGGER.info("Saving snippet: " + snippet);
             getDao().save(snippet);
+            LOGGER.info("We think its: " + getDao().findOne(snippet.getKey()));
             return Boolean.TRUE;
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Failed saving snippet");
