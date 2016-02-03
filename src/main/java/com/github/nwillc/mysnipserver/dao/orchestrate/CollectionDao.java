@@ -96,6 +96,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         client.kv(collection, key)
                 .put(entity)
                 .get();
+        LOGGER.info("Thinks its: " + get(key));
     }
 
     @CacheResult
