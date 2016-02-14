@@ -127,10 +127,6 @@ task stage(type: Copy) {
     into 'build/staging'
 }
 
-jar {
-    exclude ( "public/tests" )  // Exclude js unit tests
-}
-
 stage.dependsOn build
 processResources.dependsOn buildInfo
 
