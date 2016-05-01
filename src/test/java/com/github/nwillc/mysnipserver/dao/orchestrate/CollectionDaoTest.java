@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CollectionDaoTest {
 	private static final String ORCH_API_KEY = System.getenv("ORCH_API_KEY");
 	private CollectionDao<Snippet> dao;
-	private Cache cache;
+	private Cache<String, Snippet> cache;
 
 
 	@Before

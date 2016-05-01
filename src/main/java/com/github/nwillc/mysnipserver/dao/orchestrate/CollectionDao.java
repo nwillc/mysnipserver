@@ -22,12 +22,16 @@ import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 import io.orchestrate.client.Result;
 
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
+import javax.cache.configuration.MutableConfiguration;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -36,13 +40,14 @@ import java.util.stream.Stream;
 
 import static java.util.stream.StreamSupport.stream;
 
-@CacheDefaults(cacheResolverFactory = ResolverFactory.class)
 public class CollectionDao<T extends Entity> implements Dao<T> {
     private static final Logger LOGGER = Logger.getLogger(CollectionDao.class.getName());
+    private static final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
     private static final int LIMIT = 100;
     private final Class<T> tClass;
     private final String collection;
     private final Client client;
+    private final Cache<String, T> cache;
 
     public CollectionDao(Client client, Class<T> tClass) {
         this(client, tClass.getSimpleName(), tClass);
@@ -52,6 +57,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         this.collection = collection;
         this.tClass = tClass;
         this.client = client;
+        cache = getCache();
     }
 
     @Override
@@ -83,28 +89,35 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     }
 
     @Override
-    @CacheRemove(afterInvocation = false)
-    public void delete(@CacheKey final String key) {
+    public void delete(final String key) {
         client.kv(collection, key)
                 .delete(true)
                 .get();
+        cache.remove(key);
     }
 
-    @CachePut(afterInvocation = true)
-    public void put(@CacheKey String key, @CacheValue T entity) {
+    public void put(String key, T entity) {
         LOGGER.info("Writing out to orchestrate: " + entity);
         client.kv(collection, key)
                 .put(entity)
                 .get();
+        cache.put(key, entity);
         LOGGER.info("Thinks its: " + get(key));
     }
 
-    @CacheResult
-    public T get(@CacheKey String key) {
-        KvObject<T> categoryKvObject = client.kv(collection, key)
-                .get(tClass)
-                .get();
-        return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+    public T get(String key) {
+        T entity = cache.get(key);
+        if (entity == null) {
+            KvObject<T> categoryKvObject = client.kv(collection, key)
+                    .get(tClass)
+                    .get();
+            if (categoryKvObject != null) {
+                entity = categoryKvObject.getValue(tClass);
+                cache.put(key, entity);
+            }
+        }
+
+        return entity;
     }
 
     private Stream<T> find(Set<String> keys) {
@@ -113,5 +126,11 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     public String getCollection() {
         return collection;
+    }
+
+    private Cache<String, T> getCache() {
+        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+        configuration.setStoreByValue(false);
+        return cacheManager.createCache(collection, configuration);
     }
 }
