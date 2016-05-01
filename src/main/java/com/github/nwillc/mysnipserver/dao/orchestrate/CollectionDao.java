@@ -31,7 +31,11 @@ import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
+import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
+import javax.cache.integration.CacheLoader;
+import javax.cache.integration.CacheLoaderException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -85,7 +89,12 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @Override
     public void save(final T entity) {
-        put(entity.getKey(), entity);
+        LOGGER.info("Writing out to orchestrate: " + entity);
+        client.kv(collection, entity.getKey())
+                .put(entity)
+                .get();
+        cache.put(entity.getKey(), entity);
+        LOGGER.info("Thinks its: " + get(entity.getKey()));
     }
 
     @Override
@@ -96,28 +105,8 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         cache.remove(key);
     }
 
-    public void put(String key, T entity) {
-        LOGGER.info("Writing out to orchestrate: " + entity);
-        client.kv(collection, key)
-                .put(entity)
-                .get();
-        cache.put(key, entity);
-        LOGGER.info("Thinks its: " + get(key));
-    }
-
     public T get(String key) {
-        T entity = cache.get(key);
-        if (entity == null) {
-            KvObject<T> categoryKvObject = client.kv(collection, key)
-                    .get(tClass)
-                    .get();
-            if (categoryKvObject != null) {
-                entity = categoryKvObject.getValue(tClass);
-                cache.put(key, entity);
-            }
-        }
-
-        return entity;
+        return cache.get(key);
     }
 
     private Stream<T> find(Set<String> keys) {
@@ -128,9 +117,28 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return collection;
     }
 
+    @SuppressWarnings("unchecked")
     private Cache<String, T> getCache() {
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+        configuration.setTypes(String.class, tClass);
         configuration.setStoreByValue(false);
+        configuration.setReadThrough(true);
+        configuration.setCacheLoaderFactory(FactoryBuilder.factoryOf(OrchestrateLoader.class));
         return cacheManager.createCache(collection, configuration);
+    }
+
+    private class OrchestrateLoader implements CacheLoader<String, T> {
+        @Override
+        public T load(String key) throws CacheLoaderException {
+            KvObject<T> categoryKvObject = client.kv(collection, key)
+                    .get(tClass)
+                    .get();
+            return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+        }
+
+        @Override
+        public Map<String, T> loadAll(Iterable<? extends String> keys) throws CacheLoaderException {
+            return null;
+        }
     }
 }
