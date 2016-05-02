@@ -18,6 +18,7 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 import io.orchestrate.client.Result;
@@ -55,7 +56,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         this.collection = collection;
         this.tClass = tClass;
         this.client = client;
-        cache = getCache();
+        cache = getCache(collection, tClass);
     }
 
     @Override
@@ -111,7 +112,12 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return collection;
     }
 
-    private Cache<String, T> getCache() {
+    private Cache<String, T> getCache(String name, Class<T> clz) {
+        final Cache<String, T> cache = Caching.getCachingProvider().getCacheManager().getCache(name,
+                String.class, clz);
+        if (cache != null) {
+            return cache;
+        }
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
         configuration.setTypes(String.class, tClass);
         configuration.setStoreByValue(false);

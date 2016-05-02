@@ -23,9 +23,10 @@ public class CollectionDaoTest {
 
 	@Before
 	public void setUp() throws Exception {
+		assertThat(ORCH_API_KEY).isNotEmpty();
 		Client client = new OrchestrateClient(ORCH_API_KEY);
 		dao = new CollectionDao<>(client, "Snippet", Snippet.class);
-		cache = Caching.getCachingProvider().getCacheManager().getCache("Snippet");
+		cache = Caching.getCachingProvider().getCacheManager().getCache("Snippet", String.class, Snippet.class);
 	}
 
 	@Test
