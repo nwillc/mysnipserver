@@ -18,7 +18,6 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.Entity;
-import com.github.nwillc.mysnipserver.entity.Snippet;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 import io.orchestrate.client.Result;
@@ -34,9 +33,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
 public class CollectionDao<T extends Entity> implements Dao<T> {
@@ -70,7 +69,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
                 .limit(LIMIT)
                 .withValues(false)
                 .get(tClass)
-                .get().spliterator(), false).map(KvObject::getKey).collect(Collectors.toSet());
+                .get().spliterator(), false).map(KvObject::getKey).collect(toSet());
         return find(keys);
     }
 
@@ -78,7 +77,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
     public Stream<T> find(String query) {
         Set<String> keys = stream(client.searchCollection(collection)
                 .get(tClass, query)
-                .get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(Collectors.toSet());
+                .get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(toSet());
         return find(keys);
     }
 
