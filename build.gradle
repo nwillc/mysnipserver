@@ -65,9 +65,11 @@ dependencies {
             'org.apache.httpcomponents:httpclient:4.5.2',
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.7.4',
             'javax.cache:cache-api:1.0.0',
-            'com.github.nwillc:simplecache:1.0.3',
+          //  'com.github.nwillc:simplecache:1.0.3',
             'com.google.api-client:google-api-client:1.21.0',
-            'com.google.http-client:google-http-client:1.21.0'
+            'com.google.http-client:google-http-client:1.21.0',
+            'com.github.ben-manes.caffeine:caffeine:2.3.0',
+            'com.github.ben-manes.caffeine:jcache:2.3.0'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.7.5',
             'org.mockito:mockito-core:2.0.52-beta',

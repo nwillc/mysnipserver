@@ -25,14 +25,7 @@ import io.orchestrate.client.Result;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
-import javax.cache.annotation.CacheDefaults;
-import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CachePut;
-import javax.cache.annotation.CacheRemove;
-import javax.cache.annotation.CacheResult;
-import javax.cache.annotation.CacheValue;
 import javax.cache.configuration.Factory;
-import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
@@ -123,8 +116,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         configuration.setTypes(String.class, tClass);
         configuration.setStoreByValue(false);
         configuration.setReadThrough(true);
-        final Factory<CacheLoader<String, T>> factory = (Factory<CacheLoader<String, T>>) () -> new OrchestrateLoader();
-        configuration.setCacheLoaderFactory(factory);
+        configuration.setCacheLoaderFactory((Factory<CacheLoader<String, T>>) OrchestrateLoader::new);
         return cacheManager.createCache(collection, configuration);
     }
 
