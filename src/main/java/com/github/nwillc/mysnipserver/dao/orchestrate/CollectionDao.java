@@ -31,6 +31,7 @@ import javax.cache.annotation.CachePut;
 import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
+import javax.cache.configuration.Factory;
 import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoader;
@@ -117,13 +118,13 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return collection;
     }
 
-    @SuppressWarnings("unchecked")
     private Cache<String, T> getCache() {
         MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
         configuration.setTypes(String.class, tClass);
         configuration.setStoreByValue(false);
         configuration.setReadThrough(true);
-        configuration.setCacheLoaderFactory(FactoryBuilder.factoryOf(OrchestrateLoader.class));
+        final Factory<CacheLoader<String, T>> factory = (Factory<CacheLoader<String, T>>) () -> new OrchestrateLoader();
+        configuration.setCacheLoaderFactory(factory);
         return cacheManager.createCache(collection, configuration);
     }
 
