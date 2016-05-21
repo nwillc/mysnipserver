@@ -37,19 +37,26 @@ import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
 import static com.github.nwillc.mysnipserver.util.rest.Params.TOKEN;
 import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
+import static spark.Spark.before;
 
 public class Authentication extends SparkController<User> {
     private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";
-    private static final String[] NO_AUTH = {LOGIN_HTML, "/js/login.js", "/js/cookies.js",
-            "/favicon.ico", "/properties", versionedPath("auth")};
+    private static final String[] NO_AUTH = {
+            LOGIN_HTML,
+            "/js/login.js",
+            "/js/cookies.js",
+            "/favicon.ico",
+            "/properties",
+            versionedPath("auth")
+    };
     private final Set<String> noAuth = new HashSet<>();
 
     @Inject
     public Authentication(Dao<User> dao) {
         super(dao);
-        Spark.before(this::check);
+        before(this::check);
         for (String path : NO_AUTH) {
             noAuth(path);
         }
@@ -68,8 +75,7 @@ public class Authentication extends SparkController<User> {
         if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
             // auth required and not logged in, so redirect to login
             LOGGER.warning("Access violation: " + request.pathInfo());
-            response.redirect(LOGIN_HTML);
-            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
+            response.redirect(LOGIN_HTML, HttpStatusCode.UNAUTHERIZED.code);
         }
     }
 
