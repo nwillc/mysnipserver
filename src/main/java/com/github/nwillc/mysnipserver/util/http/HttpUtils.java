@@ -18,9 +18,9 @@ package com.github.nwillc.mysnipserver.util.http;
 
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -43,10 +43,9 @@ public final class HttpUtils {
     }
 
     static public String httpPost(String url, Map<String, String> params) {
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpPost post = new HttpPost(url);
 
-        try {
             if (params != null) {
                 post.setEntity(new UrlEncodedFormEntity(
                         params.entrySet().stream()
@@ -55,15 +54,15 @@ public final class HttpUtils {
             }
 
             HttpResponse response = client.execute(post);
-            BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
+            try (InputStreamReader in = new InputStreamReader(response.getEntity().getContent());
+                 BufferedReader rd = new BufferedReader(in)) {
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+                return result.toString();
             }
-            return result.toString();
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "failed processing " + url, e);
         }
