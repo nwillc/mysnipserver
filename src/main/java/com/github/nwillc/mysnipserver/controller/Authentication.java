@@ -75,7 +75,8 @@ public class Authentication extends SparkController<User> {
         if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
             // auth required and not logged in, so redirect to login
             LOGGER.warning("Access violation: " + request.pathInfo());
-            response.redirect(LOGIN_HTML, HttpStatusCode.UNAUTHERIZED.code);
+            response.redirect(LOGIN_HTML);
+            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
         }
     }
 
