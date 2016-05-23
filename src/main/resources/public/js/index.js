@@ -37,6 +37,7 @@ APP.Home = function () {
     $('#tabs').tabs();
     this.categories = $('#browseCategories');
     this.snippetCategories = $('#snippetCategories');
+    this.moveCategories = $('#moveCategories');
     this.category = $('#category');
     this.titles = $('#titles');
     this.title = $('#title');
@@ -49,7 +50,7 @@ APP.Home = function () {
     $(this.searchDialog).dialog('close');
 
     this.moveSnippetDialog = $('#moveSnippetDialog');
-    $(this.moveSnippetDialog).dialog({width:200});
+    $(this.moveSnippetDialog).dialog({width:500});
     $(this.moveSnippetDialog).dialog('close');
 
     this.buildInfoDialog = $('#buildInfoDialog');
@@ -64,14 +65,17 @@ APP.Home = function () {
                 return a.name.localeCompare(b.name);
             });
             $(this.categories).empty();
-            list.forEach(element =>
-                this.categories.append($("<option></option>").attr("value", element.key).text(element.name)));
+            $(this.snippetCategories).empty();
+            $(this.moveCategories).empty();
+            list.forEach(element => {
+                 this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
+                 this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+                 this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+              });
+
             window.setTimeout(() => {
                 $(this.categories).change();
-            }, 1);
-            $(this.snippetCategories).empty();
-            list.forEach(element =>
-                this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name)));
+                }, 1);
         });
     };
 
@@ -138,9 +142,12 @@ APP.Home = function () {
        var selected = $(titles).find("option:selected");
         console.log("Move Snippet: " + $(selected).val());
         $.ajax({
-         url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.categories).val(),
+         url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.moveCategories).val(),
          method: 'PUT',
-         success: () => this.loadCategories()
+         success: () => {
+             this.loadAllTitles();
+             $(this.moveSnippetDialog).dialog('close');
+         }
         });
     };
 
@@ -218,6 +225,7 @@ APP.Home = function () {
     $('#updateButton').click(this.updateSnippet);
     $('#moveButton').click(this.openMoveSnippet);
     $('#logoutButton').click(gapiSignOut);
+    $('#performMove').click(this.moveSnippet);
 
     // Go!
     this.loadCategories();
