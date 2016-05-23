@@ -67,7 +67,7 @@ public class MySnipServerApplication implements SparkApplication {
 
         // Create controllers
         new Categories(categoriesDao);
-        new Snippets(snippetDao);
+        new Snippets(snippetDao, categoriesDao);
         new Authentication(userDao);
 
         // Specific routes

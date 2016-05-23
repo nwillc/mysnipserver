@@ -28,6 +28,7 @@ import spark.Response;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -36,10 +37,12 @@ import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Snippets extends SparkController<Snippet> {
     private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
+    private final Dao<Category> categoryDao;
 
     @Inject
-    public Snippets(Dao<Snippet> dao) {
+    public Snippets(Dao<Snippet> dao, Dao<Category> categoryDao) {
         super(dao);
+        this.categoryDao = categoryDao;
         get("snippets", this::findAll);
         get("snippets/category/" + KEY.getLabel(), this::find);
         get("snippets/" + KEY.getLabel(), this::findOne);
@@ -51,7 +54,16 @@ public class Snippets extends SparkController<Snippet> {
 
     private Boolean move(Request request, Response response) {
         try {
-            LOGGER.info("Moving " + KEY.from(request) + " to " + CATEGORY.from(request));
+            final String snippetKey = KEY.from(request);
+            final String categoryKey = CATEGORY.from(request);
+            LOGGER.info("Moving " + snippetKey + " to " + categoryKey);
+            final Optional<Snippet> snippet = getDao().findOne(snippetKey);
+            final Optional<Category> category = categoryDao.findOne(categoryKey);
+            snippet.ifPresent(s -> category.ifPresent(c -> {
+                s.setCategory(c.getName());
+                LOGGER.info("Was: " + snippet.get() + "\nNow: " + s);
+            //    getDao().save(s);
+            }));
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Move failed");
         }
