@@ -18,6 +18,7 @@ package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.controller.model.Query;
 import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
@@ -25,10 +26,12 @@ import com.google.inject.Inject;
 import spark.Request;
 import spark.Response;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.github.nwillc.mysnipserver.util.rest.Params.CATEGORY;
 import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Snippets extends SparkController<Snippet> {
@@ -42,7 +45,18 @@ public class Snippets extends SparkController<Snippet> {
         get("snippets/" + KEY.getLabel(), this::findOne);
         post("snippets/category/" + KEY.getLabel(), this::searchCategory);
         post("snippets", this::save);
+        put("snippets/" + KEY.getLabel() + "/move/" + CATEGORY.getLabel(), this::move);
         delete("snippets/" + KEY.getLabel(), this::delete);
+    }
+
+    private Boolean move(Request request, Response response) {
+        try {
+            LOGGER.info("Moving " + KEY.from(request) + " to " + CATEGORY.from(request));
+        } catch (Exception e) {
+            throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Move failed");
+        }
+
+        return Boolean.TRUE;
     }
 
     private List<Snippet> findAll(Request request, Response response) {

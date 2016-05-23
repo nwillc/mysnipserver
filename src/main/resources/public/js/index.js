@@ -123,8 +123,18 @@ APP.Home = function () {
             + $(selected).val());
         $.ajax({
             url: 'v1/snippets/' + $(selected).val(),
-            type: 'DELETE',
+            method: 'DELETE',
             success: () => this.loadCategories()
+        });
+    };
+
+    this.moveSnippet = () => {
+       var selected = $(titles).find("option:selected");
+        console.log("Move Snippet: " + $(selected).val());
+        $.ajax({
+         url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.categories).val(),
+         method: 'PUT',
+         success: () => this.loadCategories()
         });
     };
 
@@ -132,7 +142,7 @@ APP.Home = function () {
         console.log("Delete Category: " + $(this.categories).val());
         $.ajax({
             url: 'v1/categories/' + $(this.categories).val(),
-            type: 'DELETE',
+            method: 'DELETE',
             success: () => this.loadCategories()
         });
     };
@@ -157,7 +167,7 @@ APP.Home = function () {
         console.log("logout");
         $.ajax({
             url: 'v1/auth',
-            type: 'DELETE',
+            method: 'DELETE',
             success: () => window.location.replace("/login.html")
         });
     };
@@ -180,7 +190,8 @@ APP.Home = function () {
           })).fail(() => alert("Failed updating snippet."));
     };
 
-    this.moveSnippet = () => {
+    this.moveDialog = () => {
+        this.moveSnippet();
         alert("Yahoooo!");
     };
 
@@ -195,7 +206,7 @@ APP.Home = function () {
     $('#performSearch').click(this.performSearch);
     $('#buildInfoButton').click(this.buildInfo);
     $('#updateButton').click(this.updateSnippet);
-    $('#moveButton').click(this.moveSnippet);
+    $('#moveButton').click(this.moveDialog);
     $('#logoutButton').click(gapiSignOut);
 
     // Go!
