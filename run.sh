@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_DIR=$(cd $(dirname ${0}) && pwd -P)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}" )" > /dev/null 2>&1 && pwd -P)"
 
 cd ${SCRIPT_DIR}
 
@@ -9,6 +9,12 @@ cd ${SCRIPT_DIR}
 echo Rebuild server...
 ./gradlew -q stage -x test
 
+CLASSPATH="build/staging:build/staging/*"
+
+if hash cygpath 2>/dev/null; then
+   CLASSPATH=$(cygpath --path --mixed "$CLASSPATH")
+fi
+
 echo Start server...
-java  -cp build/staging:build/staging/* -Djava.awt.headless=true com.github.nwillc.mysnipserver.MySnipServer $*
+java  -cp "${CLASSPATH}" -Djava.awt.headless=true com.github.nwillc.mysnipserver.MySnipServer $*
 
