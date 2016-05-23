@@ -43,9 +43,15 @@ APP.Home = function () {
     this.body = $('#body');
     this.bodyInput = $('#bodyInput');
     this.query = $('#query');
+
     this.searchDialog = $('#searchCategoryDialog');
     $(this.searchDialog).dialog({width: 500});
     $(this.searchDialog).dialog('close');
+
+    this.moveSnippetDialog = $('#moveSnippetDialog');
+    $(this.moveSnippetDialog).dialog({width:200});
+    $(this.moveSnippetDialog).dialog('close');
+
     this.buildInfoDialog = $('#buildInfoDialog');
     $(this.buildInfoDialog).dialog({height: 200, width: 500});
     $(this.buildInfoDialog).dialog('close');
@@ -151,6 +157,10 @@ APP.Home = function () {
         $(this.searchDialog).dialog('open');
     };
 
+    this.openMoveSnippet = () => {
+        $(this.moveSnippetDialog).dialog('open');
+    };
+
     this.performSearch = () => {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
@@ -206,7 +216,7 @@ APP.Home = function () {
     $('#performSearch').click(this.performSearch);
     $('#buildInfoButton').click(this.buildInfo);
     $('#updateButton').click(this.updateSnippet);
-    $('#moveButton').click(this.moveDialog);
+    $('#moveButton').click(this.openMoveSnippet);
     $('#logoutButton').click(gapiSignOut);
 
     // Go!
