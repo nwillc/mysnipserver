@@ -25,16 +25,14 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.OrchestrateClient;
-
-import java.util.logging.Logger;
+import org.pmw.tinylog.Logger;
 
 public class OrchestrateModule extends AbstractModule {
-    private static final Logger LOGGER = Logger.getLogger(OrchestrateModule.class.getCanonicalName());
     private static final String ORCH_API_KEY = System.getenv("ORCH_API_KEY");
 
     @Override
     protected void configure() {
-        LOGGER.info("Configuring Orchestrate Backed module.");
+        Logger.info("Configuring Orchestrate Backed module.");
         Client client = new OrchestrateClient(ORCH_API_KEY);
         bind(new TypeLiteral<MySnipServerApplication>() {
         }).toInstance(new MySnipServerApplication(

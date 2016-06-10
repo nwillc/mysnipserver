@@ -19,16 +19,8 @@ package com.github.nwillc.mysnipserver;
 import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
 import com.google.inject.Guice;
 import com.google.inject.Module;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import org.apache.commons.cli.*;
+import org.pmw.tinylog.Logger;
 
 import static com.github.nwillc.mysnipserver.CommandLineInterface.CLI;
 import static spark.Spark.ipAddress;
@@ -36,21 +28,20 @@ import static spark.Spark.port;
 
 public class MySnipServer {
     private static final String LOG_CONFIG = "/logging.properties";
-    private final static Logger LOGGER = Logger.getLogger(MySnipServer.class.getSimpleName());
 
-    static {
-        try (InputStream in = MySnipServer.class.getResourceAsStream(LOG_CONFIG)) {
-            if (in == null) {
-                System.err.println("Could not open " + LOG_CONFIG);
-            }
-            LogManager.getLogManager().readConfiguration(in);
-        } catch (IOException e) {
-            System.err.println("Failed reading " + LOG_CONFIG);
-        }
-    }
+//    static {
+//        try (InputStream in = MySnipServer.class.getResourceAsStream(LOG_CONFIG)) {
+//            if (in == null) {
+//                System.err.println("Could not open " + LOG_CONFIG);
+//            }
+//            LogManager.getLogManager().readConfiguration(in);
+//        } catch (IOException e) {
+//            System.err.println("Failed reading " + LOG_CONFIG);
+//        }
+//    }
 
     public static void main(String[] args) {
-        LOGGER.info("Starting");
+        Logger.info("Starting");
 
         Options options = CommandLineInterface.getOptions();
         CommandLineParser commandLineParser = new DefaultParser();
@@ -65,12 +56,12 @@ public class MySnipServer {
             }
 
             if (commandLine.hasOption(CLI.port.name())) {
-                LOGGER.info("Configuring port: " + commandLine.getOptionValue(CLI.port.name()));
+                Logger.info("Configuring port: " + commandLine.getOptionValue(CLI.port.name()));
                 port(Integer.parseInt(commandLine.getOptionValue(CLI.port.name())));
             }
 
             if (commandLine.hasOption(CLI.address.name())) {
-                LOGGER.info("Configuring address: " + commandLine.getOptionValue(CLI.address.name()));
+                Logger.info("Configuring address: " + commandLine.getOptionValue(CLI.address.name()));
                 ipAddress(commandLine.getOptionValue(CLI.address.name()));
             }
 
@@ -82,14 +73,14 @@ public class MySnipServer {
             }
 
         } catch (ParseException e) {
-            LOGGER.severe("Failed to parse command line: " + e);
+            Logger.error("Failed to parse command line: " + e);
             CommandLineInterface.help(options, 1);
         } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
-            LOGGER.severe("Failed instantiating DAO class: " + e);
+            Logger.error("Failed instantiating DAO class: " + e);
             CommandLineInterface.help(options, 1);
         }
 
         Guice.createInjector(module).getInstance(MySnipServerApplication.class).init();
-        LOGGER.info("Completed");
+        Logger.info("Completed");
     }
 }

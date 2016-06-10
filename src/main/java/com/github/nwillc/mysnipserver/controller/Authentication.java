@@ -23,24 +23,20 @@ import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.inject.Inject;
+import org.pmw.tinylog.Logger;
 import spark.Request;
 import spark.Response;
 import spark.Session;
-import spark.Spark;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 
-import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
-import static com.github.nwillc.mysnipserver.util.rest.Params.TOKEN;
-import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
+import static com.github.nwillc.mysnipserver.util.rest.Params.*;
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 import static spark.Spark.before;
 
 public class Authentication extends SparkController<User> {
-    private static final Logger LOGGER = Logger.getLogger(Authentication.class.getCanonicalName());
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";
     private static final String[] NO_AUTH = {
@@ -74,7 +70,7 @@ public class Authentication extends SparkController<User> {
 
         if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
             // auth required and not logged in, so redirect to login
-            LOGGER.warning("Access violation: " + request.pathInfo());
+            Logger.warn("Access violation: " + request.pathInfo());
             response.redirect(LOGIN_HTML);
             throw new HttpException(HttpStatusCode.UNAUTHERIZED);
         }
@@ -86,12 +82,12 @@ public class Authentication extends SparkController<User> {
     }
 
     private Boolean login(Request request, Response response) {
-        LOGGER.info("Login attempt: " + USERNAME.from(request));
+        Logger.info("Login attempt: " + USERNAME.from(request));
 
         final User user = getDao().findOne(USERNAME.from(request))
                 .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
 
-        LOGGER.info("Found: " + user);
+        Logger.info("Found: " + user);
         if (PASSWORD.from(request).equals(user.getPassword())) {
             Session session = request.session(true);
             session.attribute(IS_LOGGED_IN, Boolean.TRUE);
@@ -111,7 +107,7 @@ public class Authentication extends SparkController<User> {
         }
 
         payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Rejected"));
-        LOGGER.info("Google auth: " + payload.get().getEmail());
+        Logger.info("Google auth: " + payload.get().getEmail());
         getDao().findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Not registered user"));
         Session session = request.session(true);
         session.attribute(IS_LOGGED_IN, Boolean.TRUE);
@@ -120,7 +116,7 @@ public class Authentication extends SparkController<User> {
 
 
     private void noAuth(String path) {
-        LOGGER.info("No authentication required for: " + path);
+        Logger.info("No authentication required for: " + path);
         noAuth.add(path);
     }
 

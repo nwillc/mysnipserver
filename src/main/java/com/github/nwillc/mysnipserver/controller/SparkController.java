@@ -55,7 +55,11 @@ public abstract class SparkController<T extends Entity> implements ToJson {
         Spark.delete(versionedPath(path), route, this::toJson);
     }
 
-    protected void patch(String path, Route route) { Spark.patch(versionedPath(path), route, this::toJson);}
+    protected void patch(String path, Route route) {
+        Spark.patch(versionedPath(path), route, this::toJson);
+    }
 
-    protected void put(String path, Route route) { Spark.put(versionedPath(path), route, this::toJson);}
+    protected void put(String path, Route route) {
+        Spark.put(versionedPath(path), route, this::toJson);
+    }
 }

@@ -21,6 +21,7 @@ import com.github.nwillc.mysnipserver.dao.Entity;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 import io.orchestrate.client.Result;
+import org.pmw.tinylog.Logger;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -32,14 +33,12 @@ import javax.cache.integration.CacheLoaderException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
 public class CollectionDao<T extends Entity> implements Dao<T> {
-    private static final Logger LOGGER = Logger.getLogger(CollectionDao.class.getName());
     private static final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
     private static final int LIMIT = 100;
     private final Class<T> tClass;
@@ -83,12 +82,12 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     @Override
     public void save(final T entity) {
-        LOGGER.info("Writing out to orchestrate: " + entity);
+        Logger.info("Writing out to orchestrate: " + entity);
         client.kv(collection, entity.getKey())
                 .put(entity)
                 .get();
         cache.put(entity.getKey(), entity);
-        LOGGER.info("Thinks its: " + get(entity.getKey()));
+        Logger.info("Thinks its: " + get(entity.getKey()));
     }
 
     @Override

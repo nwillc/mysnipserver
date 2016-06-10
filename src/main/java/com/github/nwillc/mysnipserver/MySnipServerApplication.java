@@ -25,18 +25,16 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.inject.Inject;
+import org.pmw.tinylog.Logger;
 import spark.servlet.SparkApplication;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
-    private final static Logger LOGGER = Logger.getLogger(MySnipServerApplication.class.getSimpleName());
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
     private final Dao<User> userDao;
@@ -52,16 +50,16 @@ public class MySnipServerApplication implements SparkApplication {
         try (
                 final InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/build.json"));
                 final BufferedReader bufferedReader = new BufferedReader(isr)
-            ) {
-                properties = bufferedReader.lines().collect(Collectors.joining("\n"));
+        ) {
+            properties = bufferedReader.lines().collect(Collectors.joining("\n"));
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Could not load build info", e);
+            Logger.warn("Could not load build info", e);
         }
     }
 
     @Override
     public void init() {
-        LOGGER.info("Starting");
+        Logger.info("Starting");
         // Static files
         staticFileLocation("/public");
 
@@ -77,9 +75,9 @@ public class MySnipServerApplication implements SparkApplication {
         exception(HttpException.class, (e, request, response) -> {
             response.status(((HttpException) e).getCode().code);
             response.body(((HttpException) e).getCode().toString());
-            LOGGER.info("Returning: " + e.toString());
+            Logger.info("Returning: " + e.toString());
         });
 
-        LOGGER.info("Completed");
+        Logger.info("Completed");
     }
 }

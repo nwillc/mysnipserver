@@ -24,7 +24,7 @@ public class ToJsonTest implements ToJson {
 
     @Test
     public void testToJson() throws Exception {
-        Sample sample = new Sample(1L,"one", true, 1, 2, 3);
+        Sample sample = new Sample(1L, "one", true, 1, 2, 3);
 
         assertThat(sample).isNotNull();
         assertThat(toJson(sample)).isEqualTo("{\"number\":1,\"str\":\"one\",\"flag\":true,\"dead\":null,\"bits\":[1,2,3]}");
@@ -37,7 +37,7 @@ public class ToJsonTest implements ToJson {
         final public Object dead = null;
         final public int[] bits;
 
-        public Sample(Long number, String str, Boolean flag, int ... bits) {
+        public Sample(Long number, String str, Boolean flag, int... bits) {
             this.number = number;
             this.str = str;
             this.flag = flag;

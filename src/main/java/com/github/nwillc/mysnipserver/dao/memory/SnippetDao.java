@@ -19,18 +19,17 @@ package com.github.nwillc.mysnipserver.dao.memory;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import org.pmw.tinylog.Logger;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 public class SnippetDao extends MemoryBackedDao<Snippet> {
-    private static final Logger LOGGER = Logger.getLogger(SnippetDao.class.getSimpleName());
     final Dao<Category> categoryDao;
 
     public SnippetDao(Dao<Category> categoryDao) {
         this.categoryDao = categoryDao;
         Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
-        LOGGER.info("Found java category: " + java.isPresent());
+        Logger.info("Found java category: " + java.isPresent());
         java.ifPresent(c -> {
             save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
             save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));

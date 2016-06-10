@@ -22,15 +22,14 @@ import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
 import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import org.pmw.tinylog.Logger;
 
-import java.util.logging.Logger;
 
 public class MemoryBackedModule extends AbstractModule {
-    private static final Logger LOGGER = Logger.getLogger(MemoryBackedModule.class.getCanonicalName());
 
     @Override
     protected void configure() {
-        LOGGER.info("Configuring Memory Backed module.");
+        Logger.info("Configuring Memory Backed module.");
         CategoryDao categoryDao = new CategoryDao();
         bind(new TypeLiteral<MySnipServerApplication>() {
         }).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));

@@ -19,18 +19,17 @@ package com.github.nwillc.mysnipserver.controller;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.google.inject.Inject;
+import org.pmw.tinylog.Logger;
 import spark.Request;
 import spark.Response;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Categories extends SparkController<Category> {
-    private final static Logger LOGGER = Logger.getLogger(Categories.class.getCanonicalName());
 
     @Inject
     public Categories(Dao<Category> dao) {
@@ -45,7 +44,7 @@ public class Categories extends SparkController<Category> {
     }
 
     private Boolean delete(Request request, Response response) {
-        LOGGER.info("Delete category: " + KEY.from(request));
+        Logger.info("Delete category: " + KEY.from(request));
         getDao().delete(KEY.from(request));
         return Boolean.TRUE;
     }
@@ -53,7 +52,7 @@ public class Categories extends SparkController<Category> {
     private Boolean save(Request request, Response response) {
         try {
             final Category category = getMapper().get().readValue(request.body(), Category.class);
-            LOGGER.info("Category: " + category);
+            Logger.info("Category: " + category);
             getDao().save(category);
             return Boolean.TRUE;
         } catch (IOException e) {

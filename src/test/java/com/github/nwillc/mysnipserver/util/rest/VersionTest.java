@@ -18,7 +18,7 @@ package com.github.nwillc.mysnipserver.util.rest;
 
 import com.github.nwillc.contracts.UtilityClassContract;
 
-public class VersionTest extends UtilityClassContract{
+public class VersionTest extends UtilityClassContract {
     @Override
     public Class<?> getClassToTest() {
         return Version.class;

@@ -23,20 +23,18 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.inject.Inject;
+import org.pmw.tinylog.Logger;
 import spark.Request;
 import spark.Response;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.github.nwillc.mysnipserver.util.rest.Params.CATEGORY;
 import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Snippets extends SparkController<Snippet> {
-    private final static Logger LOGGER = Logger.getLogger(Snippets.class.getCanonicalName());
     private final Dao<Category> categoryDao;
 
     @Inject
@@ -56,13 +54,13 @@ public class Snippets extends SparkController<Snippet> {
         try {
             final String snippetKey = KEY.from(request);
             final String categoryKey = CATEGORY.from(request);
-            LOGGER.info("Moving " + snippetKey + " to " + categoryKey);
+            Logger.info("Moving " + snippetKey + " to " + categoryKey);
             final Optional<Snippet> snippet = getDao().findOne(snippetKey);
             final Optional<Category> category = categoryDao.findOne(categoryKey);
             snippet.ifPresent(s -> category.ifPresent(c -> {
                 s.setCategory(c.getName());
-                LOGGER.info("Was: " + snippet.get() + "\nNow: " + s);
-            //    getDao().save(s);
+                Logger.info("Was: " + snippet.get() + "\nNow: " + s);
+                getDao().save(s);
             }));
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Move failed");
@@ -72,19 +70,19 @@ public class Snippets extends SparkController<Snippet> {
     }
 
     private List<Snippet> findAll(Request request, Response response) {
-        LOGGER.info("Requesting all");
+        Logger.info("Requesting all");
         return getDao().findAll().collect(Collectors.toList());
     }
 
     private List<Snippet> find(Request request, Response response) {
-        LOGGER.info("Finding snippets in category: " + KEY.from(request));
+        Logger.info("Finding snippets in category: " + KEY.from(request));
         return getDao().findAll().filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
     }
 
     private List<Snippet> searchCategory(Request request, Response response) {
         try {
             final Query query = getMapper().get().readValue(request.body(), Query.class);
-            LOGGER.info("Searching category: " + KEY.from(request) + " with query: " + query.getQuery());
+            Logger.info("Searching category: " + KEY.from(request) + " with query: " + query.getQuery());
             return getDao().find(query.getQuery()).filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Search failed");
@@ -94,12 +92,12 @@ public class Snippets extends SparkController<Snippet> {
 
     private Snippet findOne(Request request, Response response) {
         Snippet snippet = getDao().findOne(KEY.from(request)).orElseThrow(() -> new HttpException(HttpStatusCode.NOT_FOUND));
-        LOGGER.info("Returning: " + snippet);
+        Logger.info("Returning: " + snippet);
         return snippet;
     }
 
     private Boolean delete(Request request, Response response) {
-        LOGGER.info("Delete snippet: " + KEY.from(request));
+        Logger.info("Delete snippet: " + KEY.from(request));
         getDao().delete(KEY.from(request));
         return Boolean.TRUE;
     }
@@ -107,9 +105,9 @@ public class Snippets extends SparkController<Snippet> {
     private Boolean save(Request request, Response response) {
         try {
             final Snippet snippet = getMapper().get().readValue(request.body(), Snippet.class);
-            LOGGER.info("Saving snippet: " + snippet);
+            Logger.info("Saving snippet: " + snippet);
             getDao().save(snippet);
-            LOGGER.info("We think its: " + getDao().findOne(snippet.getKey()));
+            Logger.info("We think its: " + getDao().findOne(snippet.getKey()));
             return Boolean.TRUE;
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Failed saving snippet");
