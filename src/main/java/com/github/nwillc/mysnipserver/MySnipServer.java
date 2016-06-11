@@ -27,18 +27,6 @@ import static spark.Spark.ipAddress;
 import static spark.Spark.port;
 
 public class MySnipServer {
-    private static final String LOG_CONFIG = "/logging.properties";
-
-//    static {
-//        try (InputStream in = MySnipServer.class.getResourceAsStream(LOG_CONFIG)) {
-//            if (in == null) {
-//                System.err.println("Could not open " + LOG_CONFIG);
-//            }
-//            LogManager.getLogManager().readConfiguration(in);
-//        } catch (IOException e) {
-//            System.err.println("Failed reading " + LOG_CONFIG);
-//        }
-//    }
 
     public static void main(String[] args) {
         Logger.info("Starting");
