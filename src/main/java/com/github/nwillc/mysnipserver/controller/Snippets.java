@@ -58,7 +58,7 @@ public class Snippets extends SparkController<Snippet> {
             final Optional<Snippet> snippet = getDao().findOne(snippetKey);
             final Optional<Category> category = categoryDao.findOne(categoryKey);
             snippet.ifPresent(s -> category.ifPresent(c -> {
-                s.setCategory(c.getName());
+                s.setCategory(c.getKey());
                 Logger.info("Was: " + snippet.get() + "\nNow: " + s);
                 getDao().save(s);
             }));
