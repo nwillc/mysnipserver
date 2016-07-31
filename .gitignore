@@ -7,3 +7,6 @@ env.*
 src/main/resources/build.json
 notes
 target
+gradle
+gradlew
+gradlew.bat
