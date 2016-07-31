@@ -15,6 +15,8 @@ if hash cygpath 2>/dev/null; then
    CLASSPATH=$(cygpath --path --mixed "$CLASSPATH")
 fi
 
+JAVA_OPTS=-Djava.awt.headless=true -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
+
 echo Start server...
-java  -cp "${CLASSPATH}" -Djava.awt.headless=true com.github.nwillc.mysnipserver.MySnipServer $*
+java  -cp "${CLASSPATH}" ${JAVA_OPTS} com.github.nwillc.mysnipserver.MySnipServer $*
 
