@@ -6,3 +6,4 @@ env.*
 .ruby-version
 src/main/resources/build.json
 notes
+target
