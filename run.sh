@@ -7,9 +7,9 @@ cd ${SCRIPT_DIR}
 [ -f env.sh ] && source env.sh
 
 echo Rebuild server...
-./gradlew -q stage -x test
+mvn -q clean package dependency:copy-dependencies -DskipTests
 
-CLASSPATH="build/staging:build/staging/*"
+CLASSPATH="target/mysnipserver-1.1.5.jar:target/dependency/*"
 
 if hash cygpath 2>/dev/null; then
    CLASSPATH=$(cygpath --path --mixed "$CLASSPATH")
