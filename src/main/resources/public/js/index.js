@@ -60,7 +60,7 @@ APP.Home = function () {
     // Functions
     this.loadCategories = () => {
         console.log("loadCategories");
-        $.get("v1/categories", data => {
+        $.get("/api/v1/categories", data => {
             var list = JSON.parse(data).sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
@@ -83,7 +83,7 @@ APP.Home = function () {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
         console.log("Selected Category: " + category);
-        $.get("v1/snippets/category/" + category, data => this.loadTitles(JSON.parse(data)));
+        $.get("/api/v1/snippets/category/" + category, data => this.loadTitles(JSON.parse(data)));
     };
 
     this.loadTitles = (list) => {
@@ -99,7 +99,7 @@ APP.Home = function () {
         var category = $(this.categories).val();
         var title = $(this.titles).val();
         console.log("Selected Category: " + category + " Title: " + title);
-        $.get("v1/snippets/" + title, (data, status) => {
+        $.get("/api/v1/snippets/" + title, (data, status) => {
             console.log("Status: " + status + " Data: " + data);
             var snippet = JSON.parse(data);
             $(this.body).val(snippet.body);
@@ -108,7 +108,7 @@ APP.Home = function () {
 
     this.saveCategory = () => {
         console.log("saveCategory");
-        $.post("v1/categories", JSON.stringify({
+        $.post("/api/v1/categories", JSON.stringify({
             name: $(this.category).val()
         }), () => {
             this.loadCategories();
@@ -118,7 +118,7 @@ APP.Home = function () {
 
     this.saveSnippet = () => {
         console.log("Save Snippet");
-        $.post('v1/snippets', JSON.stringify({
+        $.post('/api/v1/snippets', JSON.stringify({
             category: $(this.snippetCategories).val(),
             title: $(this.title).val(),
             body: $(this.bodyInput).val()
@@ -132,7 +132,7 @@ APP.Home = function () {
         console.log("Delete Snippet: " + $(this.categories).val() + ':'
             + $(selected).val());
         $.ajax({
-            url: 'v1/snippets/' + $(selected).val(),
+            url: '/api/v1/snippets/' + $(selected).val(),
             method: 'DELETE',
             success: () => this.loadCategories()
         });
@@ -142,7 +142,7 @@ APP.Home = function () {
        var selected = $(titles).find("option:selected");
         console.log("Move Snippet: " + $(selected).val());
         $.ajax({
-         url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.moveCategories).val(),
+         url: '/api/v1/snippets/' + $(selected).val() + '/move/' + $(this.moveCategories).val(),
          method: 'PUT',
          success: () => {
              this.loadAllTitles();
@@ -154,7 +154,7 @@ APP.Home = function () {
     this.deleteCategory = () => {
         console.log("Delete Category: " + $(this.categories).val());
         $.ajax({
-            url: 'v1/categories/' + $(this.categories).val(),
+            url: '/api/v1/categories/' + $(this.categories).val(),
             method: 'DELETE',
             success: () => this.loadCategories()
         });
@@ -172,7 +172,7 @@ APP.Home = function () {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
         console.log("Selected Category: " + category);
-        $.post("v1/snippets/category/" + category, JSON.stringify({
+        $.post("/api/v1/snippets/category/" + category, JSON.stringify({
             query: $(query).val()
         }), data => {
             this.loadTitles(JSON.parse(data));
@@ -183,9 +183,9 @@ APP.Home = function () {
     this.logout = () => {
         console.log("logout");
         $.ajax({
-            url: 'v1/auth',
+            url: '/api/v1/auth',
             method: 'DELETE',
-            success: () => window.location.replace("/login.html")
+            success: () => window.location.replace("/public/login.html")
         });
     };
 
@@ -199,7 +199,7 @@ APP.Home = function () {
 
     this.updateSnippet = () => {
          console.log("Update Snippet");
-         $.post('v1/snippets', JSON.stringify({
+         $.post('/api/v1/snippets', JSON.stringify({
              key: $(this.titles).val(),
              category: $(this.categories).val(),
              title: $(this.titles).children(":selected").text(),

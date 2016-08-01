@@ -34,10 +34,10 @@ public class OrchestrateModule extends AbstractModule {
     protected void configure() {
         Logger.info("Configuring Orchestrate Backed module.");
         Client client = new OrchestrateClient(ORCH_API_KEY);
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        }).toInstance(new MySnipServerApplication(
-                new CollectionDao<>(client, Category.class),
-                new CollectionDao<>(client, Snippet.class),
-                new CollectionDao<>(client, User.class)));
+//        bind(new TypeLiteral<MySnipServerApplication>() {
+//        }).toInstance(new MySnipServerApplication(
+//                new CollectionDao<>(client, Category.class),
+//                new CollectionDao<>(client, Snippet.class),
+//                new CollectionDao<>(client, User.class)));
     }
 }

@@ -20,48 +20,31 @@ import com.github.nwillc.mysnipserver.controller.Authentication;
 import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
+import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
+import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
-import com.google.inject.Inject;
+import com.github.nwillc.mysnipserver.util.rest.Version;
 import org.pmw.tinylog.Logger;
 import spark.servlet.SparkApplication;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
-
+import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
-    private final Dao<Category> categoriesDao;
-    private final Dao<Snippet> snippetDao;
-    private final Dao<User> userDao;
+    private final Dao<Category> categoriesDao = new CategoryDao();
+    private final Dao<Snippet> snippetDao = new SnippetDao(categoriesDao);
+    private final Dao<User> userDao = new UserDao();
     private String properties = "";
-
-    @Inject
-    public MySnipServerApplication(Dao<Category> categoriesDao,
-                                   Dao<Snippet> snippetDao,
-                                   Dao<User> userDao) {
-        this.categoriesDao = categoriesDao;
-        this.snippetDao = snippetDao;
-        this.userDao = userDao;
-        try (
-                final InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/build.json"));
-                final BufferedReader bufferedReader = new BufferedReader(isr)
-        ) {
-            properties = bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (Exception e) {
-            Logger.warn("Could not load build info", e);
-        }
-    }
 
     @Override
     public void init() {
         Logger.info("Starting");
         // Static files
-        staticFileLocation("/public");
+        // staticFileLocation("/public");
 
         // Create controllers
         new Categories(categoriesDao);
@@ -69,8 +52,8 @@ public class MySnipServerApplication implements SparkApplication {
         new Authentication(userDao);
 
         // Specific routes
-        get("/ping", (request, response) -> "PONG");
-        get("/properties", (request, response) -> properties);
+        get(versionedPath("ping"), (request, response) -> "PONG");
+        get(versionedPath("properties"), (request, response) -> properties);
 
         exception(HttpException.class, (e, request, response) -> {
             response.status(((HttpException) e).getCode().code);

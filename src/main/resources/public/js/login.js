@@ -32,7 +32,7 @@ APP.UserNameValidator = function () {
 
     this.login = (event) => {
         if (event.keyCode === 13) {
-            $.get("v1/auth/" + $(this.username).val() + "/" + $(this.password).val(), function () {
+            $.get("/api/v1/auth/" + $(this.username).val() + "/" + $(this.password).val(), function () {
                 window.location.replace("/");
             });
         }
@@ -49,7 +49,7 @@ APP.UserNameValidator = function () {
 
 function onSignIn(googleUser) {
     "use strict";
-    $.get("v1/auth/" + googleUser.getAuthResponse().id_token, function () {
+    $.get("/api/v1/auth/" + googleUser.getAuthResponse().id_token, function () {
             APP.cookies.set("token", googleUser.getAuthResponse().id_token);
             window.location.replace("/");
     });

@@ -38,13 +38,14 @@ import static spark.Spark.before;
 
 public class Authentication extends SparkController<User> {
     private static final String IS_LOGGED_IN = "loggedIn.true";
-    private static final String LOGIN_HTML = "/login.html";
+    private static final String LOGIN_HTML = "/public/login.html";
     private static final String[] NO_AUTH = {
             LOGIN_HTML,
-            "/js/login.js",
-            "/js/cookies.js",
+            "/public/js/login.js",
+            "/public/js/cookies.js",
             "/favicon.ico",
-            "/properties",
+            versionedPath("ping"),
+            versionedPath("properties"),
             versionedPath("auth")
     };
     private final Set<String> noAuth = new HashSet<>();

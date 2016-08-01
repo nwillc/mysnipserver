@@ -31,7 +31,7 @@ public class MemoryBackedModule extends AbstractModule {
     protected void configure() {
         Logger.info("Configuring Memory Backed module.");
         CategoryDao categoryDao = new CategoryDao();
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        }).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));
+//        bind(new TypeLiteral<MySnipServerApplication>() {
+//        }).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));
     }
 }

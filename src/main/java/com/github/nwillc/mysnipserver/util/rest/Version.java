@@ -23,7 +23,7 @@ public final class Version {
     }
 
     public static String versionedPath(String version, String path) {
-        return "/" + version + "/" + path;
+        return "/api/" + version + "/" + path;
     }
 
     public static String versionedPath(String path) {

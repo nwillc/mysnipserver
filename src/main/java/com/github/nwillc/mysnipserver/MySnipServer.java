@@ -68,7 +68,7 @@ public class MySnipServer {
             CommandLineInterface.help(options, 1);
         }
 
-        Guice.createInjector(module).getInstance(MySnipServerApplication.class).init();
+        //Guice.createInjector(module).getInstance(MySnipServerApplication.class).init();
         Logger.info("Completed");
     }
 }
