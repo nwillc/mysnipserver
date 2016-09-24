@@ -5,7 +5,7 @@ This is a simple snippets app. It is a RESTful server based on:
 - Java 8
 - Java Spark RESTful servlet
 - Orchestrate persistence 
-- JSR 107 Caching (my SimpleCache & cache-annotations)   
+- JSR 107 Caching ([Caffeine](https://github.com/ben-manes/caffeine))   
 - Google authentication
 - jQuery UI
 
