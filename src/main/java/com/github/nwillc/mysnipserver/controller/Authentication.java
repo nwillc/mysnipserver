@@ -73,7 +73,6 @@ public class Authentication extends SparkController<User> {
             Logger.warn("Access violation: " + request.pathInfo());
             response.type("text/html");
             response.redirect(LOGIN_HTML);
-            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
         }
     }
 
