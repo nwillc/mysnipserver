@@ -1,3 +1,5 @@
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Copy
+
 /*
  * Copyright (c) 2016,  nwillc@gmail.com
  *
@@ -17,12 +19,7 @@
 buildscript {
     repositories {
         mavenLocal()
-        jcenter {
-            url 'http://jcenter.bintray.com'
-        }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        jcenter()
         maven {
             url "https://maven.eveoh.nl/content/repositories/releases"
         }
@@ -31,30 +28,23 @@ buildscript {
         classpath "gradle.plugin.com.github.nwillc:vplugin:1.2.5",
                 "gradle.plugin.com.github.nwillc:buildinfo:0.1.2",
                 'au.com.ish.gradle:release:2.2.2',
-                'org.tmatesoft.sqljet:sqljet:1.1.9'
+                'org.tmatesoft.sqljet:sqljet:1.1.9',
+                'com.github.rholder:gradle-one-jar:1.0.4'
     }
 }
 
-apply plugin: "com.github.nwillc.buildinfo"
-apply plugin: "com.github.nwillc.vplugin"
-apply plugin: 'java'
-apply plugin: 'release'
-apply plugin: 'groovy'
-
+plugins {
+    id "java"
+    id "com.github.nwillc.vplugin" version "1.2.5"
+    id "com.github.nwillc.buildinfo" version "0.1.2"
+}
 
 repositories {
+    jcenter()
     mavenLocal()
-    jcenter {
-        url 'http://jcenter.bintray.com'
-    }
-    maven {
-        url "http://dl.bintray.com/nwillc/maven"
-    }
+    mavenCentral()
 }
 
-configurations {
-    compile.exclude group: 'org.slf4j', module: 'slf4j-simple'
-}
 
 dependencies {
     compile 'com.sparkjava:spark-core:2.3',
@@ -72,9 +62,16 @@ dependencies {
     runtime 'org.tinylog:slf4j-binding:1.1'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.7.6',
-            'org.mockito:mockito-core:2.1.0-RC.1',
+            'org.mockito:mockito-core:2.1.0',
             'org.assertj:assertj-core:3.5.2'
 }
+
+configurations {
+    compile.exclude group: 'org.slf4j', module: 'slf4j-simple'
+}
+
+apply plugin: 'release'
+apply plugin: 'gradle-one-jar'
 
 group = "com.github.nwillc"
 version = "1.1.5"
@@ -115,12 +112,6 @@ task integrationTest(type: Test) {
     }
 }
 
-task stage(type: Copy) {
-    from sourceSets.main.runtimeClasspath
-    into 'build/staging'
-}
-
-stage.dependsOn build
 processResources.dependsOn buildInfo
 
 release {
@@ -128,4 +119,9 @@ release {
     allowLocalModifications = true
     releaseDryRun = false
     scm = 'git'
+}
+
+task oneJar(type: OneJar) {
+    mainClass = 'com.github.nwillc.mysnipserver.MySnipServer'
+    additionalDir = file('build/resources/main')
 }
