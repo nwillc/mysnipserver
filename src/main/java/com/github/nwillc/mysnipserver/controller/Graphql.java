@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.HelloWorldSchema;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SchemaProvider;
 import com.github.nwillc.mysnipserver.util.ToJson;
+import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
+import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.pmw.tinylog.Logger;
@@ -35,8 +37,7 @@ public class Graphql implements ToJson {
 		try {
 			payload = getMapper().readValue(request.body(), Map.class);
 		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			throw new HttpException(HttpStatusCode.BAD_REQUEST, "Could not parse request body as GraphQL map.");
 		}
 		Logger.info(payload.get(QUERY));
 		ExecutionResult executionResult = graphql.execute(payload.get(QUERY));
