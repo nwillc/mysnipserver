@@ -58,7 +58,8 @@ dependencies {
             'com.google.http-client:google-http-client:1.22.0',
             'com.github.ben-manes.caffeine:caffeine:2.3.3',
             'com.github.ben-manes.caffeine:jcache:2.3.3',
-            'org.tinylog:tinylog:1.1'
+            'org.tinylog:tinylog:1.1',
+            'com.graphql-java:graphql-java:2.0.0'
     runtime 'org.tinylog:slf4j-binding:1.1'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.7.6',
