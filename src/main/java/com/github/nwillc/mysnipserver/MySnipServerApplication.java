@@ -18,6 +18,7 @@ package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.controller.Authentication;
 import com.github.nwillc.mysnipserver.controller.Categories;
+import com.github.nwillc.mysnipserver.controller.Graphql;
 import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
@@ -67,6 +68,8 @@ public class MySnipServerApplication implements SparkApplication {
         new Categories(categoriesDao);
         new Snippets(snippetDao, categoriesDao);
         new Authentication(userDao);
+
+        new Graphql();
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");

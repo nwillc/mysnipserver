@@ -23,6 +23,9 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 public interface ToJson {
     ThreadLocal<ObjectMapper> mapper = ThreadLocal.withInitial(() -> new ObjectMapper().registerModule(new Jdk8Module()));
 
+    default ObjectMapper getMapper() {
+        return mapper.get();
+    }
     default String toJson(Object obj) {
         try {
             return mapper.get().writeValueAsString(obj);

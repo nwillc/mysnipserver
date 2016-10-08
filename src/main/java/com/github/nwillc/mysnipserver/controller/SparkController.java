@@ -39,10 +39,6 @@ public abstract class SparkController<T extends Entity> implements ToJson {
         return dao;
     }
 
-    protected ThreadLocal<ObjectMapper> getMapper() {
-        return mapper;
-    }
-
     protected void get(String path, Route route) {
         Spark.get(versionedPath(path), route, this::toJson);
     }

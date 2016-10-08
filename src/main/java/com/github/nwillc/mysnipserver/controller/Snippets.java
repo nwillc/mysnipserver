@@ -81,7 +81,7 @@ public class Snippets extends SparkController<Snippet> {
 
     private List<Snippet> searchCategory(Request request, Response response) {
         try {
-            final Query query = getMapper().get().readValue(request.body(), Query.class);
+            final Query query = getMapper().readValue(request.body(), Query.class);
             Logger.info("Searching category: " + KEY.from(request) + " with query: " + query.getQuery());
             return getDao().find(query.getQuery()).filter(snippet -> KEY.from(request).equals(snippet.getCategory())).collect(Collectors.toList());
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public class Snippets extends SparkController<Snippet> {
 
     private Boolean save(Request request, Response response) {
         try {
-            final Snippet snippet = getMapper().get().readValue(request.body(), Snippet.class);
+            final Snippet snippet = getMapper().readValue(request.body(), Snippet.class);
             Logger.info("Saving snippet: " + snippet);
             getDao().save(snippet);
             Logger.info("We think its: " + getDao().findOne(snippet.getKey()));

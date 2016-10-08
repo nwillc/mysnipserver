@@ -51,7 +51,7 @@ public class Categories extends SparkController<Category> {
 
     private Boolean save(Request request, Response response) {
         try {
-            final Category category = getMapper().get().readValue(request.body(), Category.class);
+            final Category category = getMapper().readValue(request.body(), Category.class);
             Logger.info("Category: " + category);
             getDao().save(category);
             return Boolean.TRUE;

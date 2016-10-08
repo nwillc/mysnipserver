@@ -37,6 +37,7 @@ import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 import static spark.Spark.before;
 
 public class Authentication extends SparkController<User> {
+    public static final String AUTH_PATH = "auth";
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";
     private static final String[] NO_AUTH = {
@@ -45,7 +46,8 @@ public class Authentication extends SparkController<User> {
             "/js/cookies.js",
             "/favicon.ico",
             "/properties",
-            versionedPath("auth")
+            versionedPath(AUTH_PATH),
+            versionedPath(Graphql.GRAPHQL_PATH)
     };
     private final Set<String> noAuth = new HashSet<>();
 
@@ -56,9 +58,9 @@ public class Authentication extends SparkController<User> {
         for (String path : NO_AUTH) {
             noAuth(path);
         }
-        get("auth/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
-        get("auth/" + TOKEN.getLabel(), this::googleAuth);
-        delete("auth", this::logout);
+        get(AUTH_PATH + "/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel(), this::login);
+        get(AUTH_PATH + "/" + TOKEN.getLabel(), this::googleAuth);
+        delete(AUTH_PATH, this::logout);
     }
 
     private void check(Request request, Response response) {
