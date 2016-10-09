@@ -132,7 +132,7 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
-	private DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
+	private static DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
 		return environment -> {
 			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
 			if (category.isPresent()) {
