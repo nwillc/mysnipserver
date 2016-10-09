@@ -21,13 +21,13 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.DataFetcher;
-import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static graphql.Scalars.GraphQLString;
@@ -41,6 +41,7 @@ public class SnippetSchema implements SchemaProvider {
 	public static final String KEY = "key";
 	public static final String SNIPPET = "snippet";
 	private final GraphQLSchema schema;
+
 
 	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
 		schema = newSchema()
@@ -122,7 +123,7 @@ public class SnippetSchema implements SchemaProvider {
 								.description("A category id")
 								.type(GraphQLString)
 								.build())
-						.dataFetcher(new SnippetsDataFetcher(snippetDao))
+						.dataFetcher(snippetsFetcherFactory.apply(snippetDao))
 						.build())
 				.build();
 	}
@@ -132,21 +133,13 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
-	private class SnippetsDataFetcher implements DataFetcher {
-		private final Dao<Snippet> snippetDao;
-
-		public SnippetsDataFetcher(Dao<Snippet> snippetDao) {
-			this.snippetDao = snippetDao;
+	private Function<Dao<Snippet>, DataFetcher> snippetsFetcherFactory = (snippetDao) -> (DataFetcher) environment -> {
+		Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
+		if (category.isPresent()) {
+			return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
+		} else {
+			return snippetDao.findAll().collect(Collectors.toList());
 		}
+	};
 
-		@Override
-		public Object get(DataFetchingEnvironment environment) {
-			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
-			if (category.isPresent()) {
-				return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
-			} else {
-				return snippetDao.findAll().collect(Collectors.toList());
-			}
-		}
-	}
 }
