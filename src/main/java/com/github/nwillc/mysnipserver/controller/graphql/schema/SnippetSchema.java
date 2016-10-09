@@ -27,7 +27,6 @@ import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static graphql.Scalars.GraphQLString;
@@ -123,7 +122,7 @@ public class SnippetSchema implements SchemaProvider {
 								.description("A category id")
 								.type(GraphQLString)
 								.build())
-						.dataFetcher(snippetsFetcherFactory.apply(snippetDao))
+						.dataFetcher(snippetsFetcherFactory(snippetDao))
 						.build())
 				.build();
 	}
@@ -133,13 +132,14 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
-	private Function<Dao<Snippet>, DataFetcher> snippetsFetcherFactory = (snippetDao) -> (DataFetcher) environment -> {
-		Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
-		if (category.isPresent()) {
-			return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
-		} else {
-			return snippetDao.findAll().collect(Collectors.toList());
-		}
-	};
-
+	private DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
+		return environment -> {
+			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
+			if (category.isPresent()) {
+				return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
+			} else {
+				return snippetDao.findAll().collect(Collectors.toList());
+			}
+		};
+	}
 }
