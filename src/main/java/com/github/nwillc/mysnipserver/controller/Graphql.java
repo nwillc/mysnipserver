@@ -6,6 +6,7 @@ import com.github.nwillc.mysnipserver.controller.graphql.schema.SchemaProvider;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.ToJson;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
@@ -29,8 +30,8 @@ public class Graphql implements ToJson {
 	private static final String DATA = "data";
 	private final GraphQL graphql;
 
-	public Graphql(Dao<Category> categoryDao) {
-		SchemaProvider schema = new SnippetSchema(categoryDao);
+	public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+		SchemaProvider schema = new SnippetSchema(categoryDao, snippetDao);
 		graphql = new GraphQL(schema.getSchema());
 		Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson );
 	}

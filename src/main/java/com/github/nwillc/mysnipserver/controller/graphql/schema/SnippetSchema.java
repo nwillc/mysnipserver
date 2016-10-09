@@ -2,18 +2,14 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
-import graphql.schema.DataFetcher;
-import graphql.schema.DataFetchingEnvironment;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
-import graphql.schema.GraphQLTypeReference;
 import graphql.schema.TypeResolver;
-import org.pmw.tinylog.Logger;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static graphql.Scalars.GraphQLString;
@@ -24,6 +20,7 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
+	private final GraphQLSchema schema;
 	private final GraphQLInterfaceType entity = newInterface()
 			.name("entity")
 			.description("An entity")
@@ -34,7 +31,7 @@ public class SnippetSchema implements SchemaProvider {
 					.build())
 			.typeResolver(new SnippetTypeResolver())
 			.build();
-	public final GraphQLObjectType category = newObject()
+	private final GraphQLObjectType category = newObject()
 			.name("category")
 			.description("Category of a snippet")
 			.withInterface(entity)
@@ -49,13 +46,34 @@ public class SnippetSchema implements SchemaProvider {
 					.type(GraphQLString)
 					.build())
 			.build();
-	private final GraphQLObjectType query;
-	private final GraphQLSchema schema;
-	private final Dao<Category> categoryDao;
+	private final GraphQLObjectType snippet = newObject()
+			.name("snippet")
+			.description("A snippet")
+			.withInterface(entity)
+			.field(newFieldDefinition()
+					.name("key")
+					.description("Entity identifier")
+					.type(GraphQLString)
+					.build())
+			.field(newFieldDefinition()
+					.name("category")
+					.description("Category identifier")
+					.type(GraphQLString)
+					.build())
+			.field(newFieldDefinition()
+					.name("title")
+					.description("Snippet title")
+					.type(GraphQLString)
+					.build())
+			.field(newFieldDefinition()
+					.name("body")
+					.description("Snippet body")
+					.type(GraphQLString)
+					.build())
+			.build();
 
-	public SnippetSchema(Dao<Category> categoryDao) {
-		this.categoryDao = categoryDao;
-		query = newObject()
+	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+		GraphQLObjectType query = newObject()
 				.name("query")
 				.field(newFieldDefinition()
 						.name("category")
@@ -65,13 +83,28 @@ public class SnippetSchema implements SchemaProvider {
 								.description("The category id")
 								.type(new GraphQLNonNull(GraphQLString))
 								.build())
-						.dataFetcher(new CategoryFetcher())
+						.dataFetcher(environment -> categoryDao.findOne(environment.getArgument("key")).orElse(null))
 						.build())
-					.field(newFieldDefinition()
-							.name("categories")
-							.type(new GraphQLList(new GraphQLTypeReference("category")))
-							.dataFetcher(new CategoriesFetcher())
-							.build())
+				.field(newFieldDefinition()
+						.name("categories")
+						.type(new GraphQLList(category))
+						.dataFetcher(environment -> categoryDao.findAll().collect(Collectors.toList()))
+						.build())
+				.field(newFieldDefinition()
+						.name("snippet")
+						.type(snippet)
+						.argument(newArgument()
+								.name("key")
+								.description("The category id")
+								.type(new GraphQLNonNull(GraphQLString))
+								.build())
+						.dataFetcher(environment -> snippetDao.findOne(environment.getArgument("key")).orElse(null))
+						.build())
+				.field(newFieldDefinition()
+						.name("snippets")
+						.type(new GraphQLList(snippet))
+						.dataFetcher(environment -> snippetDao.findAll().collect(Collectors.toList()))
+						.build())
 				.build();
 		schema = newSchema()
 				.query(query)
@@ -83,29 +116,16 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
-	private class CategoryFetcher implements DataFetcher {
-		@Override
-		public Object get(DataFetchingEnvironment environment) {
-			if (environment.containsArgument("key")) {
-				String key = environment.getArgument("key");
-				Logger.info("Getting category: " + key);
-				return categoryDao.findOne(key).orElse(null);
-			}
-			return null;
-		}
-	}
-
-	private class CategoriesFetcher implements DataFetcher {
-		@Override
-		public Object get(DataFetchingEnvironment environment) {
-			return categoryDao.findAll().collect(Collectors.toList());
-		}
-	}
-
 	private class SnippetTypeResolver implements TypeResolver {
 		@Override
 		public GraphQLObjectType getType(Object object) {
-			return category;
+			if (object instanceof Category) {
+				return category;
+			} else if (object instanceof Snippet) {
+				return snippet;
+			} else {
+				return null;
+			}
 		}
 	}
 }

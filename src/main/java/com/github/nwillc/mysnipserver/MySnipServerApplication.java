@@ -68,8 +68,7 @@ public class MySnipServerApplication implements SparkApplication {
         new Categories(categoriesDao);
         new Snippets(snippetDao, categoriesDao);
         new Authentication(userDao);
-
-        new Graphql(categoriesDao);
+        new Graphql(categoriesDao, snippetDao);
 
         // Specific routes
         get("/ping", (request, response) -> "PONG");
