@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.dao;
@@ -19,28 +20,28 @@ package com.github.nwillc.mysnipserver.dao;
 import java.util.UUID;
 
 public abstract class Entity {
-    private String key;
+	private String key;
 
-    public Entity() {
-        this(UUID.randomUUID().toString());
-    }
+	public Entity() {
+		this(UUID.randomUUID().toString());
+	}
 
-    public Entity(String key) {
-        this.key = key;
-    }
+	public Entity(String key) {
+		this.key = key;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public String getKey() {
+		return key;
+	}
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    @Override
-    public String toString() {
-        return "Entity{" +
-                "key='" + key + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Entity{" +
+				"key='" + key + '\'' +
+				'}';
+	}
 }

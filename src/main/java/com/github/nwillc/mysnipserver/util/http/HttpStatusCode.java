@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.util.http;
@@ -19,21 +20,21 @@ package com.github.nwillc.mysnipserver.util.http;
 import static java.net.HttpURLConnection.*;
 
 public enum HttpStatusCode {
-    OK(HTTP_OK),
-    CREATED(HTTP_CREATED),
-    UNAUTHERIZED(HTTP_UNAUTHORIZED),
-    NOT_FOUND(HTTP_NOT_FOUND),
-    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR),
-    BAD_REQUEST(HTTP_BAD_REQUEST);
+	OK(HTTP_OK),
+	CREATED(HTTP_CREATED),
+	UNAUTHERIZED(HTTP_UNAUTHORIZED),
+	NOT_FOUND(HTTP_NOT_FOUND),
+	INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR),
+	BAD_REQUEST(HTTP_BAD_REQUEST);
 
-    public final int code;
+	public final int code;
 
-    HttpStatusCode(int code) {
-        this.code = code;
-    }
+	HttpStatusCode(int code) {
+		this.code = code;
+	}
 
-    @Override
-    public String toString() {
-        return name() + " (" + code + ')';
-    }
+	@Override
+	public String toString() {
+		return name() + " (" + code + ')';
+	}
 }

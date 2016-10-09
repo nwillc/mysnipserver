@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,21 +12,22 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.util.rest;
 
 public final class Version {
-    private static final String CURRENT_API_VERSION = "v1";
+	private static final String CURRENT_API_VERSION = "v1";
 
-    private Version() {
-    }
+	private Version() {
+	}
 
-    public static String versionedPath(String version, String path) {
-        return "/" + version + "/" + path;
-    }
+	public static String versionedPath(String version, String path) {
+		return "/" + version + "/" + path;
+	}
 
-    public static String versionedPath(String path) {
-        return versionedPath(CURRENT_API_VERSION, path);
-    }
+	public static String versionedPath(String path) {
+		return versionedPath(CURRENT_API_VERSION, path);
+	}
 }

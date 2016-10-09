@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.entity;
@@ -19,36 +20,36 @@ package com.github.nwillc.mysnipserver.entity;
 import com.github.nwillc.mysnipserver.dao.Entity;
 
 public class User extends Entity {
-    private String username;
-    private String password;
+	private String username;
+	private String password;
 
-    public User() {
-    }
+	public User() {
+	}
 
-    public User(String password, String username) {
-        this.password = password;
-        this.username = username;
-    }
+	public User(String password, String username) {
+		this.password = password;
+		this.username = username;
+	}
 
-    @Override
-    public String getKey() {
-        return username;
-    }
+	@Override
+	public String getKey() {
+		return username;
+	}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "key='" + getKey() + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + (password == null ? "" : "*******") + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "User{" +
+				"key='" + getKey() + '\'' +
+				", username='" + username + '\'' +
+				", password='" + (password == null ? "" : "*******") + '\'' +
+				'}';
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 }

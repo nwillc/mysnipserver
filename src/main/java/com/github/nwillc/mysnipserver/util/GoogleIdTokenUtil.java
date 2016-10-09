@@ -31,24 +31,24 @@ import java.util.Collections;
 import java.util.Optional;
 
 public final class GoogleIdTokenUtil {
-    private static final String CLIENT_ID = System.getenv("CLIENT_ID");
-    private static final String ISSUER = "accounts.google.com";
+	private static final String CLIENT_ID = System.getenv("CLIENT_ID");
+	private static final String ISSUER = "accounts.google.com";
 
-    private GoogleIdTokenUtil() {
-    }
+	private GoogleIdTokenUtil() {
+	}
 
-    static public Optional<Payload> verify(final String googleTokenId) throws GeneralSecurityException, IOException {
-        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(httpTransport, jsonFactory)
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                .setIssuer(ISSUER)
-                .build();
-        GoogleIdToken idToken = verifier.verify(googleTokenId);
-        if (idToken != null) {
-            return Optional.of(idToken.getPayload());
-        }
-        return Optional.empty();
-    }
+	static public Optional<Payload> verify(final String googleTokenId) throws GeneralSecurityException, IOException {
+		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(httpTransport, jsonFactory)
+				.setAudience(Collections.singletonList(CLIENT_ID))
+				.setIssuer(ISSUER)
+				.build();
+		GoogleIdToken idToken = verifier.verify(googleTokenId);
+		if (idToken != null) {
+			return Optional.of(idToken.getPayload());
+		}
+		return Optional.empty();
+	}
 
 }

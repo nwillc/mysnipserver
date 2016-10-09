@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,18 +12,19 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.controller.model;
 
 public class Query {
-    private String query;
+	private String query;
 
-    public String getQuery() {
-        return query;
-    }
+	public String getQuery() {
+		return query;
+	}
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
+	public void setQuery(String query) {
+		this.query = query;
+	}
 }

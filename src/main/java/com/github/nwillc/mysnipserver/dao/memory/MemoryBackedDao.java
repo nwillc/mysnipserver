@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.dao.memory;
@@ -25,31 +26,31 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MemoryBackedDao<T extends Entity> implements Dao<T> {
-    private final Map<String, T> entities = new HashMap<>();
+	private final Map<String, T> entities = new HashMap<>();
 
-    @Override
-    public void delete(String s) {
-        entities.remove(s);
-    }
+	@Override
+	public void delete(String s) {
+		entities.remove(s);
+	}
 
-    @Override
-    public Optional<T> findOne(String s) {
-        return Optional.ofNullable(entities.get(s));
-    }
+	@Override
+	public Optional<T> findOne(String s) {
+		return Optional.ofNullable(entities.get(s));
+	}
 
-    @Override
-    public Stream<T> findAll() {
-        return entities.values().stream();
-    }
+	@Override
+	public Stream<T> findAll() {
+		return entities.values().stream();
+	}
 
-    @Override
-    public Stream<T> find(String phrase) {
-        // Very lazy search that just looks for single word in the toString - for testing
-        return findAll().filter(e -> e.toString().contains(phrase));
-    }
+	@Override
+	public Stream<T> find(String phrase) {
+		// Very lazy search that just looks for single word in the toString - for testing
+		return findAll().filter(e -> e.toString().contains(phrase));
+	}
 
-    @Override
-    public void save(T t) {
-        entities.put(t.getKey(), t);
-    }
+	@Override
+	public void save(T t) {
+		entities.put(t.getKey(), t);
+	}
 }

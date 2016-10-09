@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.dao.memory;
@@ -24,16 +25,16 @@ import org.pmw.tinylog.Logger;
 import java.util.Optional;
 
 public class SnippetDao extends MemoryBackedDao<Snippet> {
-    final Dao<Category> categoryDao;
+	final Dao<Category> categoryDao;
 
-    public SnippetDao(Dao<Category> categoryDao) {
-        this.categoryDao = categoryDao;
-        Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
-        Logger.info("Found java category: " + java.isPresent());
-        java.ifPresent(c -> {
-            save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
-            save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));
-            save(new Snippet(c.getKey(), "jdk version", "java -version;\n"));
-        });
-    }
+	public SnippetDao(Dao<Category> categoryDao) {
+		this.categoryDao = categoryDao;
+		Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
+		Logger.info("Found java category: " + java.isPresent());
+		java.ifPresent(c -> {
+			save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
+			save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));
+			save(new Snippet(c.getKey(), "jdk version", "java -version;\n"));
+		});
+	}
 }

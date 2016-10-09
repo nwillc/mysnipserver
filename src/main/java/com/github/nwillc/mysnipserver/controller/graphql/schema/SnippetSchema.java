@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2016, nwillc@gmail.com
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ */
+
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
@@ -21,20 +38,9 @@ import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
 	private final GraphQLSchema schema;
-	private final GraphQLInterfaceType entity = newInterface()
-			.name("entity")
-			.description("An entity")
-			.field(newFieldDefinition()
-					.name("key")
-					.description("Entity identifier")
-					.type(GraphQLString)
-					.build())
-			.typeResolver(new SnippetTypeResolver())
-			.build();
 	private final GraphQLObjectType category = newObject()
 			.name("category")
 			.description("Category of a snippet")
-			.withInterface(entity)
 			.field(newFieldDefinition()
 					.name("key")
 					.description("Entity identifier")
@@ -49,7 +55,6 @@ public class SnippetSchema implements SchemaProvider {
 	private final GraphQLObjectType snippet = newObject()
 			.name("snippet")
 			.description("A snippet")
-			.withInterface(entity)
 			.field(newFieldDefinition()
 					.name("key")
 					.description("Entity identifier")
@@ -116,16 +121,4 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
-	private class SnippetTypeResolver implements TypeResolver {
-		@Override
-		public GraphQLObjectType getType(Object object) {
-			if (object instanceof Category) {
-				return category;
-			} else if (object instanceof Snippet) {
-				return snippet;
-			} else {
-				return null;
-			}
-		}
-	}
 }

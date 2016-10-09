@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.entity;
@@ -19,28 +20,28 @@ package com.github.nwillc.mysnipserver.entity;
 import com.github.nwillc.mysnipserver.dao.Entity;
 
 public class Category extends Entity {
-    private String name;
+	private String name;
 
-    public Category() {
-    }
+	public Category() {
+	}
 
-    public Category(String name) {
-        this.name = name;
-    }
+	public Category(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "key='" + getKey() + "'" +
-                ", name='" + name + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Category{" +
+				"key='" + getKey() + "'" +
+				", name='" + name + '\'' +
+				'}';
+	}
 }

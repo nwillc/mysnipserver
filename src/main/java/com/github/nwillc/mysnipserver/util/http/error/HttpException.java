@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.util.http.error;
@@ -20,31 +21,31 @@ package com.github.nwillc.mysnipserver.util.http.error;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 
 public class HttpException extends RuntimeException {
-    private final HttpStatusCode code;
+	private final HttpStatusCode code;
 
-    public HttpException(HttpStatusCode code) {
-        this(code, code.name().toLowerCase());
-    }
+	public HttpException(HttpStatusCode code) {
+		this(code, code.name().toLowerCase());
+	}
 
-    public HttpException(HttpStatusCode code, String msg) {
-        super(msg);
-        this.code = code;
-    }
+	public HttpException(HttpStatusCode code, String msg) {
+		super(msg);
+		this.code = code;
+	}
 
-    public HttpException(HttpStatusCode code, String msg, Throwable cause) {
-        super(msg, cause);
-        this.code = code;
-    }
+	public HttpException(HttpStatusCode code, String msg, Throwable cause) {
+		super(msg, cause);
+		this.code = code;
+	}
 
-    public HttpStatusCode getCode() {
-        return code;
-    }
+	public HttpStatusCode getCode() {
+		return code;
+	}
 
-    @Override
-    public String toString() {
-        return "HttpException{" +
-                "code=" + code +
-                ", message= '" + getMessage() + "'" +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "HttpException{" +
+				"code=" + code +
+				", message= '" + getMessage() + "'" +
+				'}';
+	}
 }

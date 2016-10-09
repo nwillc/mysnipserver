@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.mysnipserver.controller;
@@ -31,33 +32,33 @@ import static com.github.nwillc.mysnipserver.util.rest.Params.KEY;
 
 public class Categories extends SparkController<Category> {
 
-    @Inject
-    public Categories(Dao<Category> dao) {
-        super(dao);
-        get("categories", this::findAll);
-        post("categories", this::save);
-        delete("categories/" + KEY.getLabel(), this::delete);
-    }
+	@Inject
+	public Categories(Dao<Category> dao) {
+		super(dao);
+		get("categories", this::findAll);
+		post("categories", this::save);
+		delete("categories/" + KEY.getLabel(), this::delete);
+	}
 
-    private List<Category> findAll(Request request, Response response) {
-        return getDao().findAll().collect(Collectors.toList());
-    }
+	private List<Category> findAll(Request request, Response response) {
+		return getDao().findAll().collect(Collectors.toList());
+	}
 
-    private Boolean delete(Request request, Response response) {
-        Logger.info("Delete category: " + KEY.from(request));
-        getDao().delete(KEY.from(request));
-        return Boolean.TRUE;
-    }
+	private Boolean delete(Request request, Response response) {
+		Logger.info("Delete category: " + KEY.from(request));
+		getDao().delete(KEY.from(request));
+		return Boolean.TRUE;
+	}
 
-    private Boolean save(Request request, Response response) {
-        try {
-            final Category category = getMapper().readValue(request.body(), Category.class);
-            Logger.info("Category: " + category);
-            getDao().save(category);
-            return Boolean.TRUE;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Boolean.FALSE;
-    }
+	private Boolean save(Request request, Response response) {
+		try {
+			final Category category = getMapper().readValue(request.body(), Category.class);
+			Logger.info("Category: " + category);
+			getDao().save(category);
+			return Boolean.TRUE;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return Boolean.FALSE;
+	}
 }
