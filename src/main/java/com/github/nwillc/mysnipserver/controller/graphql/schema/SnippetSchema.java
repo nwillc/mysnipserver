@@ -34,14 +34,23 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
+	public static final String CATEGORY = "category";
+	public static final String KEY = "key";
+	public static final String SNIPPET = "snippet";
 	private final GraphQLSchema schema;
 
 	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+		schema = newSchema()
+				.query(build(categoryDao, snippetDao))
+				.build();
+	}
+
+	private GraphQLObjectType build(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
 		GraphQLObjectType category = newObject()
-				.name("category")
+				.name(CATEGORY)
 				.description("Category of a snippet")
 				.field(newFieldDefinition()
-						.name("key")
+						.name(KEY)
 						.description("Entity identifier")
 						.type(GraphQLString)
 						.build())
@@ -52,15 +61,15 @@ public class SnippetSchema implements SchemaProvider {
 						.build())
 				.build();
 		GraphQLObjectType snippet = newObject()
-				.name("snippet")
+				.name(SNIPPET)
 				.description("A snippet")
 				.field(newFieldDefinition()
-						.name("key")
+						.name(KEY)
 						.description("Entity identifier")
 						.type(GraphQLString)
 						.build())
 				.field(newFieldDefinition()
-						.name("category")
+						.name(CATEGORY)
 						.description("Category identifier")
 						.type(GraphQLString)
 						.build())
@@ -75,17 +84,17 @@ public class SnippetSchema implements SchemaProvider {
 						.type(GraphQLString)
 						.build())
 				.build();
-		GraphQLObjectType query = newObject()
+		return newObject()
 				.name("query")
 				.field(newFieldDefinition()
-						.name("category")
+						.name(CATEGORY)
 						.type(category)
 						.argument(newArgument()
-								.name("key")
+								.name(KEY)
 								.description("The category id")
 								.type(new GraphQLNonNull(GraphQLString))
 								.build())
-						.dataFetcher(environment -> categoryDao.findOne(environment.getArgument("key")).orElse(null))
+						.dataFetcher(environment -> categoryDao.findOne(environment.getArgument(KEY)).orElse(null))
 						.build())
 				.field(newFieldDefinition()
 						.name("categories")
@@ -93,23 +102,20 @@ public class SnippetSchema implements SchemaProvider {
 						.dataFetcher(environment -> categoryDao.findAll().collect(Collectors.toList()))
 						.build())
 				.field(newFieldDefinition()
-						.name("snippet")
+						.name(SNIPPET)
 						.type(snippet)
 						.argument(newArgument()
-								.name("key")
-								.description("The category id")
+								.name(KEY)
+								.description("The snippet id")
 								.type(new GraphQLNonNull(GraphQLString))
 								.build())
-						.dataFetcher(environment -> snippetDao.findOne(environment.getArgument("key")).orElse(null))
+						.dataFetcher(environment -> snippetDao.findOne(environment.getArgument(KEY)).orElse(null))
 						.build())
 				.field(newFieldDefinition()
 						.name("snippets")
 						.type(new GraphQLList(snippet))
 						.dataFetcher(environment -> snippetDao.findAll().collect(Collectors.toList()))
 						.build())
-				.build();
-		schema = newSchema()
-				.query(query)
 				.build();
 	}
 
