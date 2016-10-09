@@ -3,6 +3,9 @@ package com.github.nwillc.mysnipserver.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.HelloWorldSchema;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SchemaProvider;
+import com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema;
+import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.util.ToJson;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
@@ -24,10 +27,11 @@ public class Graphql implements ToJson {
 	private static final String QUERY = "query";
 	private static final String ERRORS = "errors";
 	private static final String DATA = "data";
-	private final SchemaProvider schema = new HelloWorldSchema();
-	private final GraphQL graphql = new GraphQL(schema.getSchema());
+	private final GraphQL graphql;
 
-	public Graphql() {
+	public Graphql(Dao<Category> categoryDao) {
+		SchemaProvider schema = new SnippetSchema(categoryDao);
+		graphql = new GraphQL(schema.getSchema());
 		Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson );
 	}
 
@@ -39,7 +43,7 @@ public class Graphql implements ToJson {
 		} catch (IOException e) {
 			throw new HttpException(HttpStatusCode.BAD_REQUEST, "Could not parse request body as GraphQL map.");
 		}
-		Logger.info(payload.get(QUERY));
+		Logger.info(QUERY + ": " + payload.get(QUERY));
 		ExecutionResult executionResult = graphql.execute(payload.get(QUERY));
 		Map<String, Object> result = new LinkedHashMap<>();
 		if (executionResult.getErrors().size() > 0) {
