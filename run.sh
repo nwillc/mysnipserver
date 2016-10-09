@@ -9,7 +9,7 @@ cd ${SCRIPT_DIR}
 echo Rebuild server...
 ./gradlew -q clean oneJar -x test
 
-JAVA_OPTS=-Djava.awt.headless=true -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
+JAVA_OPTS="-Djava.awt.headless=true -XX:+UnlockCommercialFeatures -XX:+FlightRecorder"
 
 echo Start server...
 java ${JAVA_OPTS} -jar build/libs/*-standalone.jar $*
