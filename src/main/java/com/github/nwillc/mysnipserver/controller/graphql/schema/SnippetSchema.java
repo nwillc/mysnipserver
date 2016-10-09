@@ -20,11 +20,14 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import graphql.schema.DataFetcher;
+import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static graphql.Scalars.GraphQLString;
@@ -114,7 +117,12 @@ public class SnippetSchema implements SchemaProvider {
 				.field(newFieldDefinition()
 						.name("snippets")
 						.type(new GraphQLList(snippet))
-						.dataFetcher(environment -> snippetDao.findAll().collect(Collectors.toList()))
+						.argument(newArgument()
+								.name(CATEGORY)
+								.description("A category id")
+								.type(GraphQLString)
+								.build())
+						.dataFetcher(new SnippetsDataFetcher(snippetDao))
 						.build())
 				.build();
 	}
@@ -124,4 +132,21 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
+	private class SnippetsDataFetcher implements DataFetcher {
+		private final Dao<Snippet> snippetDao;
+
+		public SnippetsDataFetcher(Dao<Snippet> snippetDao) {
+			this.snippetDao = snippetDao;
+		}
+
+		@Override
+		public Object get(DataFetchingEnvironment environment) {
+			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
+			if (category.isPresent()) {
+				return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
+			} else {
+				return snippetDao.findAll().collect(Collectors.toList());
+			}
+		}
+	}
 }
