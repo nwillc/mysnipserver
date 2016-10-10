@@ -40,6 +40,7 @@ public class SnippetSchema implements SchemaProvider {
 	public static final String CATEGORY = "category";
 	public static final String KEY = "key";
 	public static final String SNIPPET = "snippet";
+	public static final String NAME = "name";
 	private final GraphQLSchema schema;
 
 
@@ -60,7 +61,7 @@ public class SnippetSchema implements SchemaProvider {
 						.type(GraphQLString)
 						.build())
 				.field(newFieldDefinition()
-						.name("name")
+						.name(NAME)
 						.description("Category Name")
 						.type(GraphQLString)
 						.build())
@@ -133,21 +134,27 @@ public class SnippetSchema implements SchemaProvider {
 		return newObject()
 				.name("mutation")
 				.field(newFieldDefinition()
-						.name("newCategory")
+						.name("createCategory")
 						.type(new GraphQLTypeReference(CATEGORY))
 						.argument(newArgument()
-								.name("name")
-								.type(GraphQLString)
+								.name(NAME)
+								.type(new GraphQLNonNull(GraphQLString))
 								.build())
-						.dataFetcher(e -> {
-							Optional<String> name = Optional.ofNullable(e.getArgument("name"));
-							if (name.isPresent()) {
-								Category c = new Category(name.get());
-								categoryDao.save(c);
-								return c;
-							}
-							return null;
-						})
+						.dataFetcher(categoryMutation(categoryDao))
+						.build())
+				.field(newFieldDefinition()
+						.name("updateCategory")
+						.type(new GraphQLTypeReference(CATEGORY))
+						.argument(newArgument()
+								.name(KEY)
+								.description("The category id")
+								.type(new GraphQLNonNull(GraphQLString))
+								.build())
+						.argument(newArgument()
+								.name(NAME)
+								.type(new GraphQLNonNull(GraphQLString))
+								.build())
+						.dataFetcher(categoryMutation(categoryDao))
 						.build())
 				.build();
 	}
@@ -157,6 +164,21 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
+	private static DataFetcher categoryMutation(Dao<Category> categoryDao) {
+		return environment -> {
+			Optional<String> name = Optional.ofNullable(environment.getArgument(NAME));
+			Optional<String> key = Optional.ofNullable(environment.getArgument(KEY));
+			if (name.isPresent()) {
+				final Category category = new Category(name.get());
+				if (key.isPresent()) {
+					category.setKey(key.get());
+				}
+				categoryDao.save(category);
+				return category;
+			}
+			return null;
+		};
+	}
 	private static DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
 		return environment -> {
 			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
