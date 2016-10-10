@@ -170,7 +170,7 @@ public class SnippetSchema implements SchemaProvider {
 								.name(BODY)
 								.type(new GraphQLNonNull(GraphQLString))
 								.build())
-						.dataFetcher(snippetMutation(snippetDao))
+						.dataFetcher(snippetMutation(categoryDao, snippetDao))
 						.build())
 				.build();
 	}
@@ -180,12 +180,16 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
-	private static DataFetcher snippetMutation(Dao<Snippet> snippetDao) {
+	private static DataFetcher snippetMutation(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
 		return environment -> {
 			Optional<String> key = Optional.ofNullable(environment.getArgument(KEY));
 			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
 			Optional<String> title = Optional.ofNullable(environment.getArgument(TITLE));
 			Optional<String> body = Optional.ofNullable(environment.getArgument(BODY));
+
+			if (!categoryDao.findOne(category.get()).isPresent()) {
+				return null;
+			}
 
 			final Snippet snippet = new Snippet(category.get(), title.get(), body.get());
 			if (key.isPresent()) {
