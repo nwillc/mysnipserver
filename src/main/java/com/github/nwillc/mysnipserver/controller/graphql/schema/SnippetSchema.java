@@ -25,6 +25,7 @@ import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLNonNull;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.GraphQLTypeReference;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,11 +45,12 @@ public class SnippetSchema implements SchemaProvider {
 
 	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
 		schema = newSchema()
-				.query(build(categoryDao, snippetDao))
+				.query(queries(categoryDao, snippetDao))
+				.mutation(mutations(categoryDao, snippetDao))
 				.build();
 	}
 
-	private GraphQLObjectType build(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+	private GraphQLObjectType queries(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
 		GraphQLObjectType category = newObject()
 				.name(CATEGORY)
 				.description("Category of a snippet")
@@ -123,6 +125,29 @@ public class SnippetSchema implements SchemaProvider {
 								.type(GraphQLString)
 								.build())
 						.dataFetcher(snippetsFetcherFactory(snippetDao))
+						.build())
+				.build();
+	}
+
+	private GraphQLObjectType mutations(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+		return newObject()
+				.name("mutation")
+				.field(newFieldDefinition()
+						.name("newCategory")
+						.type(new GraphQLTypeReference(CATEGORY))
+						.argument(newArgument()
+								.name("name")
+								.type(GraphQLString)
+								.build())
+						.dataFetcher(e -> {
+							Optional<String> name = Optional.ofNullable(e.getArgument("name"));
+							if (name.isPresent()) {
+								Category c = new Category(name.get());
+								categoryDao.save(c);
+								return c;
+							}
+							return null;
+						})
 						.build())
 				.build();
 	}
