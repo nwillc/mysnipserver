@@ -29,6 +29,7 @@ import graphql.schema.GraphQLTypeReference;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static graphql.Scalars.GraphQLString;
 import static graphql.schema.GraphQLArgument.newArgument;
@@ -136,8 +137,13 @@ public class SnippetSchema implements SchemaProvider {
 		return newObject()
 				.name("mutation")
 				.field(newFieldDefinition()
-						.name("createCategory")
+						.name(CATEGORY)
 						.type(new GraphQLTypeReference(CATEGORY))
+						.argument(newArgument()
+								.name(KEY)
+								.description("The category id")
+								.type(GraphQLString)
+								.build())
 						.argument(newArgument()
 								.name(NAME)
 								.type(new GraphQLNonNull(GraphQLString))
@@ -145,18 +151,26 @@ public class SnippetSchema implements SchemaProvider {
 						.dataFetcher(categoryMutation(categoryDao))
 						.build())
 				.field(newFieldDefinition()
-						.name("updateCategory")
-						.type(new GraphQLTypeReference(CATEGORY))
+						.name(SNIPPET)
+						.type(new GraphQLTypeReference(SNIPPET))
 						.argument(newArgument()
 								.name(KEY)
-								.description("The category id")
+								.description("The snippet id")
+								.type(GraphQLString)
+								.build())
+						.argument(newArgument()
+								.name(CATEGORY)
 								.type(new GraphQLNonNull(GraphQLString))
 								.build())
 						.argument(newArgument()
-								.name(NAME)
+								.name(TITLE)
 								.type(new GraphQLNonNull(GraphQLString))
 								.build())
-						.dataFetcher(categoryMutation(categoryDao))
+						.argument(newArgument()
+								.name(BODY)
+								.type(new GraphQLNonNull(GraphQLString))
+								.build())
+						.dataFetcher(snippetMutation(snippetDao))
 						.build())
 				.build();
 	}
@@ -166,19 +180,34 @@ public class SnippetSchema implements SchemaProvider {
 		return schema;
 	}
 
+	private static DataFetcher snippetMutation(Dao<Snippet> snippetDao) {
+		return environment -> {
+			Optional<String> key = Optional.ofNullable(environment.getArgument(KEY));
+			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
+			Optional<String> title = Optional.ofNullable(environment.getArgument(TITLE));
+			Optional<String> body = Optional.ofNullable(environment.getArgument(BODY));
+
+			final Snippet snippet = new Snippet(category.get(), title.get(), body.get());
+			if (key.isPresent()) {
+				snippet.setKey(key.get());
+			}
+			snippetDao.save(snippet);
+			return snippet;
+		};
+	}
+
 	private static DataFetcher categoryMutation(Dao<Category> categoryDao) {
 		return environment -> {
 			Optional<String> name = Optional.ofNullable(environment.getArgument(NAME));
 			Optional<String> key = Optional.ofNullable(environment.getArgument(KEY));
-			if (name.isPresent()) {
-				final Category category = new Category(name.get());
-				if (key.isPresent()) {
-					category.setKey(key.get());
-				}
-				categoryDao.save(category);
-				return category;
+
+			final Category category = new Category(name.get());
+
+			if (key.isPresent()) {
+				category.setKey(key.get());
 			}
-			return null;
+			categoryDao.save(category);
+			return category;
 		};
 	}
 
