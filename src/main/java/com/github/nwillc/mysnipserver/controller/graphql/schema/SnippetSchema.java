@@ -41,6 +41,8 @@ public class SnippetSchema implements SchemaProvider {
 	public static final String KEY = "key";
 	public static final String SNIPPET = "snippet";
 	public static final String NAME = "name";
+	public static final String TITLE = "title";
+	public static final String BODY = "body";
 	private final GraphQLSchema schema;
 
 
@@ -80,12 +82,12 @@ public class SnippetSchema implements SchemaProvider {
 						.type(GraphQLString)
 						.build())
 				.field(newFieldDefinition()
-						.name("title")
+						.name(TITLE)
 						.description("Snippet title")
 						.type(GraphQLString)
 						.build())
 				.field(newFieldDefinition()
-						.name("body")
+						.name(BODY)
 						.description("Snippet body")
 						.type(GraphQLString)
 						.build())
@@ -179,6 +181,7 @@ public class SnippetSchema implements SchemaProvider {
 			return null;
 		};
 	}
+
 	private static DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
 		return environment -> {
 			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));

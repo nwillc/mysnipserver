@@ -31,42 +31,42 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class HttpUtilsTest extends UtilityClassContract {
-    private static final String TEST_PATH = "test";
-    private static final int TEST_PORT = 7654;
-    private static final String TEST_URL = "http://localhost:" + TEST_PORT + "/" + TEST_PATH;
-    private static final String TEST_RESULT = "Hello";
-    private static final String TEST_PARAM_NAME = "payload";
-    private static final String TEST_PARAM_VALUE = "World";
+	private static final String TEST_PATH = "test";
+	private static final int TEST_PORT = 7654;
+	private static final String TEST_URL = "http://localhost:" + TEST_PORT + "/" + TEST_PATH;
+	private static final String TEST_RESULT = "Hello";
+	private static final String TEST_PARAM_NAME = "payload";
+	private static final String TEST_PARAM_VALUE = "World";
 
-    @Override
-    public Class<?> getClassToTest() {
-        return HttpUtils.class;
-    }
+	@Override
+	public Class<?> getClassToTest() {
+		return HttpUtils.class;
+	}
 
-    @Before
-    public void setUp() throws Exception {
-        Spark.port(TEST_PORT);
-        Spark.post(TEST_PATH, (req, res) -> TEST_RESULT + req.body().split("=")[1]);
-        Spark.awaitInitialization();
-    }
+	@Before
+	public void setUp() throws Exception {
+		Spark.port(TEST_PORT);
+		Spark.post(TEST_PATH, (req, res) -> TEST_RESULT + req.body().split("=")[1]);
+		Spark.awaitInitialization();
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        Spark.stop();
-    }
+	@After
+	public void tearDown() throws Exception {
+		Spark.stop();
+	}
 
-    @Test
-    public void shouldHttpPost() throws Exception {
-        Map<String, String> params = new HashMap<>();
-        params.put(TEST_PARAM_NAME, TEST_PARAM_VALUE);
-        assertThat(HttpUtils.httpPost(TEST_URL, params)).isEqualTo(TEST_RESULT + TEST_PARAM_VALUE);
-    }
+	@Test
+	public void shouldHttpPost() throws Exception {
+		Map<String, String> params = new HashMap<>();
+		params.put(TEST_PARAM_NAME, TEST_PARAM_VALUE);
+		assertThat(HttpUtils.httpPost(TEST_URL, params)).isEqualTo(TEST_RESULT + TEST_PARAM_VALUE);
+	}
 
-    @Test
-    public void testAppUrl() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getRequestURL()).thenReturn(new StringBuffer("http://localtest:4567/v3/test"));
-        when(request.getRequestURI()).thenReturn("/v3/test");
-        assertThat(HttpUtils.appUrl(request)).isEqualTo("http://localtest:4567");
-    }
+	@Test
+	public void testAppUrl() throws Exception {
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getRequestURL()).thenReturn(new StringBuffer("http://localtest:4567/v3/test"));
+		when(request.getRequestURI()).thenReturn("/v3/test");
+		assertThat(HttpUtils.appUrl(request)).isEqualTo("http://localtest:4567");
+	}
 }
