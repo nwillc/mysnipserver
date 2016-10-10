@@ -12,3 +12,4 @@ deploy:
   domain: nwillc
   on:
     repo: nwillc/mysnipserver
+    branch: master
