@@ -1,9 +1,9 @@
 
 var APP = APP || {};
 
-APP.Graphql = function() {
+APP.Graphql = function(query) {
   "use strict";
 
-  this.query = "";
+  this.query = query;
   this.variables = {};
 }

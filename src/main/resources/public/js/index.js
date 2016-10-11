@@ -57,10 +57,9 @@ APP.Home = function () {
     $(this.buildInfoDialog).dialog({height: 200, width: 500});
     $(this.buildInfoDialog).dialog('close');
 
-    this.categoryGQL = new APP.Graphql();
-    this.categoryGQL.query = "{ categories { key name }}";
-    this.categorySnippetsGQL = new APP.Graphql();
-    this.categorySnippetsGQL.query = "query($category: String!){ snippets ( category: $category ) { key title }}";
+    this.categoryGQL = new APP.Graphql("{ categories { key name }}");
+    this.categorySnippetsGQL = new APP.Graphql("query($category: String!){ snippets ( category: $category ) { key title }}");
+    this.snippetBodyGQL = new APP.Graphql("query($snippet: String!){ snippet ( key: $snippet) { body }}");
 
     // Functions
     this.loadCategories = () => {
@@ -88,8 +87,7 @@ APP.Home = function () {
 
     this.loadAllTitles = () => {
         console.log("loadAllTitles");
-        var category = $(this.categories).val();
-        this.categorySnippetsGQL.variables["category"] = category;
+        this.categorySnippetsGQL.variables["category"] = $(this.categories).val();
         console.log("Selected Category: " + JSON.stringify(this.categorySnippetsGQL));
         $.post("v1/graphql",
             JSON.stringify(this.categorySnippetsGQL),
@@ -106,12 +104,10 @@ APP.Home = function () {
     };
 
     this.loadBody = () => {
-        console.log("loadBody");
-        var snippet = $(this.titles).val();
-        var request = "{ \"query\": \"{ snippet ( key: \\\"" + snippet + "\\\") { body }}\", \"variables\": {} }";
-        console.log("Requesting snippet: " + request);
+        this.snippetBodyGQL.variables["snippet"] = $(this.titles).val();
+        console.log("Requesting snippet: " + JSON.stringify(this.snippetBodyGQL));
         $.post("v1/graphql",
-            request,
+            JSON.stringify(this.snippetBodyGQL),
             payload => $(this.body).val(payload.data.snippet.body))
             .fail(() => alert("Failed to retrieve snippet"));
     };
