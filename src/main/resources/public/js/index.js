@@ -60,30 +60,36 @@ APP.Home = function () {
     // Functions
     this.loadCategories = () => {
         console.log("loadCategories");
-        $.get("v1/categories", data => {
-            var list = JSON.parse(data).sort((a, b) => {
-                return a.name.localeCompare(b.name);
-            });
+        $.post("v1/graphql", "{ \"query\": \"{ categories { key name }}\", \"variables\": {} }", data => {
+            console.log("Parsing GraphQL response");
+            var payload = JSON.parse(data);
+            var list = payload.data.categories.sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                });
             $(this.categories).empty();
             $(this.snippetCategories).empty();
             $(this.moveCategories).empty();
             list.forEach(element => {
-                 this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
-                 this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
-                 this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
-              });
+                    this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
+                    this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+                    this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+                });
 
-            window.setTimeout(() => {
-                $(this.categories).change();
+             window.setTimeout(() => {
+                    $(this.categories).change();
                 }, 1);
-        });
+        }).fail(() => alert("Failed getting categories."));
     };
 
     this.loadAllTitles = () => {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
-        console.log("Selected Category: " + category);
-        $.get("v1/snippets/category/" + category, data => this.loadTitles(JSON.parse(data)));
+        var request = "{ \"query\": \"{ snippets ( category: \\\"" + category + "\\\") { key title }}\", \"variables\": {} }";
+        console.log("Selected Category: " + request);
+        $.post("v1/graphql",
+            request,
+            data => this.loadTitles(JSON.parse(data).data.snippets))
+            .fail(() => alert("Failed to load snippets for category"));
     };
 
     this.loadTitles = (list) => {
