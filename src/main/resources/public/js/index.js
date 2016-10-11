@@ -57,12 +57,16 @@ APP.Home = function () {
     $(this.buildInfoDialog).dialog({height: 200, width: 500});
     $(this.buildInfoDialog).dialog('close');
 
+    this.categoryGQL = new APP.Graphql();
+    this.categoryGQL.query = "{ categories { key name }}";
+    this.categorySnippetsGQL = new APP.Graphql();
+    this.categorySnippetsGQL.query = "query($category: String!){ snippets ( category: $category ) { key title }}";
+
     // Functions
     this.loadCategories = () => {
-        var request = "{ \"query\": \"{ categories { key name }}\", \"variables\": {} }";
-        console.log("loadCategories: " + request);
+        console.log("loadCategories: " + JSON.stringify(this.categoryGQL));
         $.post("v1/graphql",
-            request,
+            JSON.stringify(this.categoryGQL),
             payload => {
             var list = payload.data.categories.sort((a, b) => {
                     return a.name.localeCompare(b.name);
@@ -85,10 +89,10 @@ APP.Home = function () {
     this.loadAllTitles = () => {
         console.log("loadAllTitles");
         var category = $(this.categories).val();
-        var request = "{ \"query\": \"{ snippets ( category: \\\"" + category + "\\\") { key title }}\", \"variables\": {} }";
-        console.log("Selected Category: " + request);
+        this.categorySnippetsGQL.variables["category"] = category;
+        console.log("Selected Category: " + JSON.stringify(this.categorySnippetsGQL));
         $.post("v1/graphql",
-            request,
+            JSON.stringify(this.categorySnippetsGQL),
             payload => this.loadTitles(payload.data.snippets))
             .fail(() => alert("Failed to load snippets for category"));
     };

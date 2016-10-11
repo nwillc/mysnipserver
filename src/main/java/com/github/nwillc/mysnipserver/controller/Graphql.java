@@ -53,14 +53,15 @@ public class Graphql implements ToJson {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> graphql(Request request, Response response) {
-        Map<String, String> payload;
+        Map<String, Object> payload;
         try {
             payload = getMapper().readValue(request.body(), Map.class);
         } catch (IOException e) {
             throw new HttpException(HttpStatusCode.BAD_REQUEST, "Could not parse request body as GraphQL map.");
         }
+        Map<String,Object> variables = (Map<String, Object>) payload.get("variables");
         Logger.info(QUERY + ": " + payload.get(QUERY));
-        ExecutionResult executionResult = graphql.execute(payload.get(QUERY));
+        ExecutionResult executionResult = graphql.execute(payload.get(QUERY).toString(), null, null, variables);
         Map<String, Object> result = new LinkedHashMap<>();
         if (executionResult.getErrors().size() > 0) {
             result.put(ERRORS, executionResult.getErrors());
