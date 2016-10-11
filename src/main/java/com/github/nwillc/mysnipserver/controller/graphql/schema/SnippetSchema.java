@@ -20,16 +20,12 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import graphql.schema.DataFetcher;
-import graphql.schema.GraphQLList;
-import graphql.schema.GraphQLNonNull;
-import graphql.schema.GraphQLObjectType;
-import graphql.schema.GraphQLSchema;
-import graphql.schema.GraphQLTypeReference;
+import graphql.schema.*;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static graphql.Scalars.GraphQLBoolean;
 import static graphql.Scalars.GraphQLString;
 import static graphql.schema.GraphQLArgument.newArgument;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
@@ -37,12 +33,12 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
-	public static final String CATEGORY = "category";
-	public static final String KEY = "key";
-	public static final String SNIPPET = "snippet";
-	public static final String NAME = "name";
-	public static final String TITLE = "title";
-	public static final String BODY = "body";
+	private static final String CATEGORY = "category";
+	private static final String KEY = "key";
+	private static final String SNIPPET = "snippet";
+	private static final String NAME = "name";
+	private static final String TITLE = "title";
+	private static final String BODY = "body";
 	private final GraphQLSchema schema;
 
 
@@ -149,6 +145,19 @@ public class SnippetSchema implements SchemaProvider {
 								.build())
 						.dataFetcher(categoryMutation(categoryDao))
 						.build())
+                .field(newFieldDefinition()
+						.name("deleteCategory")
+						.type(GraphQLBoolean)
+						.argument(newArgument()
+								.name(KEY)
+								.description("The category id")
+								.type(new GraphQLNonNull(GraphQLString))
+								.build())
+						.dataFetcher(environment -> {
+						    categoryDao.delete(getArgument(environment,KEY).orElse(null));
+						    return true;
+                        })
+						.build())
 				.field(newFieldDefinition()
 						.name(SNIPPET)
 						.type(new GraphQLTypeReference(SNIPPET))
@@ -171,6 +180,19 @@ public class SnippetSchema implements SchemaProvider {
 								.build())
 						.dataFetcher(snippetMutation(categoryDao, snippetDao))
 						.build())
+                .field(newFieldDefinition()
+                        .name("deleteSnippet")
+                        .type(GraphQLBoolean)
+                        .argument(newArgument()
+                                .name(KEY)
+                                .description("The snippet id")
+                                .type(new GraphQLNonNull(GraphQLString))
+                                .build())
+                        .dataFetcher(environment -> {
+                            snippetDao.delete(getArgument(environment,KEY).orElse(null));
+                            return true;
+                        })
+                        .build())
 				.build();
 	}
 
@@ -181,19 +203,17 @@ public class SnippetSchema implements SchemaProvider {
 
 	private static DataFetcher snippetMutation(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
 		return environment -> {
-			Optional<String> key = Optional.ofNullable(environment.getArgument(KEY));
-			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
-			Optional<String> title = Optional.ofNullable(environment.getArgument(TITLE));
-			Optional<String> body = Optional.ofNullable(environment.getArgument(BODY));
+			Optional<String> key = getArgument(environment,KEY);
+			Optional<String> category = getArgument(environment, CATEGORY);
+			Optional<String> title = getArgument(environment, TITLE);
+			Optional<String> body = getArgument(environment, BODY);
 
 			if (!categoryDao.findOne(category.get()).isPresent()) {
 				return null;
 			}
 
 			final Snippet snippet = new Snippet(category.get(), title.get(), body.get());
-			if (key.isPresent()) {
-				snippet.setKey(key.get());
-			}
+			key.ifPresent(snippet::setKey);
 			snippetDao.save(snippet);
 			return snippet;
 		};
@@ -201,14 +221,12 @@ public class SnippetSchema implements SchemaProvider {
 
 	private static DataFetcher categoryMutation(Dao<Category> categoryDao) {
 		return environment -> {
-			Optional<String> name = Optional.ofNullable(environment.getArgument(NAME));
-			Optional<String> key = Optional.ofNullable(environment.getArgument(KEY));
+			Optional<String> name = getArgument(environment, NAME);
+			Optional<String> key = getArgument(environment, KEY);
 
 			final Category category = new Category(name.get());
 
-			if (key.isPresent()) {
-				category.setKey(key.get());
-			}
+			key.ifPresent(category::setKey);
 			categoryDao.save(category);
 			return category;
 		};
@@ -216,12 +234,16 @@ public class SnippetSchema implements SchemaProvider {
 
 	private static DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
 		return environment -> {
-			Optional<String> category = Optional.ofNullable(environment.getArgument(CATEGORY));
+			Optional<String> category = getArgument(environment, CATEGORY);
 			if (category.isPresent()) {
 				return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
 			} else {
 				return snippetDao.findAll().collect(Collectors.toList());
 			}
 		};
+	}
+
+	private static Optional<String> getArgument(final DataFetchingEnvironment environment, final String arg) {
+		return Optional.ofNullable(environment.getArgument(arg));
 	}
 }
