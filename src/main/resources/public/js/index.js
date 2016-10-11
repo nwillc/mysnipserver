@@ -63,9 +63,7 @@ APP.Home = function () {
         console.log("loadCategories: " + request);
         $.post("v1/graphql",
             request,
-            data => {
-            console.log("Parsing GraphQL response");
-            var payload = JSON.parse(data);
+            payload => {
             var list = payload.data.categories.sort((a, b) => {
                     return a.name.localeCompare(b.name);
                 });
@@ -91,7 +89,7 @@ APP.Home = function () {
         console.log("Selected Category: " + request);
         $.post("v1/graphql",
             request,
-            data => this.loadTitles(JSON.parse(data).data.snippets))
+            payload => this.loadTitles(payload.data.snippets))
             .fail(() => alert("Failed to load snippets for category"));
     };
 
@@ -110,7 +108,7 @@ APP.Home = function () {
         console.log("Requesting snippet: " + request);
         $.post("v1/graphql",
             request,
-            data => $(this.body).val(JSON.parse(data).data.snippet.body))
+            payload => $(this.body).val(payload.data.snippet.body))
             .fail(() => alert("Failed to retrieve snippet"));
     };
 
@@ -137,13 +135,13 @@ APP.Home = function () {
 
     this.deleteSnippet = () => {
         var selected = $(titles).find("option:selected");
+        var request = "{ \"query\": \"mutation { deleteSnippet ( key: \\\"" + $(selected).val() + "\\\") }\", \"variables\": {} }";
         console.log("Delete Snippet: " + $(this.categories).val() + ':'
             + $(selected).val());
-        $.ajax({
-            url: 'v1/snippets/' + $(selected).val(),
-            method: 'DELETE',
-            success: () => this.loadCategories()
-        });
+        $.post("v1/graphql",
+                request,
+                payload => this.loadCategories())
+                .fail(() => alert("Failed to delete snippet."))
     };
 
     this.moveSnippet = () => {
