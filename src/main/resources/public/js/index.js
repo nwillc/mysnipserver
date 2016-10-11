@@ -60,6 +60,7 @@ APP.Home = function () {
     this.categoryGQL = new APP.Graphql("{ categories { key name }}");
     this.categorySnippetsGQL = new APP.Graphql("query($category: String!){ snippets ( category: $category ) { key title }}");
     this.snippetBodyGQL = new APP.Graphql("query($snippet: String!){ snippet ( key: $snippet) { body }}");
+    this.deleteSnippetGQL = new APP.Graphql("mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
 
     // Functions
     this.loadCategories = () => {
@@ -134,12 +135,10 @@ APP.Home = function () {
     };
 
     this.deleteSnippet = () => {
-        var selected = $(titles).find("option:selected");
-        var request = "{ \"query\": \"mutation { deleteSnippet ( key: \\\"" + $(selected).val() + "\\\") }\", \"variables\": {} }";
-        console.log("Delete Snippet: " + $(this.categories).val() + ':'
-            + $(selected).val());
+        this.deleteSnippetGQL.variables["snippet"] = $(titles).find("option:selected").val();
+        console.log("Delete Snippet: " + JSON.stringify(this.deleteSnippetGQL));
         $.post("v1/graphql",
-                request,
+                JSON.stringify(this.deleteSnippetGQL),
                 payload => this.loadCategories())
                 .fail(() => alert("Failed to delete snippet."))
     };
