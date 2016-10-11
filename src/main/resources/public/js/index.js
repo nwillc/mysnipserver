@@ -59,8 +59,11 @@ APP.Home = function () {
 
     // Functions
     this.loadCategories = () => {
-        console.log("loadCategories");
-        $.post("v1/graphql", "{ \"query\": \"{ categories { key name }}\", \"variables\": {} }", data => {
+        var request = "{ \"query\": \"{ categories { key name }}\", \"variables\": {} }";
+        console.log("loadCategories: " + request);
+        $.post("v1/graphql",
+            request,
+            data => {
             console.log("Parsing GraphQL response");
             var payload = JSON.parse(data);
             var list = payload.data.categories.sort((a, b) => {
@@ -107,14 +110,8 @@ APP.Home = function () {
         console.log("Requesting snippet: " + request);
         $.post("v1/graphql",
             request,
-            data => $(this.body).val(JSON.parse(data).data.snippet))
+            data => $(this.body).val(JSON.parse(data).data.snippet.body))
             .fail(() => alert("Failed to retrieve snippet"));
-
-//        $.get("v1/snippets/" + title, (data, status) => {
-//            console.log("Status: " + status + " Data: " + data);
-//            var snippet = JSON.parse(data);
-//            $(this.body).val(snippet.body);
-//        })
     };
 
     this.saveCategory = () => {
