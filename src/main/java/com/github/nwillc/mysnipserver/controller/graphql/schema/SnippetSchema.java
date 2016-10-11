@@ -23,7 +23,9 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.*;
 
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static graphql.Scalars.GraphQLBoolean;
 import static graphql.Scalars.GraphQLString;
@@ -33,13 +35,14 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
-	private static final String CATEGORY = "category";
+    private static final String CATEGORY = "category";
 	private static final String KEY = "key";
 	private static final String SNIPPET = "snippet";
 	private static final String NAME = "name";
 	private static final String TITLE = "title";
 	private static final String BODY = "body";
-	private final GraphQLSchema schema;
+    private static final String MATCH = "match";
+    private final GraphQLSchema schema;
 
 
 	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
@@ -123,6 +126,10 @@ public class SnippetSchema implements SchemaProvider {
 								.description("A category id")
 								.type(GraphQLString)
 								.build())
+                        .argument(newArgument()
+                                .name(MATCH)
+                                .type(GraphQLString)
+                                .build())
 						.dataFetcher(snippetsFetcherFactory(snippetDao))
 						.build())
 				.build();
@@ -235,10 +242,14 @@ public class SnippetSchema implements SchemaProvider {
 	private static DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
 		return environment -> {
 			Optional<String> category = getArgument(environment, CATEGORY);
+			Optional<String> match = getArgument(environment, MATCH);
+
+            final Stream<Snippet> snippetStream = match.isPresent() ? snippetDao.find(match.get()) : snippetDao.findAll();
+
 			if (category.isPresent()) {
-				return snippetDao.findAll().filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
+				return snippetStream.filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
 			} else {
-				return snippetDao.findAll().collect(Collectors.toList());
+				return snippetStream.collect(Collectors.toList());
 			}
 		};
 	}
