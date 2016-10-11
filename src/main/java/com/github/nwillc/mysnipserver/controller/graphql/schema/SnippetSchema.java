@@ -244,13 +244,13 @@ public class SnippetSchema implements SchemaProvider {
 			Optional<String> category = getArgument(environment, CATEGORY);
 			Optional<String> match = getArgument(environment, MATCH);
 
-            final Stream<Snippet> snippetStream = match.isPresent() ? snippetDao.find(match.get()) : snippetDao.findAll();
+            Stream<Snippet> snippetStream = match.isPresent() ? snippetDao.find(match.get()) : snippetDao.findAll();
 
 			if (category.isPresent()) {
-				return snippetStream.filter(s -> category.get().equals(s.getCategory())).collect(Collectors.toList());
-			} else {
-				return snippetStream.collect(Collectors.toList());
-			}
+                snippetStream = snippetStream.filter(snippet -> category.get().equals(snippet.getCategory()));
+            }
+
+            return snippetStream.collect(Collectors.toList());
 		};
 	}
 
