@@ -102,14 +102,19 @@ APP.Home = function () {
 
     this.loadBody = () => {
         console.log("loadBody");
-        var category = $(this.categories).val();
-        var title = $(this.titles).val();
-        console.log("Selected Category: " + category + " Title: " + title);
-        $.get("v1/snippets/" + title, (data, status) => {
-            console.log("Status: " + status + " Data: " + data);
-            var snippet = JSON.parse(data);
-            $(this.body).val(snippet.body);
-        })
+        var snippet = $(this.titles).val();
+        var request = "{ \"query\": \"{ snippet ( key: \\\"" + snippet + "\\\") { body }}\", \"variables\": {} }";
+        console.log("Requesting snippet: " + request);
+        $.post("v1/graphql",
+            request,
+            data => $(this.body).val(JSON.parse(data).data.snippet))
+            .fail(() => alert("Failed to retrieve snippet"));
+
+//        $.get("v1/snippets/" + title, (data, status) => {
+//            console.log("Status: " + status + " Data: " + data);
+//            var snippet = JSON.parse(data);
+//            $(this.body).val(snippet.body);
+//        })
     };
 
     this.saveCategory = () => {
