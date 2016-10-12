@@ -50,8 +50,8 @@ APP.UserNameValidator = function () {
 function onSignIn(googleUser) {
     "use strict";
     $.get("v1/auth/" + googleUser.getAuthResponse().id_token, function () {
-            APP.cookies.set("token", googleUser.getAuthResponse().id_token);
-            window.location.replace("/");
+        APP.cookies.set("token", googleUser.getAuthResponse().id_token);
+        window.location.replace("/");
     });
 }
 

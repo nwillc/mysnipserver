@@ -18,9 +18,7 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.controller.Authentication;
-import com.github.nwillc.mysnipserver.controller.Categories;
 import com.github.nwillc.mysnipserver.controller.Graphql;
-import com.github.nwillc.mysnipserver.controller.Snippets;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
@@ -68,8 +66,6 @@ public class MySnipServerApplication implements SparkApplication {
 		staticFileLocation("/public");
 
 		// Create controllers
-		new Categories(categoriesDao);
-		new Snippets(snippetDao, categoriesDao);
 		if (auth) {
 			new Authentication(userDao);
 		}

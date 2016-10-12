@@ -23,7 +23,6 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.*;
 
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

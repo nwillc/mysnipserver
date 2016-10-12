@@ -23,6 +23,7 @@ function gapiAuth2Load() {
 }
 
 function gapiSignOut() {
+    "use strict";
     APP.home.logout();
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
@@ -33,6 +34,7 @@ function gapiSignOut() {
 var APP = APP || {};
 
 APP.Home = function () {
+    "use strict";
     // Instance variables and initialization
     $('#tabs').tabs();
     this.categories = $('#browseCategories');
@@ -156,14 +158,6 @@ APP.Home = function () {
         this.deleteCategoryGQL.execute(() => this.loadCategories());
     };
 
-    this.openSearch = () => {
-        $(this.searchDialog).dialog('open');
-    };
-
-    this.openMoveSnippet = () => {
-        $(this.moveSnippetDialog).dialog('open');
-    };
-
     this.performSearch = () => {
         this.searchCategoryGQL.variables["category"] = $(this.categories).val();
         this.searchCategoryGQL.variables["match"] = $(query).val();
@@ -176,12 +170,13 @@ APP.Home = function () {
 
     this.updateSnippet = () => {
         console.log("Update Snippet");
-        $.post('v1/snippets', JSON.stringify({
-            key: $(this.titles).val(),
-            category: $(this.categories).val(),
-            title: $(this.titles).children(":selected").text(),
-            body: $(this.body).val()
-        })).fail(() => alert("Failed updating snippet."));
+        this.snippetUpdateGQL.variables["key"] = $(this.titles).val();
+        this.snippetUpdateGQL.variables["category"] = $(this.categories).val();
+        this.snippetUpdateGQL.variables["title"] = $(this.titles).children(":selected").text();
+        this.snippetUpdateGQL.variables["body"] = $(this.body).val();
+        this.snippetUpdateGQL.execute(() => {
+            this.loadAllTitles();
+        });
     };
 
     this.logout = () => {
@@ -199,6 +194,14 @@ APP.Home = function () {
             $(this.buildInfoDialog).dialog('open');
             $('#buildInfo').html(data);
         });
+    };
+
+    this.openSearch = () => {
+        $(this.searchDialog).dialog('open');
+    };
+
+    this.openMoveSnippet = () => {
+        $(this.moveSnippetDialog).dialog('open');
     };
 
     this.moveDialog = () => {

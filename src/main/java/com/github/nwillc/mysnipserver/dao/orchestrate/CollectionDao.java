@@ -32,6 +32,7 @@ import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -104,7 +105,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	}
 
 	private Stream<T> find(Set<String> keys) {
-		return keys.stream().map(this::get).filter(e -> e != null);
+		return keys.stream().map(this::get).filter(Objects::nonNull);
 	}
 
 	public String getCollection() {
