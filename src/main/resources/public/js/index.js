@@ -63,6 +63,7 @@ APP.Home = function () {
     this.categoryCreateGQL = new APP.Graphql(this.graphqlUrl, "mutation($name: String!){ category(name: $name){ key }}");
     this.snippetBodyGQL = new APP.Graphql(this.graphqlUrl, "query($snippet: String!){ snippet ( key: $snippet) { body }}");
     this.snippetCreateGQL = new APP.Graphql(this.graphqlUrl, "mutation($category: String! $title: String! $body: String!){ snippet ( category: $category title: $title body: $body ){ key }}");
+    this.snippetUpdateGQL = new APP.Graphql(this.graphqlUrl, "mutation($key: String! $category: String! $title: String! $body: String!){ snippet ( key: $key category: $category title: $title body: $body ){ key }}");
     this.deleteSnippetGQL = new APP.Graphql(this.graphqlUrl, "mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
     this.deleteCategoryGQL = new APP.Graphql(this.graphqlUrl, "mutation($category: String!) { deleteCategory ( key: $category ) }");
     this.searchCategoryGQL = new APP.Graphql(this.graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
@@ -139,13 +140,13 @@ APP.Home = function () {
     this.moveSnippet = () => {
         var selected = $(titles).find("option:selected");
         console.log("Move Snippet: " + $(selected).val());
-        $.ajax({
-            url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.moveCategories).val(),
-            method: 'PUT',
-            success: () => {
-                this.loadAllTitles();
-                $(this.moveSnippetDialog).dialog('close');
-            }
+        this.snippetUpdateGQL.variables["key"] = selected.val();
+        this.snippetUpdateGQL.variables["category"] = $(this.moveCategories).val();
+        this.snippetUpdateGQL.variables["title"] = selected.text();
+        this.snippetUpdateGQL.variables["body"] = $(this.body).val();
+        this.snippetUpdateGQL.execute(() => {
+            this.loadAllTitles();
+            $(this.moveSnippetDialog).dialog('close');
         });
     };
 
