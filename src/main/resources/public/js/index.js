@@ -61,6 +61,7 @@ APP.Home = function () {
     this.categorySnippetsGQL = new APP.Graphql("query($category: String!){ snippets ( category: $category ) { key title }}");
     this.snippetBodyGQL = new APP.Graphql("query($snippet: String!){ snippet ( key: $snippet) { body }}");
     this.deleteSnippetGQL = new APP.Graphql("mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
+    this.deleteCategoryGQL = new APP.Graphql("mutation($category: String!) { deleteCategory ( key: $category ) }");
 
     // Functions
     this.loadCategories = () => {
@@ -138,9 +139,9 @@ APP.Home = function () {
         this.deleteSnippetGQL.variables["snippet"] = $(titles).find("option:selected").val();
         console.log("Delete Snippet: " + JSON.stringify(this.deleteSnippetGQL));
         $.post("v1/graphql",
-                JSON.stringify(this.deleteSnippetGQL),
-                payload => this.loadCategories())
-                .fail(() => alert("Failed to delete snippet."))
+                this.deleteSnippetGQL.toString(),
+                payload => this.loadCategories)
+                .fail(() => alert("Failed to delete snippet."));
     };
 
     this.moveSnippet = () => {
@@ -157,12 +158,12 @@ APP.Home = function () {
     };
 
     this.deleteCategory = () => {
-        console.log("Delete Category: " + $(this.categories).val());
-        $.ajax({
-            url: 'v1/categories/' + $(this.categories).val(),
-            method: 'DELETE',
-            success: () => this.loadCategories()
-        });
+        this.deleteCategoryGQL.variables["category"] =  $(this.categories).val();
+        console.log("Delete Category: " + this.deleteCategoryGQL.toString());
+        $.post("v1/graphql",
+            this.deleteCategoryGQL.toString(),
+            payload => this.loadCategories())
+            .fail(() => alert("failed to delete category"));
     };
 
     this.openSearch = () => {

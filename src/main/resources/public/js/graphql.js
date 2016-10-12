@@ -6,4 +6,8 @@ APP.Graphql = function(query) {
 
   this.query = query;
   this.variables = {};
+
+  this.toString = () => {
+    return JSON.stringify(this);
+  };
 }

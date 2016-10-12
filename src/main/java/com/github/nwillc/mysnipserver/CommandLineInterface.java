@@ -57,6 +57,10 @@ public final class CommandLineInterface {
 		option.setRequired(false);
 		options.addOption(option);
 
+		option = new Option(CLI.noauth.name().substring(0, 1), CLI.noauth.name(), false, "Should the server require authentication");
+		option.setRequired(false);
+		options.addOption(option);
+
 		option = new Option(CLI.store.name().substring(0, 1), CLI.store.name(), true,
 				"Storage mechanism, MemoryBacked or Orchestrate.");
 		option.setArgName(CLI.store.name());
@@ -71,6 +75,7 @@ public final class CommandLineInterface {
 	enum CLI {
 		address,
 		help,
+		noauth,
 		port,
 		store
 	}

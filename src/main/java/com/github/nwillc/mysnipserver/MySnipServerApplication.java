@@ -40,6 +40,7 @@ public class MySnipServerApplication implements SparkApplication {
 	private final Dao<Category> categoriesDao;
 	private final Dao<Snippet> snippetDao;
 	private final Dao<User> userDao;
+	private boolean auth;
 	private String properties = "";
 
 	@Inject
@@ -57,6 +58,7 @@ public class MySnipServerApplication implements SparkApplication {
 		} catch (Exception e) {
 			Logger.warn("Could not load build info", e);
 		}
+		setAuth(true);
 	}
 
 	@Override
@@ -68,7 +70,9 @@ public class MySnipServerApplication implements SparkApplication {
 		// Create controllers
 		new Categories(categoriesDao);
 		new Snippets(snippetDao, categoriesDao);
-		new Authentication(userDao);
+		if (auth) {
+			new Authentication(userDao);
+		}
 		new Graphql(categoriesDao, snippetDao);
 
 		// Specific routes
@@ -82,5 +86,10 @@ public class MySnipServerApplication implements SparkApplication {
 		});
 
 		Logger.info("Completed");
+	}
+
+	public void setAuth(boolean auth) {
+		Logger.info("Setting authentication to: " + auth);
+		this.auth = auth;
 	}
 }

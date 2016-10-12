@@ -40,12 +40,17 @@ public class MySnipServer {
 		CommandLineParser commandLineParser = new DefaultParser();
 
 		Module module = null;
+		boolean auth = true;
 
 		try {
 			CommandLine commandLine = commandLineParser.parse(options, args);
 
 			if (commandLine.hasOption(CLI.help.name())) {
 				CommandLineInterface.help(options, 0);
+			}
+
+			if (commandLine.hasOption(CLI.noauth.name())) {
+				auth = false;
 			}
 
 			if (commandLine.hasOption(CLI.port.name())) {
@@ -73,7 +78,9 @@ public class MySnipServer {
 			CommandLineInterface.help(options, 1);
 		}
 
-		Guice.createInjector(module).getInstance(MySnipServerApplication.class).init();
+		MySnipServerApplication application = Guice.createInjector(module).getInstance(MySnipServerApplication.class);
+		application.setAuth(auth);
+		application.init();
 		Logger.info("Completed");
 	}
 }
