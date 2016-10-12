@@ -62,6 +62,7 @@ APP.Home = function () {
     this.snippetBodyGQL = new APP.Graphql("query($snippet: String!){ snippet ( key: $snippet) { body }}");
     this.deleteSnippetGQL = new APP.Graphql("mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
     this.deleteCategoryGQL = new APP.Graphql("mutation($category: String!) { deleteCategory ( key: $category ) }");
+    this.searchCategoryGQL = new APP.Graphql("query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
 
     // Functions
     this.loadCategories = () => {
@@ -90,9 +91,9 @@ APP.Home = function () {
     this.loadAllTitles = () => {
         console.log("loadAllTitles");
         this.categorySnippetsGQL.variables["category"] = $(this.categories).val();
-        console.log("Selected Category: " + JSON.stringify(this.categorySnippetsGQL));
+        console.log("Selected Category: " + this.categorySnippetsGQL.toString());
         $.post("v1/graphql",
-            JSON.stringify(this.categorySnippetsGQL),
+            this.categorySnippetsGQL.toString(),
             payload => this.loadTitles(payload.data.snippets))
             .fail(() => alert("Failed to load snippets for category"));
     };
@@ -107,9 +108,9 @@ APP.Home = function () {
 
     this.loadBody = () => {
         this.snippetBodyGQL.variables["snippet"] = $(this.titles).val();
-        console.log("Requesting snippet: " + JSON.stringify(this.snippetBodyGQL));
+        console.log("Requesting snippet: " + this.snippetBodyGQL.toString());
         $.post("v1/graphql",
-            JSON.stringify(this.snippetBodyGQL),
+            this.snippetBodyGQL.toString(),
             payload => $(this.body).val(payload.data.snippet.body))
             .fail(() => alert("Failed to retrieve snippet"));
     };
@@ -137,7 +138,7 @@ APP.Home = function () {
 
     this.deleteSnippet = () => {
         this.deleteSnippetGQL.variables["snippet"] = $(titles).find("option:selected").val();
-        console.log("Delete Snippet: " + JSON.stringify(this.deleteSnippetGQL));
+        console.log("Delete Snippet: " + this.deleteSnippetGQL.toString());
         $.post("v1/graphql",
                 this.deleteSnippetGQL.toString(),
                 payload => this.loadCategories)
@@ -176,14 +177,16 @@ APP.Home = function () {
 
     this.performSearch = () => {
         console.log("loadAllTitles");
-        var category = $(this.categories).val();
-        console.log("Selected Category: " + category);
-        $.post("v1/snippets/category/" + category, JSON.stringify({
-            query: $(query).val()
-        }), data => {
-            this.loadTitles(JSON.parse(data));
-            $(this.searchDialog).dialog('close');
-        }).fail(() => alert("Failed searching snippets."));
+        this.searchCategoryGQL.variables["category"] =  $(this.categories).val();
+        this.searchCategoryGQL.variables["match"] = $(query).val();
+        console.log("Search Category: " + this.searchCategoryGQL.toString());
+        $.post("v1/graphql",
+            this.searchCategoryGQL.toString(),
+            payload => {
+                this.loadTitles(payload.data.snippets);
+                $(this.searchDialog).dialog('close');
+            }
+        ).fail(() => alert("Failed searching snippets."));
     };
 
     this.logout = () => {
