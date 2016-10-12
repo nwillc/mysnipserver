@@ -14,10 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-function gapiAuth2Load () {
+function gapiAuth2Load() {
     "use strict";
     console.log("Loading gapi auth2");
-    gapi.load('auth2', function() {
+    gapi.load('auth2', function () {
         gapi.auth2.init();
     });
 }
@@ -46,56 +46,53 @@ APP.Home = function () {
     this.query = $('#query');
 
     this.searchDialog = $('#searchCategoryDialog');
-    $(this.searchDialog).dialog({width: 500});
+    $(this.searchDialog).dialog({ width: 500 });
     $(this.searchDialog).dialog('close');
 
     this.moveSnippetDialog = $('#moveSnippetDialog');
-    $(this.moveSnippetDialog).dialog({width:500});
+    $(this.moveSnippetDialog).dialog({ width: 500 });
     $(this.moveSnippetDialog).dialog('close');
 
     this.buildInfoDialog = $('#buildInfoDialog');
-    $(this.buildInfoDialog).dialog({height: 200, width: 500});
+    $(this.buildInfoDialog).dialog({ height: 200, width: 500 });
     $(this.buildInfoDialog).dialog('close');
 
-    this.categoryGQL = new APP.Graphql("{ categories { key name }}");
-    this.categorySnippetsGQL = new APP.Graphql("query($category: String!){ snippets ( category: $category ) { key title }}");
-    this.snippetBodyGQL = new APP.Graphql("query($snippet: String!){ snippet ( key: $snippet) { body }}");
-    this.deleteSnippetGQL = new APP.Graphql("mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
-    this.deleteCategoryGQL = new APP.Graphql("mutation($category: String!) { deleteCategory ( key: $category ) }");
-    this.searchCategoryGQL = new APP.Graphql("query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
+    this.graphqlUrl = "v1/graphql";
+    this.categoryGQL = new APP.Graphql(this.graphqlUrl, "{ categories { key name }}");
+    this.categorySnippetsGQL = new APP.Graphql(this.graphqlUrl, "query($category: String!){ snippets ( category: $category ) { key title }}");
+    this.categoryCreateGQL = new APP.Graphql(this.graphqlUrl, "mutation($name: String!){ category(name: $name){ key }}");
+    this.snippetBodyGQL = new APP.Graphql(this.graphqlUrl, "query($snippet: String!){ snippet ( key: $snippet) { body }}");
+    this.snippetCreateGQL = new APP.Graphql(this.graphqlUrl, "mutation($category: String! $title: String! $body: String!){ snippet ( category: $category title: $title body: $body ){ key }}");
+    this.deleteSnippetGQL = new APP.Graphql(this.graphqlUrl, "mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
+    this.deleteCategoryGQL = new APP.Graphql(this.graphqlUrl, "mutation($category: String!) { deleteCategory ( key: $category ) }");
+    this.searchCategoryGQL = new APP.Graphql(this.graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
 
     // Functions
     this.loadCategories = () => {
-        console.log("loadCategories: " + JSON.stringify(this.categoryGQL));
-        $.post("v1/graphql",
-            JSON.stringify(this.categoryGQL),
-            payload => {
-            var list = payload.data.categories.sort((a, b) => {
-                    return a.name.localeCompare(b.name);
-                });
+        console.log("loadCategories");
+        this.categoryGQL.execute((response) => {
+            var list = response.data.categories.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
             $(this.categories).empty();
             $(this.snippetCategories).empty();
             $(this.moveCategories).empty();
             list.forEach(element => {
-                    this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
-                    this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
-                    this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
-                });
+                this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
+                this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+                this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+            });
 
-             window.setTimeout(() => {
-                    $(this.categories).change();
-                }, 1);
-        }).fail(() => alert("Failed getting categories."));
+            window.setTimeout(() => {
+                $(this.categories).change();
+            }, 1);
+        });
     };
 
     this.loadAllTitles = () => {
-        console.log("loadAllTitles");
         this.categorySnippetsGQL.variables["category"] = $(this.categories).val();
-        console.log("Selected Category: " + this.categorySnippetsGQL.toString());
-        $.post("v1/graphql",
-            this.categorySnippetsGQL.toString(),
-            payload => this.loadTitles(payload.data.snippets))
-            .fail(() => alert("Failed to load snippets for category"));
+        console.log("Snippets for Category");
+        this.categorySnippetsGQL.execute((response) => this.loadTitles(response.data.snippets));
     };
 
     this.loadTitles = (list) => {
@@ -108,63 +105,54 @@ APP.Home = function () {
 
     this.loadBody = () => {
         this.snippetBodyGQL.variables["snippet"] = $(this.titles).val();
-        console.log("Requesting snippet: " + this.snippetBodyGQL.toString());
-        $.post("v1/graphql",
-            this.snippetBodyGQL.toString(),
-            payload => $(this.body).val(payload.data.snippet.body))
-            .fail(() => alert("Failed to retrieve snippet"));
+        console.log("Requesting snippet");
+        this.snippetBodyGQL.execute((response) => $(this.body).val(response.data.snippet.body));
     };
 
     this.saveCategory = () => {
-        console.log("saveCategory");
-        $.post("v1/categories", JSON.stringify({
-            name: $(this.category).val()
-        }), () => {
+        console.log("Create Category");
+        this.categoryCreateGQL.variables["name"] = $(this.category).val();
+        this.categoryCreateGQL.execute(() => {
             this.loadCategories();
             $('#category').val('');
-        }).fail(() => alert("Failed saving category"));
+        });
     };
 
     this.saveSnippet = () => {
-        console.log("Save Snippet");
-        $.post('v1/snippets', JSON.stringify({
-            category: $(this.snippetCategories).val(),
-            title: $(this.title).val(),
-            body: $(this.bodyInput).val()
-        }), () => this.loadCategories()).fail(() => alert("Failed saving snippet."));
-        $(this.title).val('');
-        $(this.bodyInput).val('');
+        console.log("Create Snippet");
+        this.snippetCreateGQL.variables["category"] = $(this.snippetCategories).val();
+        this.snippetCreateGQL.variables["title"] = $(this.title).val();
+        this.snippetCreateGQL.variables["body"] = $(this.bodyInput).val();
+        this.snippetCreateGQL.execute(() => {
+            this.loadCategories();
+            $(this.title).val('');
+            $(this.bodyInput).val('');
+        });
     };
 
     this.deleteSnippet = () => {
         this.deleteSnippetGQL.variables["snippet"] = $(titles).find("option:selected").val();
-        console.log("Delete Snippet: " + this.deleteSnippetGQL.toString());
-        $.post("v1/graphql",
-                this.deleteSnippetGQL.toString(),
-                payload => this.loadCategories)
-                .fail(() => alert("Failed to delete snippet."));
+        console.log("Delete Snippet");
+        this.deleteSnippetGQL.execute(() => this.loadCategories());
     };
 
     this.moveSnippet = () => {
-       var selected = $(titles).find("option:selected");
+        var selected = $(titles).find("option:selected");
         console.log("Move Snippet: " + $(selected).val());
         $.ajax({
-         url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.moveCategories).val(),
-         method: 'PUT',
-         success: () => {
-             this.loadAllTitles();
-             $(this.moveSnippetDialog).dialog('close');
-         }
+            url: 'v1/snippets/' + $(selected).val() + '/move/' + $(this.moveCategories).val(),
+            method: 'PUT',
+            success: () => {
+                this.loadAllTitles();
+                $(this.moveSnippetDialog).dialog('close');
+            }
         });
     };
 
     this.deleteCategory = () => {
-        this.deleteCategoryGQL.variables["category"] =  $(this.categories).val();
-        console.log("Delete Category: " + this.deleteCategoryGQL.toString());
-        $.post("v1/graphql",
-            this.deleteCategoryGQL.toString(),
-            payload => this.loadCategories())
-            .fail(() => alert("failed to delete category"));
+        this.deleteCategoryGQL.variables["category"] = $(this.categories).val();
+        console.log("Delete Category");
+        this.deleteCategoryGQL.execute(() => this.loadCategories());
     };
 
     this.openSearch = () => {
@@ -176,17 +164,23 @@ APP.Home = function () {
     };
 
     this.performSearch = () => {
-        console.log("loadAllTitles");
-        this.searchCategoryGQL.variables["category"] =  $(this.categories).val();
+        this.searchCategoryGQL.variables["category"] = $(this.categories).val();
         this.searchCategoryGQL.variables["match"] = $(query).val();
-        console.log("Search Category: " + this.searchCategoryGQL.toString());
-        $.post("v1/graphql",
-            this.searchCategoryGQL.toString(),
-            payload => {
-                this.loadTitles(payload.data.snippets);
-                $(this.searchDialog).dialog('close');
-            }
-        ).fail(() => alert("Failed searching snippets."));
+        console.log("Search Category");
+        this.searchCategoryGQL.execute((response) => {
+            this.loadTitles(response.data.snippets);
+            $(this.searchDialog).dialog('close');
+        });
+    };
+
+    this.updateSnippet = () => {
+        console.log("Update Snippet");
+        $.post('v1/snippets', JSON.stringify({
+            key: $(this.titles).val(),
+            category: $(this.categories).val(),
+            title: $(this.titles).children(":selected").text(),
+            body: $(this.body).val()
+        })).fail(() => alert("Failed updating snippet."));
     };
 
     this.logout = () => {
@@ -204,16 +198,6 @@ APP.Home = function () {
             $(this.buildInfoDialog).dialog('open');
             $('#buildInfo').html(data);
         });
-    };
-
-    this.updateSnippet = () => {
-         console.log("Update Snippet");
-         $.post('v1/snippets', JSON.stringify({
-             key: $(this.titles).val(),
-             category: $(this.categories).val(),
-             title: $(this.titles).children(":selected").text(),
-             body: $(this.body).val()
-          })).fail(() => alert("Failed updating snippet."));
     };
 
     this.moveDialog = () => {
