@@ -3,7 +3,7 @@
 This is a simple snippets app. It is a GraphQL server based on:
 
 - Java 8
-- Java Spark servlet providing [GraphQL API](http://graphql.org/)
+- [Java Spark](http://sparkjava.com/) servlet providing [GraphQL API](http://graphql.org/)
 - [Orchestrate](https://orchestrate.io/) persistence 
 - JSR 107 Caching ([Caffeine](https://github.com/ben-manes/caffeine))   
 - Google authentication
