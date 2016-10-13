@@ -3,6 +3,9 @@ jdk:
 - oraclejdk8
 env:
 - TERM=dumb
+after_success:
+  - ./gradlew pmdMain jacocoTestReport
+  - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: openshift
   user: nwillc@gmail.com

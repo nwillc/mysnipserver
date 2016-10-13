@@ -73,6 +73,8 @@ configurations {
 
 apply plugin: 'release'
 apply plugin: 'gradle-one-jar'
+apply plugin: "jacoco"
+apply plugin: "pmd"
 
 group = "com.github.nwillc"
 version = "2.0.0"
@@ -125,4 +127,38 @@ release {
 task oneJar(type: OneJar) {
     mainClass = 'com.github.nwillc.mysnipserver.MySnipServer'
     additionalDir = file('build/resources/main')
+}
+
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+pmd {
+    toolVersion = '4.3'
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    ruleSets = [
+            "basic",
+            "braces",
+            "naming",
+            "clone",
+            "codesize",
+            "controversial",
+            "design",
+            "finalizers",
+            "imports",
+            "junit",
+            "logging-java",
+            "migrating",
+            "optimizations",
+            "strictexception",
+            "strings",
+            "sunsecure",
+            "typeresolution",
+            "unusedcode"
+    ]
 }
