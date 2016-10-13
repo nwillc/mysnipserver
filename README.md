@@ -1,6 +1,6 @@
 # MySnipServer
 
-This is a simple snippets app. It is a RESTful server based on:
+This is a simple snippets app. It is a GraphQL server based on:
 
 - Java 8
 - Java Spark servlet providing GraphQL API
