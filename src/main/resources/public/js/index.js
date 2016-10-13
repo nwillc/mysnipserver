@@ -59,16 +59,16 @@ APP.Home = function () {
     $(this.buildInfoDialog).dialog({ height: 200, width: 500 });
     $(this.buildInfoDialog).dialog('close');
 
-    this.graphqlUrl = "v1/graphql";
-    this.categoryGQL = new APP.Graphql(this.graphqlUrl, "{ categories { key name }}");
-    this.categorySnippetsGQL = new APP.Graphql(this.graphqlUrl, "query($category: String!){ snippets ( category: $category ) { key title }}");
-    this.categoryCreateGQL = new APP.Graphql(this.graphqlUrl, "mutation($name: String!){ category(name: $name){ key }}");
-    this.snippetBodyGQL = new APP.Graphql(this.graphqlUrl, "query($snippet: String!){ snippet ( key: $snippet) { body }}");
-    this.snippetCreateGQL = new APP.Graphql(this.graphqlUrl, "mutation($category: String! $title: String! $body: String!){ snippet ( category: $category title: $title body: $body ){ key }}");
-    this.snippetUpdateGQL = new APP.Graphql(this.graphqlUrl, "mutation($key: String! $category: String! $title: String! $body: String!){ snippet ( key: $key category: $category title: $title body: $body ){ key }}");
-    this.deleteSnippetGQL = new APP.Graphql(this.graphqlUrl, "mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
-    this.deleteCategoryGQL = new APP.Graphql(this.graphqlUrl, "mutation($category: String!) { deleteCategory ( key: $category ) }");
-    this.searchCategoryGQL = new APP.Graphql(this.graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
+    var graphqlUrl = "v1/graphql";
+    this.categoryGQL = new APP.Graphql(graphqlUrl, "{ categories { key name }}");
+    this.categorySnippetsGQL = new APP.Graphql(graphqlUrl, "query($category: String!){ snippets ( category: $category ) { key title }}");
+    this.categoryCreateGQL = new APP.Graphql(graphqlUrl, "mutation($name: String!){ category(name: $name){ key }}");
+    this.snippetBodyGQL = new APP.Graphql(graphqlUrl, "query($snippet: String!){ snippet ( key: $snippet) { body }}");
+    this.snippetCreateGQL = new APP.Graphql(graphqlUrl, "mutation($category: String! $title: String! $body: String!){ snippet ( category: $category title: $title body: $body ){ key }}");
+    this.snippetUpdateGQL = new APP.Graphql(graphqlUrl, "mutation($key: String! $category: String! $title: String! $body: String!){ snippet ( key: $key category: $category title: $title body: $body ){ key }}");
+    this.deleteSnippetGQL = new APP.Graphql(graphqlUrl, "mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
+    this.deleteCategoryGQL = new APP.Graphql(graphqlUrl, "mutation($category: String!) { deleteCategory ( key: $category ) }");
+    this.searchCategoryGQL = new APP.Graphql(graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
 
     // Functions
     this.loadCategories = () => {
