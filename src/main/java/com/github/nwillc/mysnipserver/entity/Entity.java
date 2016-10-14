@@ -22,29 +22,29 @@ import graphql.annotations.GraphQLField;
 import java.util.UUID;
 
 public abstract class Entity {
-	private String key;
+    private String key;
 
-	public Entity() {
-		this(UUID.randomUUID().toString());
-	}
+    public Entity() {
+        this(UUID.randomUUID().toString());
+    }
 
-	public Entity(String key) {
-		this.key = key;
-	}
+    public Entity(String key) {
+        this.key = key;
+    }
 
-	@GraphQLField
-	public String getKey() {
-		return key;
-	}
+    @GraphQLField
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	@Override
-	public String toString() {
-		return "Entity{" +
-				"key='" + key + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "key='" + key + '\'' +
+                '}';
+    }
 }

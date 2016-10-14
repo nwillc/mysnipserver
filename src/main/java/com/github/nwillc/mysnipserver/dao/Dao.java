@@ -23,13 +23,13 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface Dao<T extends Entity> {
-	Optional<T> findOne(final String key);
+    Optional<T> findOne(final String key);
 
-	Stream<T> findAll();
+    Stream<T> findAll();
 
-	Stream<T> find(String query);
+    Stream<T> find(String query);
 
-	void save(final T entity);
+    void save(final T entity);
 
-	void delete(final String key);
+    void delete(final String key);
 }

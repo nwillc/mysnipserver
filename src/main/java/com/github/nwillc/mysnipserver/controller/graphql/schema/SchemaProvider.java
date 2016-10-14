@@ -21,5 +21,5 @@ import graphql.schema.GraphQLSchema;
 
 @FunctionalInterface
 public interface SchemaProvider {
-	GraphQLSchema getSchema();
+    GraphQLSchema getSchema();
 }

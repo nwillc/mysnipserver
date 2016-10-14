@@ -25,58 +25,58 @@ import org.apache.commons.cli.Options;
  * Support for command line processing.
  */
 public final class CommandLineInterface {
-	private CommandLineInterface() {
-	}
+    private CommandLineInterface() {
+    }
 
-	public static void help(Options options, int status) {
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("java " + MySnipServer.class.getCanonicalName(), options, true);
-		System.exit(status);
-	}
+    public static void help(Options options, int status) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("java " + MySnipServer.class.getCanonicalName(), options, true);
+        System.exit(status);
+    }
 
-	public static Options getOptions() {
-		Option option;
+    public static Options getOptions() {
+        Option option;
 
-		Options options = new Options();
+        Options options = new Options();
 
-		option = new Option(CLI.help.name().substring(0, 1), CLI.help.name(), false, "Get command line help.");
-		option.setRequired(false);
-		options.addOption(option);
+        option = new Option(CLI.help.name().substring(0, 1), CLI.help.name(), false, "Get command line help.");
+        option.setRequired(false);
+        options.addOption(option);
 
-		option = new Option(CLI.address.name().substring(0, 1), CLI.address.name(), true, "IP address to listen on.");
-		option.setArgName(CLI.address.name());
-		option.setArgs(1);
-		option.setType(String.class);
-		option.setRequired(false);
-		options.addOption(option);
+        option = new Option(CLI.address.name().substring(0, 1), CLI.address.name(), true, "IP address to listen on.");
+        option.setArgName(CLI.address.name());
+        option.setArgs(1);
+        option.setType(String.class);
+        option.setRequired(false);
+        options.addOption(option);
 
-		option = new Option(CLI.port.name().substring(0, 1), CLI.port.name(), true, "Port number to listen on.");
-		option.setArgName(CLI.port.name());
-		option.setArgs(1);
-		option.setType(Integer.class);
-		option.setRequired(false);
-		options.addOption(option);
+        option = new Option(CLI.port.name().substring(0, 1), CLI.port.name(), true, "Port number to listen on.");
+        option.setArgName(CLI.port.name());
+        option.setArgs(1);
+        option.setType(Integer.class);
+        option.setRequired(false);
+        options.addOption(option);
 
-		option = new Option(CLI.noauth.name().substring(0, 1), CLI.noauth.name(), false, "Should the server require authentication");
-		option.setRequired(false);
-		options.addOption(option);
+        option = new Option(CLI.noauth.name().substring(0, 1), CLI.noauth.name(), false, "Should the server require authentication");
+        option.setRequired(false);
+        options.addOption(option);
 
-		option = new Option(CLI.store.name().substring(0, 1), CLI.store.name(), true,
-				"Storage mechanism, MemoryBacked or Orchestrate.");
-		option.setArgName(CLI.store.name());
-		option.setArgs(1);
-		option.setType(String.class);
-		option.setRequired(false);
-		options.addOption(option);
+        option = new Option(CLI.store.name().substring(0, 1), CLI.store.name(), true,
+                "Storage mechanism, MemoryBacked or Orchestrate.");
+        option.setArgName(CLI.store.name());
+        option.setArgs(1);
+        option.setType(String.class);
+        option.setRequired(false);
+        options.addOption(option);
 
-		return options;
-	}
+        return options;
+    }
 
-	enum CLI {
-		address,
-		help,
-		noauth,
-		port,
-		store
-	}
+    enum CLI {
+        address,
+        help,
+        noauth,
+        port,
+        store
+    }
 }

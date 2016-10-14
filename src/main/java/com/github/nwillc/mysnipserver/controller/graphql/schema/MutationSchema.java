@@ -24,9 +24,6 @@ import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
 
@@ -50,8 +47,8 @@ public final class MutationSchema {
         if (key != null) {
             category.setKey(key);
         }
-       categoryDao.save(category);
-       return category;
+        categoryDao.save(category);
+        return category;
     }
 
     @GraphQLField
@@ -59,12 +56,12 @@ public final class MutationSchema {
                                   @NotNull @GraphQLName(CATEGORY) final String category,
                                   @NotNull @GraphQLName(TITLE) final String title,
                                   @NotNull @GraphQLName(BODY) final String body) {
-       final Snippet snippet = new Snippet(category, title, body);
-       if (key != null) {
-           snippet.setKey(key);
-       }
-       snippetDao.save(snippet);
-       return snippet;
+        final Snippet snippet = new Snippet(category, title, body);
+        if (key != null) {
+            snippet.setKey(key);
+        }
+        snippetDao.save(snippet);
+        return snippet;
     }
 
     @GraphQLField

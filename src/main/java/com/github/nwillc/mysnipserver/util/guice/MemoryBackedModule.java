@@ -28,11 +28,11 @@ import org.pmw.tinylog.Logger;
 
 public class MemoryBackedModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		Logger.info("Configuring Memory Backed module.");
-		CategoryDao categoryDao = new CategoryDao();
-		bind(new TypeLiteral<MySnipServerApplication>() {
-		}).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));
-	}
+    @Override
+    protected void configure() {
+        Logger.info("Configuring Memory Backed module.");
+        CategoryDao categoryDao = new CategoryDao();
+        bind(new TypeLiteral<MySnipServerApplication>() {
+        }).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));
+    }
 }

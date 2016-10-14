@@ -22,26 +22,26 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class ToJsonTest implements ToJson {
 
-	@Test
-	public void testToJson() throws Exception {
-		Sample sample = new Sample(1L, "one", true, 1, 2, 3);
+    @Test
+    public void testToJson() throws Exception {
+        Sample sample = new Sample(1L, "one", true, 1, 2, 3);
 
-		assertThat(sample).isNotNull();
-		assertThat(toJson(sample)).isEqualTo("{\"number\":1,\"str\":\"one\",\"flag\":true,\"dead\":null,\"bits\":[1,2,3]}");
-	}
+        assertThat(sample).isNotNull();
+        assertThat(toJson(sample)).isEqualTo("{\"number\":1,\"str\":\"one\",\"flag\":true,\"dead\":null,\"bits\":[1,2,3]}");
+    }
 
-	static class Sample {
-		final public Long number;
-		final public String str;
-		final public Boolean flag;
-		final public Object dead = null;
-		final public int[] bits;
+    static class Sample {
+        final public Long number;
+        final public String str;
+        final public Boolean flag;
+        final public Object dead = null;
+        final public int[] bits;
 
-		public Sample(Long number, String str, Boolean flag, int... bits) {
-			this.number = number;
-			this.str = str;
-			this.flag = flag;
-			this.bits = bits;
-		}
-	}
+        public Sample(Long number, String str, Boolean flag, int... bits) {
+            this.number = number;
+            this.str = str;
+            this.flag = flag;
+            this.bits = bits;
+        }
+    }
 }
