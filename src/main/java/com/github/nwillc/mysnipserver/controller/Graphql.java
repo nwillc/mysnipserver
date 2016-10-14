@@ -17,7 +17,6 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.mysnipserver.controller.graphql.schema.SchemaProvider;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
@@ -46,8 +45,7 @@ public class Graphql implements ToJson {
     private final GraphQL graphql;
 
     public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-        SchemaProvider schema = new SnippetSchema(categoryDao, snippetDao);
-        graphql = new GraphQL(schema.getSchema());
+        graphql = new GraphQL(new SnippetSchema(categoryDao, snippetDao).getSchema());
         Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson);
     }
 

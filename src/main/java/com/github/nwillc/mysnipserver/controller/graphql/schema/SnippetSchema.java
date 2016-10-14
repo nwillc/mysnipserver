@@ -25,7 +25,7 @@ import graphql.schema.GraphQLSchema;
 
 import static graphql.schema.GraphQLSchema.newSchema;
 
-public class SnippetSchema implements SchemaProvider {
+public class SnippetSchema {
     public static final String CATEGORY = "category";
     public static final String KEY = "key";
     public static final String SNIPPET = "snippet";
@@ -49,7 +49,6 @@ public class SnippetSchema implements SchemaProvider {
                 .build();
     }
 
-    @Override
     public GraphQLSchema getSchema() {
         return schema;
     }
