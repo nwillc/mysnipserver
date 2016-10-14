@@ -20,7 +20,9 @@ package com.github.nwillc.mysnipserver.entity;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 
-@GraphQLName("category")
+import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.CATEGORY;
+
+@GraphQLName(CATEGORY)
 public class Category extends Entity {
 	private String name;
 

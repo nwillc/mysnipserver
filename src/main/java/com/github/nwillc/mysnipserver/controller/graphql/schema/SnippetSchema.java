@@ -24,8 +24,6 @@ import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.*;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static graphql.Scalars.GraphQLBoolean;
 import static graphql.Scalars.GraphQLString;
@@ -36,121 +34,77 @@ import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
     public static final String CATEGORY = "category";
-	public static final String KEY = "key";
-	public static final String SNIPPET = "snippet";
-	public static final String NAME = "name";
-	public static final String TITLE = "title";
-	public static final String BODY = "body";
-    private static final String MATCH = "match";
+    public static final String KEY = "key";
+    public static final String SNIPPET = "snippet";
+    public static final String NAME = "name";
+    public static final String TITLE = "title";
+    public static final String BODY = "body";
+    public static final String MATCH = "match";
+    public static final String QUERY = "query";
     private final GraphQLSchema schema;
 
 
-	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-		schema = newSchema()
-				.query(queries(categoryDao, snippetDao))
-				.mutation(mutations(categoryDao, snippetDao))
-				.build();
-	}
+    public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
+        QuerySchema.setCategoryDao(categoryDao);
+        QuerySchema.setSnippetDao(snippetDao);
+        schema = newSchema()
+                .query(GraphQLAnnotations.object(QuerySchema.class))
+                //	.mutation(mutations(categoryDao, snippetDao))
+                .build();
+    }
 
-	private GraphQLObjectType queries(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-        final GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
-        final GraphQLObjectType snippet = GraphQLAnnotations.object(Snippet.class);
+    private GraphQLObjectType mutations(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
         return newObject()
-				.name("query")
-				.field(newFieldDefinition()
-						.name(CATEGORY)
-						.type(category)
-						.argument(newArgument()
-								.name(KEY)
-								.description("The category id")
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.dataFetcher(environment -> categoryDao.findOne(environment.getArgument(KEY)).orElse(null))
-						.build())
-				.field(newFieldDefinition()
-						.name("categories")
-						.type(new GraphQLList(category))
-						.dataFetcher(environment -> categoryDao.findAll().collect(Collectors.toList()))
-						.build())
-				.field(newFieldDefinition()
-						.name(SNIPPET)
-						.type(snippet)
-						.argument(newArgument()
-								.name(KEY)
-								.description("The snippet id")
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.dataFetcher(environment -> snippetDao.findOne(environment.getArgument(KEY)).orElse(null))
-						.build())
-				.field(newFieldDefinition()
-						.name("snippets")
-						.type(new GraphQLList(snippet))
-						.argument(newArgument()
-								.name(CATEGORY)
-								.description("A category id")
-								.type(GraphQLString)
-								.build())
+                .name("mutation")
+                .field(newFieldDefinition()
+                        .name(CATEGORY)
+                        .type(new GraphQLTypeReference(CATEGORY))
                         .argument(newArgument()
-                                .name(MATCH)
+                                .name(KEY)
+                                .description("The category id")
                                 .type(GraphQLString)
                                 .build())
-						.dataFetcher(snippetsFetcherFactory(snippetDao))
-						.build())
-				.build();
-	}
-
-	private GraphQLObjectType mutations(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
-		return newObject()
-				.name("mutation")
-				.field(newFieldDefinition()
-						.name(CATEGORY)
-						.type(new GraphQLTypeReference(CATEGORY))
-						.argument(newArgument()
-								.name(KEY)
-								.description("The category id")
-								.type(GraphQLString)
-								.build())
-						.argument(newArgument()
-								.name(NAME)
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.dataFetcher(categoryMutation(categoryDao))
-						.build())
+                        .argument(newArgument()
+                                .name(NAME)
+                                .type(new GraphQLNonNull(GraphQLString))
+                                .build())
+                        .dataFetcher(categoryMutation(categoryDao))
+                        .build())
                 .field(newFieldDefinition()
-						.name("deleteCategory")
-						.type(GraphQLBoolean)
-						.argument(newArgument()
-								.name(KEY)
-								.description("The category id")
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.dataFetcher(environment -> {
-						    categoryDao.delete(getArgument(environment,KEY).orElse(null));
-						    return true;
+                        .name("deleteCategory")
+                        .type(GraphQLBoolean)
+                        .argument(newArgument()
+                                .name(KEY)
+                                .description("The category id")
+                                .type(new GraphQLNonNull(GraphQLString))
+                                .build())
+                        .dataFetcher(environment -> {
+                            categoryDao.delete(getArgument(environment, KEY).orElse(null));
+                            return true;
                         })
-						.build())
-				.field(newFieldDefinition()
-						.name(SNIPPET)
-						.type(new GraphQLTypeReference(SNIPPET))
-						.argument(newArgument()
-								.name(KEY)
-								.description("The snippet id")
-								.type(GraphQLString)
-								.build())
-						.argument(newArgument()
-								.name(CATEGORY)
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.argument(newArgument()
-								.name(TITLE)
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.argument(newArgument()
-								.name(BODY)
-								.type(new GraphQLNonNull(GraphQLString))
-								.build())
-						.dataFetcher(snippetMutation(categoryDao, snippetDao))
-						.build())
+                        .build())
+                .field(newFieldDefinition()
+                        .name(SNIPPET)
+                        .type(new GraphQLTypeReference(SNIPPET))
+                        .argument(newArgument()
+                                .name(KEY)
+                                .description("The snippet id")
+                                .type(GraphQLString)
+                                .build())
+                        .argument(newArgument()
+                                .name(CATEGORY)
+                                .type(new GraphQLNonNull(GraphQLString))
+                                .build())
+                        .argument(newArgument()
+                                .name(TITLE)
+                                .type(new GraphQLNonNull(GraphQLString))
+                                .build())
+                        .argument(newArgument()
+                                .name(BODY)
+                                .type(new GraphQLNonNull(GraphQLString))
+                                .build())
+                        .dataFetcher(snippetMutation(categoryDao, snippetDao))
+                        .build())
                 .field(newFieldDefinition()
                         .name("deleteSnippet")
                         .type(GraphQLBoolean)
@@ -160,65 +114,51 @@ public class SnippetSchema implements SchemaProvider {
                                 .type(new GraphQLNonNull(GraphQLString))
                                 .build())
                         .dataFetcher(environment -> {
-                            snippetDao.delete(getArgument(environment,KEY).orElse(null));
+                            snippetDao.delete(getArgument(environment, KEY).orElse(null));
                             return true;
                         })
                         .build())
-				.build();
-	}
+                .build();
+    }
 
-	@Override
-	public GraphQLSchema getSchema() {
-		return schema;
-	}
+    @Override
+    public GraphQLSchema getSchema() {
+        return schema;
+    }
 
-	private static DataFetcher snippetMutation(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
-		return environment -> {
-			Optional<String> key = getArgument(environment,KEY);
-			Optional<String> category = getArgument(environment, CATEGORY);
-			Optional<String> title = getArgument(environment, TITLE);
-			Optional<String> body = getArgument(environment, BODY);
+    private static DataFetcher snippetMutation(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+        return environment -> {
+            Optional<String> key = getArgument(environment, KEY);
+            Optional<String> category = getArgument(environment, CATEGORY);
+            Optional<String> title = getArgument(environment, TITLE);
+            Optional<String> body = getArgument(environment, BODY);
 
-			if (!categoryDao.findOne(category.get()).isPresent()) {
-				return null;
-			}
-
-			final Snippet snippet = new Snippet(category.get(), title.get(), body.get());
-			key.ifPresent(snippet::setKey);
-			snippetDao.save(snippet);
-			return snippet;
-		};
-	}
-
-	private static DataFetcher categoryMutation(Dao<Category> categoryDao) {
-		return environment -> {
-			Optional<String> name = getArgument(environment, NAME);
-			Optional<String> key = getArgument(environment, KEY);
-
-			final Category category = new Category(name.get());
-
-			key.ifPresent(category::setKey);
-			categoryDao.save(category);
-			return category;
-		};
-	}
-
-	private static DataFetcher snippetsFetcherFactory(Dao<Snippet> snippetDao) {
-		return environment -> {
-			Optional<String> category = getArgument(environment, CATEGORY);
-			Optional<String> match = getArgument(environment, MATCH);
-
-            Stream<Snippet> snippetStream = match.isPresent() ? snippetDao.find(match.get()) : snippetDao.findAll();
-
-			if (category.isPresent()) {
-                snippetStream = snippetStream.filter(snippet -> category.get().equals(snippet.getCategory()));
+            if (!categoryDao.findOne(category.get()).isPresent()) {
+                return null;
             }
 
-            return snippetStream.collect(Collectors.toList());
-		};
-	}
+            final Snippet snippet = new Snippet(category.get(), title.get(), body.get());
+            key.ifPresent(snippet::setKey);
+            snippetDao.save(snippet);
+            return snippet;
+        };
+    }
 
-	private static Optional<String> getArgument(final DataFetchingEnvironment environment, final String arg) {
-		return Optional.ofNullable(environment.getArgument(arg));
-	}
+    private static DataFetcher categoryMutation(Dao<Category> categoryDao) {
+        return environment -> {
+            Optional<String> name = getArgument(environment, NAME);
+            Optional<String> key = getArgument(environment, KEY);
+
+            final Category category = new Category(name.get());
+
+            key.ifPresent(category::setKey);
+            categoryDao.save(category);
+            return category;
+        };
+    }
+
+    public static Optional<String> getArgument(final DataFetchingEnvironment environment, final String arg) {
+        return Optional.ofNullable(environment.getArgument(arg));
+    }
+
 }

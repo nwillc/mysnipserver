@@ -73,7 +73,8 @@ public class MySnipServerApplication implements SparkApplication {
 		try {
 			new Graphql(categoriesDao, snippetDao);
 		} catch (Exception e) {
-			Logger.error("Failed instantiating GraphGL Controller", e);
+			Logger.error("Failed instantiating GraphGL Controller: " + e.getMessage(), e);
+			e.printStackTrace();
 		}
 
 		// Specific routes
