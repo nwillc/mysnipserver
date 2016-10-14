@@ -45,7 +45,7 @@ public class Graphql implements ToJson {
     private static final String DATA = "data";
     private final GraphQL graphql;
 
-    public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+    public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
         SchemaProvider schema = new SnippetSchema(categoryDao, snippetDao);
         graphql = new GraphQL(schema.getSchema());
         Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson);

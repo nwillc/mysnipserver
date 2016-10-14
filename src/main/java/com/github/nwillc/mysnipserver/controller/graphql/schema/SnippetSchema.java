@@ -20,6 +20,7 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.*;
 
 import java.util.Optional;
@@ -34,63 +35,27 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
-    private static final String CATEGORY = "category";
-	private static final String KEY = "key";
-	private static final String SNIPPET = "snippet";
-	private static final String NAME = "name";
-	private static final String TITLE = "title";
-	private static final String BODY = "body";
+    public static final String CATEGORY = "category";
+	public static final String KEY = "key";
+	public static final String SNIPPET = "snippet";
+	public static final String NAME = "name";
+	public static final String TITLE = "title";
+	public static final String BODY = "body";
     private static final String MATCH = "match";
     private final GraphQLSchema schema;
 
 
-	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
+	public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
 		schema = newSchema()
 				.query(queries(categoryDao, snippetDao))
 				.mutation(mutations(categoryDao, snippetDao))
 				.build();
 	}
 
-	private GraphQLObjectType queries(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
-		GraphQLObjectType category = newObject()
-				.name(CATEGORY)
-				.description("Category of a snippet")
-				.field(newFieldDefinition()
-						.name(KEY)
-						.description("Entity identifier")
-						.type(GraphQLString)
-						.build())
-				.field(newFieldDefinition()
-						.name(NAME)
-						.description("Category Name")
-						.type(GraphQLString)
-						.build())
-				.build();
-		GraphQLObjectType snippet = newObject()
-				.name(SNIPPET)
-				.description("A snippet")
-				.field(newFieldDefinition()
-						.name(KEY)
-						.description("Entity identifier")
-						.type(GraphQLString)
-						.build())
-				.field(newFieldDefinition()
-						.name(CATEGORY)
-						.description("Category identifier")
-						.type(GraphQLString)
-						.build())
-				.field(newFieldDefinition()
-						.name(TITLE)
-						.description("Snippet title")
-						.type(GraphQLString)
-						.build())
-				.field(newFieldDefinition()
-						.name(BODY)
-						.description("Snippet body")
-						.type(GraphQLString)
-						.build())
-				.build();
-		return newObject()
+	private GraphQLObjectType queries(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
+        final GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
+        final GraphQLObjectType snippet = GraphQLAnnotations.object(Snippet.class);
+        return newObject()
 				.name("query")
 				.field(newFieldDefinition()
 						.name(CATEGORY)

@@ -15,7 +15,9 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.dao;
+package com.github.nwillc.mysnipserver.entity;
+
+import graphql.annotations.GraphQLField;
 
 import java.util.UUID;
 
@@ -30,6 +32,7 @@ public abstract class Entity {
 		this.key = key;
 	}
 
+	@GraphQLField
 	public String getKey() {
 		return key;
 	}

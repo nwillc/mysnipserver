@@ -17,8 +17,10 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-import com.github.nwillc.mysnipserver.dao.Entity;
+import graphql.annotations.GraphQLField;
+import graphql.annotations.GraphQLName;
 
+@GraphQLName("snippet")
 public class Snippet extends Entity {
 	private String category;
 	private String title;
@@ -33,6 +35,7 @@ public class Snippet extends Entity {
 		this.title = title;
 	}
 
+	@GraphQLField
 	public String getCategory() {
 		return category;
 	}
@@ -41,6 +44,7 @@ public class Snippet extends Entity {
 		this.category = category;
 	}
 
+	@GraphQLField
 	public String getBody() {
 		return body;
 	}
@@ -49,6 +53,7 @@ public class Snippet extends Entity {
 		this.body = body;
 	}
 
+	@GraphQLField
 	public String getTitle() {
 		return title;
 	}

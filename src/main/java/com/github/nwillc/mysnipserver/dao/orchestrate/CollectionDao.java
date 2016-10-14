@@ -18,7 +18,7 @@
 package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.dao.Entity;
+import com.github.nwillc.mysnipserver.entity.Entity;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 import io.orchestrate.client.Result;

@@ -17,8 +17,10 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-import com.github.nwillc.mysnipserver.dao.Entity;
+import graphql.annotations.GraphQLField;
+import graphql.annotations.GraphQLName;
 
+@GraphQLName("category")
 public class Category extends Entity {
 	private String name;
 
@@ -29,6 +31,7 @@ public class Category extends Entity {
 		this.name = name;
 	}
 
+	@GraphQLField
 	public String getName() {
 		return name;
 	}

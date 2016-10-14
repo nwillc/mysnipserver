@@ -66,10 +66,15 @@ public class MySnipServerApplication implements SparkApplication {
 		staticFileLocation("/public");
 
 		// Create controllers
+
 		if (auth) {
 			new Authentication(userDao);
 		}
-		new Graphql(categoriesDao, snippetDao);
+		try {
+			new Graphql(categoriesDao, snippetDao);
+		} catch (Exception e) {
+			Logger.error("Failed instantiating GraphGL Controller", e);
+		}
 
 		// Specific routes
 		get("/ping", (request, response) -> "PONG");

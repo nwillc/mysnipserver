@@ -17,37 +17,22 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-public class User extends Entity {
-	private String username;
-	private String password;
+import graphql.annotations.GraphQLAnnotations;
+import graphql.schema.GraphQLObjectType;
+import org.junit.Test;
 
-	public User() {
-	}
+import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-	public User(String password, String username) {
-		this.password = password;
-		this.username = username;
-	}
 
-	@Override
-	public String getKey() {
-		return username;
-	}
+public class CategoryTest {
 
-	@Override
-	public String toString() {
-		return "User{" +
-				"key='" + getKey() + '\'' +
-				", username='" + username + '\'' +
-				", password='" + (password == null ? "" : "*******") + '\'' +
-				'}';
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
+    @Test
+    public void testGraphQLAnnotations() throws Exception {
+        GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
+        assertThat(category.getName()).isEqualTo(CATEGORY);
+        assertThat(category.getFieldDefinitions().size()).isEqualTo(2);
+        assertThat(category.getFieldDefinition(KEY)).isNotNull();
+        assertThat(category.getFieldDefinition(NAME)).isNotNull();
+    }
 }

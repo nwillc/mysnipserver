@@ -17,6 +17,8 @@
 
 package com.github.nwillc.mysnipserver.dao;
 
+import com.github.nwillc.mysnipserver.entity.Entity;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
