@@ -21,15 +21,8 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.annotations.GraphQLAnnotations;
-import graphql.schema.*;
+import graphql.schema.GraphQLSchema;
 
-import java.util.Optional;
-
-import static graphql.Scalars.GraphQLBoolean;
-import static graphql.Scalars.GraphQLString;
-import static graphql.schema.GraphQLArgument.newArgument;
-import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
-import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema implements SchemaProvider {
@@ -41,124 +34,24 @@ public class SnippetSchema implements SchemaProvider {
     public static final String BODY = "body";
     public static final String MATCH = "match";
     public static final String QUERY = "query";
+    public static final String MUTATION = "mutation";
     private final GraphQLSchema schema;
 
 
     public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
         QuerySchema.setCategoryDao(categoryDao);
         QuerySchema.setSnippetDao(snippetDao);
+        MutationSchema.setCategoryDao(categoryDao);
+        MutationSchema.setSnippetDao(snippetDao);
         schema = newSchema()
                 .query(GraphQLAnnotations.object(QuerySchema.class))
-                //	.mutation(mutations(categoryDao, snippetDao))
-                .build();
-    }
-
-    private GraphQLObjectType mutations(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
-        return newObject()
-                .name("mutation")
-                .field(newFieldDefinition()
-                        .name(CATEGORY)
-                        .type(new GraphQLTypeReference(CATEGORY))
-                        .argument(newArgument()
-                                .name(KEY)
-                                .description("The category id")
-                                .type(GraphQLString)
-                                .build())
-                        .argument(newArgument()
-                                .name(NAME)
-                                .type(new GraphQLNonNull(GraphQLString))
-                                .build())
-                        .dataFetcher(categoryMutation(categoryDao))
-                        .build())
-                .field(newFieldDefinition()
-                        .name("deleteCategory")
-                        .type(GraphQLBoolean)
-                        .argument(newArgument()
-                                .name(KEY)
-                                .description("The category id")
-                                .type(new GraphQLNonNull(GraphQLString))
-                                .build())
-                        .dataFetcher(environment -> {
-                            categoryDao.delete(getArgument(environment, KEY).orElse(null));
-                            return true;
-                        })
-                        .build())
-                .field(newFieldDefinition()
-                        .name(SNIPPET)
-                        .type(new GraphQLTypeReference(SNIPPET))
-                        .argument(newArgument()
-                                .name(KEY)
-                                .description("The snippet id")
-                                .type(GraphQLString)
-                                .build())
-                        .argument(newArgument()
-                                .name(CATEGORY)
-                                .type(new GraphQLNonNull(GraphQLString))
-                                .build())
-                        .argument(newArgument()
-                                .name(TITLE)
-                                .type(new GraphQLNonNull(GraphQLString))
-                                .build())
-                        .argument(newArgument()
-                                .name(BODY)
-                                .type(new GraphQLNonNull(GraphQLString))
-                                .build())
-                        .dataFetcher(snippetMutation(categoryDao, snippetDao))
-                        .build())
-                .field(newFieldDefinition()
-                        .name("deleteSnippet")
-                        .type(GraphQLBoolean)
-                        .argument(newArgument()
-                                .name(KEY)
-                                .description("The snippet id")
-                                .type(new GraphQLNonNull(GraphQLString))
-                                .build())
-                        .dataFetcher(environment -> {
-                            snippetDao.delete(getArgument(environment, KEY).orElse(null));
-                            return true;
-                        })
-                        .build())
+                .mutation(GraphQLAnnotations.object(MutationSchema.class))
                 .build();
     }
 
     @Override
     public GraphQLSchema getSchema() {
         return schema;
-    }
-
-    private static DataFetcher snippetMutation(Dao<Category> categoryDao, Dao<Snippet> snippetDao) {
-        return environment -> {
-            Optional<String> key = getArgument(environment, KEY);
-            Optional<String> category = getArgument(environment, CATEGORY);
-            Optional<String> title = getArgument(environment, TITLE);
-            Optional<String> body = getArgument(environment, BODY);
-
-            if (!categoryDao.findOne(category.get()).isPresent()) {
-                return null;
-            }
-
-            final Snippet snippet = new Snippet(category.get(), title.get(), body.get());
-            key.ifPresent(snippet::setKey);
-            snippetDao.save(snippet);
-            return snippet;
-        };
-    }
-
-    private static DataFetcher categoryMutation(Dao<Category> categoryDao) {
-        return environment -> {
-            Optional<String> name = getArgument(environment, NAME);
-            Optional<String> key = getArgument(environment, KEY);
-
-            final Category category = new Category(name.get());
-
-            key.ifPresent(category::setKey);
-            categoryDao.save(category);
-            return category;
-        };
-    }
-
-    public static Optional<String> getArgument(final DataFetchingEnvironment environment, final String arg) {
-        return Optional.ofNullable(environment.getArgument(arg));
     }
 
 }
