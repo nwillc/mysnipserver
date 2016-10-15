@@ -49,8 +49,7 @@ public class Authentication implements ToJson {
             "/js/cookies.js",
             "/favicon.ico",
             "/properties",
-            versionedPath(AUTH_PATH),
-            versionedPath(Graphql.GRAPHQL_PATH)
+            versionedPath(AUTH_PATH)
     };
     private final Dao<User> dao;
     private final Set<String> noAuth = new HashSet<>();
