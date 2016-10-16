@@ -15,24 +15,16 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.entity;
+package com.github.nwillc.mysnipserver.dao;
 
-import graphql.annotations.GraphQLAnnotations;
-import graphql.schema.GraphQLObjectType;
-import org.junit.Test;
+import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ *
+ */
+public interface DaoProvider {
+	Dao<Category> getCategoryDao();
 
-
-public class CategoryTest {
-
-	@Test
-	public void testGraphQLAnnotations() throws Exception {
-		GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
-		assertThat(category.getName()).isEqualTo(CATEGORY);
-		assertThat(category.getFieldDefinitions().size()).isEqualTo(2);
-		assertThat(category.getFieldDefinition(KEY)).isNotNull();
-		assertThat(category.getFieldDefinition(NAME)).isNotNull();
-	}
+	Dao<Snippet> getSnippetDao();
 }

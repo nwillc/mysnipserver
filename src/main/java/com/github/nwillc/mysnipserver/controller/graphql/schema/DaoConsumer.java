@@ -15,24 +15,20 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.entity;
+package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import graphql.annotations.GraphQLAnnotations;
-import graphql.schema.GraphQLObjectType;
-import org.junit.Test;
+import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.DaoProvider;
+import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import graphql.schema.DataFetchingEnvironment;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
-import static org.assertj.core.api.Assertions.assertThat;
+public class DaoConsumer {
+	public static Dao<Category> getCategoryDao(DataFetchingEnvironment env) {
+		return ((DaoProvider) env.getSource()).getCategoryDao();
+	}
 
-
-public class CategoryTest {
-
-	@Test
-	public void testGraphQLAnnotations() throws Exception {
-		GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
-		assertThat(category.getName()).isEqualTo(CATEGORY);
-		assertThat(category.getFieldDefinitions().size()).isEqualTo(2);
-		assertThat(category.getFieldDefinition(KEY)).isNotNull();
-		assertThat(category.getFieldDefinition(NAME)).isNotNull();
+	public static Dao<Snippet> getSnippetDao(DataFetchingEnvironment env) {
+		return ((DaoProvider) env.getSource()).getSnippetDao();
 	}
 }

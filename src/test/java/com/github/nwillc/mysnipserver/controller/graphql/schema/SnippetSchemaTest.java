@@ -17,13 +17,7 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.mysnipserver.entity.Snippet;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 /**
  *

@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema;
 import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.dao.DaoProvider;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.ToJson;
@@ -37,7 +38,7 @@ import java.util.Map;
 
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 
-public class Graphql implements ToJson {
+public class Graphql implements ToJson, DaoProvider {
 	static final String GRAPHQL_PATH = "graphql";
 	private static final String QUERY = "query";
 	private static final String ERRORS = "errors";
@@ -53,10 +54,12 @@ public class Graphql implements ToJson {
 		Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson);
 	}
 
+	@Override
 	public Dao<Category> getCategoryDao() {
 		return categoryDao;
 	}
 
+	@Override
 	public Dao<Snippet> getSnippetDao() {
 		return snippetDao;
 	}

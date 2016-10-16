@@ -17,7 +17,6 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import com.github.nwillc.mysnipserver.controller.Graphql;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.annotations.GraphQLField;
@@ -29,18 +28,17 @@ import javax.validation.constraints.NotNull;
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
 
 @GraphQLName(MUTATION)
-public final class MutationSchema {
+public final class MutationSchema extends DaoConsumer {
 
 	@GraphQLField
 	public static Category category(final DataFetchingEnvironment env,
 									@GraphQLName(KEY) final String key,
 									@NotNull @GraphQLName(NAME) final String name) {
-		Graphql graphql = (Graphql) env.getSource();
 		final Category category = new Category(name);
 		if (key != null) {
 			category.setKey(key);
 		}
-		graphql.getCategoryDao().save(category);
+		getCategoryDao(env).save(category);
 		return category;
 	}
 
@@ -50,28 +48,25 @@ public final class MutationSchema {
 								  @NotNull @GraphQLName(CATEGORY) final String category,
 								  @NotNull @GraphQLName(TITLE) final String title,
 								  @NotNull @GraphQLName(BODY) final String body) {
-		Graphql graphql = (Graphql) env.getSource();
 		final Snippet snippet = new Snippet(category, title, body);
 		if (key != null) {
 			snippet.setKey(key);
 		}
-		graphql.getSnippetDao().save(snippet);
+		getSnippetDao(env).save(snippet);
 		return snippet;
 	}
 
 	@GraphQLField
 	public static boolean deleteCategory(final DataFetchingEnvironment env,
 										 @NotNull @GraphQLName(KEY) final String key) {
-		Graphql graphql = (Graphql) env.getSource();
-		graphql.getCategoryDao().delete(key);
+		getCategoryDao(env).delete(key);
 		return true;
 	}
 
 	@GraphQLField
 	public static boolean deleteSnippet(final DataFetchingEnvironment env,
 										@NotNull @GraphQLName(KEY) final String key) {
-		Graphql graphql = (Graphql) env.getSource();
-		graphql.getSnippetDao().delete(key);
+		getSnippetDao(env).delete(key);
 		return true;
 	}
 }

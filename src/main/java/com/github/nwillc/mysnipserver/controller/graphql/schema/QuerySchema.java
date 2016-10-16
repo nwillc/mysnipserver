@@ -17,7 +17,6 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import com.github.nwillc.mysnipserver.controller.Graphql;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.annotations.GraphQLField;
@@ -32,28 +31,25 @@ import java.util.stream.Stream;
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
 
 @GraphQLName(QUERY)
-public final class QuerySchema {
+public final class QuerySchema extends DaoConsumer {
 
 	@GraphQLField
 	public static List<Category> categories(final DataFetchingEnvironment env) {
-		Graphql graphql = (Graphql) env.getSource();
-		return graphql.getCategoryDao().findAll().collect(Collectors.toList());
+		return getCategoryDao(env).findAll().collect(Collectors.toList());
 	}
 
 	@GraphQLField
 	public static Category category(final DataFetchingEnvironment env,
 									@NotNull @GraphQLName(KEY) final String key) {
-		Graphql graphql = (Graphql) env.getSource();
-		return graphql.getCategoryDao().findOne(key).orElse(null);
+		return getCategoryDao(env).findOne(key).orElse(null);
 	}
 
 	@GraphQLField
 	public static List<Snippet> snippets(final DataFetchingEnvironment env,
 										 @GraphQLName(CATEGORY) final String category,
 										 @GraphQLName(MATCH) final String match) {
-		Graphql graphql = (Graphql) env.getSource();
-		Stream<Snippet> snippetStream = match != null ? graphql.getSnippetDao().find(match) :
-				graphql.getSnippetDao().findAll();
+		Stream<Snippet> snippetStream = match != null ? getSnippetDao(env).find(match) :
+				getSnippetDao(env).findAll();
 		if (category != null) {
 			snippetStream = snippetStream.filter(snippet -> category.equals(snippet.getCategory()));
 		}
@@ -63,7 +59,6 @@ public final class QuerySchema {
 	@GraphQLField
 	public static Snippet snippet(final DataFetchingEnvironment env,
 								  @NotNull @GraphQLName(KEY) final String key) {
-		Graphql graphql = (Graphql) env.getSource();
-		return graphql.getSnippetDao().findOne(key).orElse(null);
+		return getSnippetDao(env).findOne(key).orElse(null);
 	}
 }
