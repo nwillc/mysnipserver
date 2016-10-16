@@ -38,35 +38,47 @@ import java.util.Map;
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 
 public class Graphql implements ToJson {
-    static final String GRAPHQL_PATH = "graphql";
-    private static final String QUERY = "query";
-    private static final String ERRORS = "errors";
-    private static final String DATA = "data";
-    private final GraphQL graphql;
+	static final String GRAPHQL_PATH = "graphql";
+	private static final String QUERY = "query";
+	private static final String ERRORS = "errors";
+	private static final String DATA = "data";
+	private final GraphQL graphql;
+	private final Dao<Category> categoryDao;
+	private final Dao<Snippet> snippetDao;
 
-    public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-        graphql = new GraphQL(new SnippetSchema(categoryDao, snippetDao).getSchema());
-        Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson);
-    }
+	public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
+		this.categoryDao = categoryDao;
+		this.snippetDao = snippetDao;
+		graphql = new GraphQL(new SnippetSchema().getSchema());
+		Spark.post(versionedPath(GRAPHQL_PATH), this::graphql, this::toJson);
+	}
 
-    @SuppressWarnings("unchecked")
-    private Map<String, Object> graphql(Request request, Response response) {
-        Map<String, Object> payload;
-        try {
-            payload = getMapper().readValue(request.body(), Map.class);
-        } catch (IOException e) {
-            throw new HttpException(HttpStatusCode.BAD_REQUEST, "Could not parse request body as GraphQL map.");
-        }
-        Map<String, Object> variables = (Map<String, Object>) payload.get("variables");
-        Logger.info(QUERY + ": " + payload.get(QUERY));
-        ExecutionResult executionResult = graphql.execute(payload.get(QUERY).toString(), null, null, variables);
-        Map<String, Object> result = new LinkedHashMap<>();
-        if (executionResult.getErrors().size() > 0) {
-            result.put(ERRORS, executionResult.getErrors());
-            Logger.error("Errors: {}", executionResult.getErrors());
-        }
-        result.put(DATA, executionResult.getData());
-        response.type("application/json");
-        return result;
-    }
+	public Dao<Category> getCategoryDao() {
+		return categoryDao;
+	}
+
+	public Dao<Snippet> getSnippetDao() {
+		return snippetDao;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> graphql(Request request, Response response) {
+		Map<String, Object> payload;
+		try {
+			payload = getMapper().readValue(request.body(), Map.class);
+		} catch (IOException e) {
+			throw new HttpException(HttpStatusCode.BAD_REQUEST, "Could not parse request body as GraphQL map.");
+		}
+		Map<String, Object> variables = (Map<String, Object>) payload.get("variables");
+		Logger.info(QUERY + ": " + payload.get(QUERY));
+		ExecutionResult executionResult = graphql.execute(payload.get(QUERY).toString(), null, this, variables);
+		Map<String, Object> result = new LinkedHashMap<>();
+		if (executionResult.getErrors().size() > 0) {
+			result.put(ERRORS, executionResult.getErrors());
+			Logger.error("Errors: {}", executionResult.getErrors());
+		}
+		result.put(DATA, executionResult.getData());
+		response.type("application/json");
+		return result;
+	}
 }

@@ -38,11 +38,7 @@ public class SnippetSchema {
     private final GraphQLSchema schema;
 
 
-    public SnippetSchema(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-        QuerySchema.setCategoryDao(categoryDao);
-        QuerySchema.setSnippetDao(snippetDao);
-        MutationSchema.setCategoryDao(categoryDao);
-        MutationSchema.setSnippetDao(snippetDao);
+    public SnippetSchema() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
         schema = newSchema()
                 .query(GraphQLAnnotations.object(QuerySchema.class))
                 .mutation(GraphQLAnnotations.object(MutationSchema.class))

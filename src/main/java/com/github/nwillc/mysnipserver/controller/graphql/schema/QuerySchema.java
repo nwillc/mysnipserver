@@ -17,11 +17,12 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import com.github.nwillc.mysnipserver.dao.Dao;
+import com.github.nwillc.mysnipserver.controller.Graphql;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
+import graphql.schema.DataFetchingEnvironment;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -32,38 +33,37 @@ import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSc
 
 @GraphQLName(QUERY)
 public final class QuerySchema {
-    private static Dao<Category> categoryDao;
-    private static Dao<Snippet> snippetDao;
 
-    public static void setCategoryDao(Dao<Category> categoryDao) {
-        QuerySchema.categoryDao = categoryDao;
-    }
+	@GraphQLField
+	public static List<Category> categories(final DataFetchingEnvironment env) {
+		Graphql graphql = (Graphql) env.getSource();
+		return graphql.getCategoryDao().findAll().collect(Collectors.toList());
+	}
 
-    public static void setSnippetDao(Dao<Snippet> snippetDao) {
-        QuerySchema.snippetDao = snippetDao;
-    }
+	@GraphQLField
+	public static Category category(final DataFetchingEnvironment env,
+									@NotNull @GraphQLName(KEY) final String key) {
+		Graphql graphql = (Graphql) env.getSource();
+		return graphql.getCategoryDao().findOne(key).orElse(null);
+	}
 
-    @GraphQLField
-    public static List<Category> categories() {
-        return categoryDao.findAll().collect(Collectors.toList());
-    }
+	@GraphQLField
+	public static List<Snippet> snippets(final DataFetchingEnvironment env,
+										 @GraphQLName(CATEGORY) final String category,
+										 @GraphQLName(MATCH) final String match) {
+		Graphql graphql = (Graphql) env.getSource();
+		Stream<Snippet> snippetStream = match != null ? graphql.getSnippetDao().find(match) :
+				graphql.getSnippetDao().findAll();
+		if (category != null) {
+			snippetStream = snippetStream.filter(snippet -> category.equals(snippet.getCategory()));
+		}
+		return snippetStream.collect(Collectors.toList());
+	}
 
-    @GraphQLField
-    public static Category category(@NotNull @GraphQLName(KEY) final String key) {
-        return categoryDao.findOne(key).orElse(null);
-    }
-
-    @GraphQLField
-    public static List<Snippet> snippets(@GraphQLName(CATEGORY) final String category, @GraphQLName(MATCH) final String match) {
-        Stream<Snippet> snippetStream = match != null ? snippetDao.find(match) : snippetDao.findAll();
-        if (category != null) {
-            snippetStream = snippetStream.filter(snippet -> category.equals(snippet.getCategory()));
-        }
-        return snippetStream.collect(Collectors.toList());
-    }
-
-    @GraphQLField
-    public static Snippet snippet(@NotNull @GraphQLName(KEY) final String key) {
-        return snippetDao.findOne(key).orElse(null);
-    }
+	@GraphQLField
+	public static Snippet snippet(final DataFetchingEnvironment env,
+								  @NotNull @GraphQLName(KEY) final String key) {
+		Graphql graphql = (Graphql) env.getSource();
+		return graphql.getSnippetDao().findOne(key).orElse(null);
+	}
 }

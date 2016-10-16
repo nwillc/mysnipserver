@@ -72,15 +72,17 @@ configurations {
     compile.exclude group: 'org.slf4j', module: 'slf4j-simple'
 }
 
+apply plugin: 'application'
 apply plugin: 'release'
 apply plugin: 'gradle-one-jar'
 apply plugin: "jacoco"
 apply plugin: "pmd"
 
 group = "com.github.nwillc"
-version = "2.1.0"
+version = "2.2.0"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
+mainClassName = "com.github.nwillc.mysnipserver.MySnipServer"
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
