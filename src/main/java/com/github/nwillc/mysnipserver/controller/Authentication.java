@@ -40,88 +40,88 @@ import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 import static spark.Spark.before;
 
 public class Authentication implements ToJson {
-    private static final String AUTH_PATH = "auth";
-    private static final String IS_LOGGED_IN = "loggedIn.true";
-    private static final String LOGIN_HTML = "/login.html";
-    private static final String[] NO_AUTH = {
-            LOGIN_HTML,
-            "/js/login.js",
-            "/js/cookies.js",
-            "/favicon.ico",
-            "/properties",
-            versionedPath(AUTH_PATH)
-    };
-    private final Dao<User> dao;
-    private final Set<String> noAuth = new HashSet<>();
+	private static final String AUTH_PATH = "auth";
+	private static final String IS_LOGGED_IN = "loggedIn.true";
+	private static final String LOGIN_HTML = "/login.html";
+	private static final String[] NO_AUTH = {
+			LOGIN_HTML,
+			"/js/login.js",
+			"/js/cookies.js",
+			"/favicon.ico",
+			"/properties",
+			versionedPath(AUTH_PATH)
+	};
+	private final Dao<User> dao;
+	private final Set<String> noAuth = new HashSet<>();
 
-    @Inject
-    public Authentication(Dao<User> dao) {
-        this.dao = dao;
-        before(this::check);
-        for (String path : NO_AUTH) {
-            noAuth(path);
-        }
-        Spark.get(versionedPath(AUTH_PATH + "/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel()), this::login);
-        Spark.get(versionedPath(AUTH_PATH + "/" + TOKEN.getLabel()), this::googleAuth);
-        Spark.delete(versionedPath(AUTH_PATH), this::logout);
-    }
+	@Inject
+	public Authentication(Dao<User> dao) {
+		this.dao = dao;
+		before(this::check);
+		for (String path : NO_AUTH) {
+			noAuth(path);
+		}
+		Spark.get(versionedPath(AUTH_PATH + "/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel()), this::login);
+		Spark.get(versionedPath(AUTH_PATH + "/" + TOKEN.getLabel()), this::googleAuth);
+		Spark.delete(versionedPath(AUTH_PATH), this::logout);
+	}
 
-    private void check(Request request, Response response) {
-        Session session = request.session(true);
+	private void check(Request request, Response response) {
+		Session session = request.session(true);
 
-        if (noAuth.stream().anyMatch(path -> request.pathInfo().startsWith(path))) {
-            return;
-        }
+		if (noAuth.stream().anyMatch(path -> request.pathInfo().startsWith(path))) {
+			return;
+		}
 
-        if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
-            // auth required and not logged in, so redirect to login
-            Logger.warn("Access violation: " + request.pathInfo());
-            response.type("text/html");
-            response.redirect(LOGIN_HTML);
-        }
-    }
+		if (!Boolean.TRUE.equals(session.attribute(IS_LOGGED_IN))) {
+			// auth required and not logged in, so redirect to login
+			Logger.warn("Access violation: " + request.pathInfo());
+			response.type("text/html");
+			response.redirect(LOGIN_HTML);
+		}
+	}
 
-    private Boolean logout(Request request, Response response) {
-        request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
-        return Boolean.TRUE;
-    }
+	private Boolean logout(Request request, Response response) {
+		request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
+		return Boolean.TRUE;
+	}
 
-    private Boolean login(Request request, Response response) {
-        Logger.info("Login attempt: " + USERNAME.from(request));
+	private Boolean login(Request request, Response response) {
+		Logger.info("Login attempt: " + USERNAME.from(request));
 
-        final User user = dao.findOne(USERNAME.from(request))
-                .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
+		final User user = dao.findOne(USERNAME.from(request))
+				.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
 
-        Logger.info("Found: " + user);
-        if (PASSWORD.from(request).equals(user.getPassword())) {
-            Session session = request.session(true);
-            session.attribute(IS_LOGGED_IN, Boolean.TRUE);
-        } else {
-            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
-        }
-        return Boolean.TRUE;
-    }
+		Logger.info("Found: " + user);
+		if (PASSWORD.from(request).equals(user.getPassword())) {
+			Session session = request.session(true);
+			session.attribute(IS_LOGGED_IN, Boolean.TRUE);
+		} else {
+			throw new HttpException(HttpStatusCode.UNAUTHERIZED);
+		}
+		return Boolean.TRUE;
+	}
 
-    private Boolean googleAuth(Request request, Response response) {
-        Optional<GoogleIdToken.Payload> payload;
-        try {
-            payload = GoogleIdTokenUtil.verify(TOKEN.from(request));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new HttpException(HttpStatusCode.UNAUTHERIZED, "Failed decoding payload", e);
-        }
+	private Boolean googleAuth(Request request, Response response) {
+		Optional<GoogleIdToken.Payload> payload;
+		try {
+			payload = GoogleIdTokenUtil.verify(TOKEN.from(request));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new HttpException(HttpStatusCode.UNAUTHERIZED, "Failed decoding payload", e);
+		}
 
-        payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Rejected"));
-        Logger.info("Google auth: " + payload.get().getEmail());
-        dao.findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Not registered user"));
-        Session session = request.session(true);
-        session.attribute(IS_LOGGED_IN, Boolean.TRUE);
-        return Boolean.TRUE;
-    }
+		payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Rejected"));
+		Logger.info("Google auth: " + payload.get().getEmail());
+		dao.findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Not registered user"));
+		Session session = request.session(true);
+		session.attribute(IS_LOGGED_IN, Boolean.TRUE);
+		return Boolean.TRUE;
+	}
 
-    private void noAuth(String path) {
-        Logger.info("No authentication required for: " + path);
-        noAuth.add(path);
-    }
+	private void noAuth(String path) {
+		Logger.info("No authentication required for: " + path);
+		noAuth.add(path);
+	}
 
 }

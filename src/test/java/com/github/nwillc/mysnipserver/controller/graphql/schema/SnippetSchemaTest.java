@@ -15,15 +15,24 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.dao.memory;
+package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import org.junit.Test;
 
-public class CategoryDao extends MemoryBackedDao<Category> {
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
-	public CategoryDao() {
-		save(new Category("Java"));
-		save(new Category("Shell Script"));
+/**
+ *
+ */
+public class SnippetSchemaTest {
+
+	@Test
+	public void shouldGetSchema() throws Exception {
+		SnippetSchema snippetSchema = new SnippetSchema();
 	}
 
 }

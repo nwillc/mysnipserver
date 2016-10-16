@@ -20,7 +20,7 @@ package com.github.nwillc.mysnipserver.dao.memory;
 import com.github.nwillc.mysnipserver.entity.User;
 
 public class UserDao extends MemoryBackedDao<User> {
-    public UserDao() {
-        save(new User("nick", "nwillc@gmail.com"));
-    }
+	public UserDao() {
+		save(new User("nick", "nwillc@gmail.com"));
+	}
 }

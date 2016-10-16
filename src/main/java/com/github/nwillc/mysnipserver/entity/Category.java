@@ -24,29 +24,29 @@ import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSc
 
 @GraphQLName(CATEGORY)
 public class Category extends Entity {
-    private String name;
+	private String name;
 
-    public Category() {
-    }
+	public Category() {
+	}
 
-    public Category(String name) {
-        this.name = name;
-    }
+	public Category(String name) {
+		this.name = name;
+	}
 
-    @GraphQLField
-    public String getName() {
-        return name;
-    }
+	@GraphQLField
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "key='" + getKey() + "'" +
-                ", name='" + name + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Category{" +
+				"key='" + getKey() + "'" +
+				", name='" + name + '\'' +
+				'}';
+	}
 }

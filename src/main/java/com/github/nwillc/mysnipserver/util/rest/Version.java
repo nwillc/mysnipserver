@@ -18,16 +18,16 @@
 package com.github.nwillc.mysnipserver.util.rest;
 
 public final class Version {
-    private static final String API_VERSION = "v1";
+	private static final String API_VERSION = "v1";
 
-    private Version() {
-    }
+	private Version() {
+	}
 
-    public static String versionedPath(final String version, final String path) {
-        return "/" + version + "/" + path;
-    }
+	public static String versionedPath(final String version, final String path) {
+		return "/" + version + "/" + path;
+	}
 
-    public static String versionedPath(final String path) {
-        return versionedPath(API_VERSION, path);
-    }
+	public static String versionedPath(final String path) {
+		return versionedPath(API_VERSION, path);
+	}
 }

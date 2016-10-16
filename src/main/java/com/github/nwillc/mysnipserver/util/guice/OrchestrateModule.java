@@ -29,16 +29,16 @@ import io.orchestrate.client.OrchestrateClient;
 import org.pmw.tinylog.Logger;
 
 public class OrchestrateModule extends AbstractModule {
-    private static final String ORCH_API_KEY = System.getenv("ORCH_API_KEY");
+	private static final String ORCH_API_KEY = System.getenv("ORCH_API_KEY");
 
-    @Override
-    protected void configure() {
-        Logger.info("Configuring Orchestrate Backed module.");
-        Client client = new OrchestrateClient(ORCH_API_KEY);
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        }).toInstance(new MySnipServerApplication(
-                new CollectionDao<>(client, Category.class),
-                new CollectionDao<>(client, Snippet.class),
-                new CollectionDao<>(client, User.class)));
-    }
+	@Override
+	protected void configure() {
+		Logger.info("Configuring Orchestrate Backed module.");
+		Client client = new OrchestrateClient(ORCH_API_KEY);
+		bind(new TypeLiteral<MySnipServerApplication>() {
+		}).toInstance(new MySnipServerApplication(
+				new CollectionDao<>(client, Category.class),
+				new CollectionDao<>(client, Snippet.class),
+				new CollectionDao<>(client, User.class)));
+	}
 }

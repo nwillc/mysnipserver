@@ -41,103 +41,103 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
 public class CollectionDao<T extends Entity> implements Dao<T> {
-    private static final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-    private static final int LIMIT = 100;
-    private final Class<T> tClass;
-    private final String collection;
-    private final Client client;
-    private final Cache<String, T> cache;
+	private static final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
+	private static final int LIMIT = 100;
+	private final Class<T> tClass;
+	private final String collection;
+	private final Client client;
+	private final Cache<String, T> cache;
 
-    public CollectionDao(Client client, Class<T> tClass) {
-        this(client, tClass.getSimpleName(), tClass);
-    }
+	public CollectionDao(Client client, Class<T> tClass) {
+		this(client, tClass.getSimpleName(), tClass);
+	}
 
-    public CollectionDao(Client client, String collection, Class<T> tClass) {
-        this.collection = collection;
-        this.tClass = tClass;
-        this.client = client;
-        cache = getCache(collection, tClass);
-    }
+	public CollectionDao(Client client, String collection, Class<T> tClass) {
+		this.collection = collection;
+		this.tClass = tClass;
+		this.client = client;
+		cache = getCache(collection, tClass);
+	}
 
-    @Override
-    public Optional<T> findOne(final String key) {
-        return Optional.ofNullable(get(key));
-    }
+	@Override
+	public Optional<T> findOne(final String key) {
+		return Optional.ofNullable(get(key));
+	}
 
-    @Override
-    public Stream<T> findAll() {
-        Set<String> keys = stream(client.listCollection(collection)
-                .limit(LIMIT)
-                .withValues(false)
-                .get(tClass)
-                .get().spliterator(), false).map(KvObject::getKey).collect(toSet());
-        return find(keys);
-    }
+	@Override
+	public Stream<T> findAll() {
+		Set<String> keys = stream(client.listCollection(collection)
+				.limit(LIMIT)
+				.withValues(false)
+				.get(tClass)
+				.get().spliterator(), false).map(KvObject::getKey).collect(toSet());
+		return find(keys);
+	}
 
-    @Override
-    public Stream<T> find(String query) {
-        Set<String> keys = stream(client.searchCollection(collection)
-                .get(tClass, query)
-                .get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(toSet());
-        return find(keys);
-    }
+	@Override
+	public Stream<T> find(String query) {
+		Set<String> keys = stream(client.searchCollection(collection)
+				.get(tClass, query)
+				.get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(toSet());
+		return find(keys);
+	}
 
-    @Override
-    public void save(final T entity) {
-        Logger.info("Writing out to orchestrate: " + entity);
-        client.kv(collection, entity.getKey())
-                .put(entity)
-                .get();
-        cache.put(entity.getKey(), entity);
-        Logger.info("Thinks its: " + get(entity.getKey()));
-    }
+	@Override
+	public void save(final T entity) {
+		Logger.info("Writing out to orchestrate: " + entity);
+		client.kv(collection, entity.getKey())
+				.put(entity)
+				.get();
+		cache.put(entity.getKey(), entity);
+		Logger.info("Thinks its: " + get(entity.getKey()));
+	}
 
-    @Override
-    public void delete(final String key) {
-        client.kv(collection, key)
-                .delete(true)
-                .get();
-        cache.remove(key);
-    }
+	@Override
+	public void delete(final String key) {
+		client.kv(collection, key)
+				.delete(true)
+				.get();
+		cache.remove(key);
+	}
 
-    public T get(String key) {
-        return cache.get(key);
-    }
+	public T get(String key) {
+		return cache.get(key);
+	}
 
-    private Stream<T> find(Set<String> keys) {
-        return keys.stream().map(this::get).filter(Objects::nonNull);
-    }
+	private Stream<T> find(Set<String> keys) {
+		return keys.stream().map(this::get).filter(Objects::nonNull);
+	}
 
-    public String getCollection() {
-        return collection;
-    }
+	public String getCollection() {
+		return collection;
+	}
 
-    private Cache<String, T> getCache(String name, Class<T> clz) {
-        final Cache<String, T> cache = Caching.getCachingProvider().getCacheManager().getCache(name,
-                String.class, clz);
-        if (cache != null) {
-            return cache;
-        }
-        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
-        configuration.setTypes(String.class, tClass);
-        configuration.setStoreByValue(false);
-        configuration.setReadThrough(true);
-        configuration.setCacheLoaderFactory((Factory<CacheLoader<String, T>>) OrchestrateLoader::new);
-        return cacheManager.createCache(collection, configuration);
-    }
+	private Cache<String, T> getCache(String name, Class<T> clz) {
+		final Cache<String, T> cache = Caching.getCachingProvider().getCacheManager().getCache(name,
+				String.class, clz);
+		if (cache != null) {
+			return cache;
+		}
+		MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+		configuration.setTypes(String.class, tClass);
+		configuration.setStoreByValue(false);
+		configuration.setReadThrough(true);
+		configuration.setCacheLoaderFactory((Factory<CacheLoader<String, T>>) OrchestrateLoader::new);
+		return cacheManager.createCache(collection, configuration);
+	}
 
-    private class OrchestrateLoader implements CacheLoader<String, T> {
-        @Override
-        public T load(String key) throws CacheLoaderException {
-            KvObject<T> categoryKvObject = client.kv(collection, key)
-                    .get(tClass)
-                    .get();
-            return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
-        }
+	private class OrchestrateLoader implements CacheLoader<String, T> {
+		@Override
+		public T load(String key) throws CacheLoaderException {
+			KvObject<T> categoryKvObject = client.kv(collection, key)
+					.get(tClass)
+					.get();
+			return categoryKvObject == null ? null : categoryKvObject.getValue(tClass);
+		}
 
-        @Override
-        public Map<String, T> loadAll(Iterable<? extends String> keys) throws CacheLoaderException {
-            return null;
-        }
-    }
+		@Override
+		public Map<String, T> loadAll(Iterable<? extends String> keys) throws CacheLoaderException {
+			return null;
+		}
+	}
 }

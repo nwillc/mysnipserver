@@ -35,63 +35,63 @@ import java.util.stream.Collectors;
 import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
-    private final Dao<Category> categoriesDao;
-    private final Dao<Snippet> snippetDao;
-    private final Dao<User> userDao;
-    private boolean auth;
-    private String properties = "";
+	private final Dao<Category> categoriesDao;
+	private final Dao<Snippet> snippetDao;
+	private final Dao<User> userDao;
+	private boolean auth;
+	private String properties = "";
 
-    @Inject
-    public MySnipServerApplication(Dao<Category> categoriesDao,
-                                   Dao<Snippet> snippetDao,
-                                   Dao<User> userDao) {
-        this.categoriesDao = categoriesDao;
-        this.snippetDao = snippetDao;
-        this.userDao = userDao;
-        try (
-                final InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/build.json"));
-                final BufferedReader bufferedReader = new BufferedReader(isr)
-        ) {
-            properties = bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (Exception e) {
-            Logger.warn("Could not load build info", e);
-        }
-        setAuth(true);
-    }
+	@Inject
+	public MySnipServerApplication(Dao<Category> categoriesDao,
+								   Dao<Snippet> snippetDao,
+								   Dao<User> userDao) {
+		this.categoriesDao = categoriesDao;
+		this.snippetDao = snippetDao;
+		this.userDao = userDao;
+		try (
+				final InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/build.json"));
+				final BufferedReader bufferedReader = new BufferedReader(isr)
+		) {
+			properties = bufferedReader.lines().collect(Collectors.joining("\n"));
+		} catch (Exception e) {
+			Logger.warn("Could not load build info", e);
+		}
+		setAuth(true);
+	}
 
-    @Override
-    public void init() {
-        Logger.info("Starting");
-        // Static files
-        staticFileLocation("/public");
+	@Override
+	public void init() {
+		Logger.info("Starting");
+		// Static files
+		staticFileLocation("/public");
 
-        // Create controllers
+		// Create controllers
 
-        if (auth) {
-            new Authentication(userDao);
-        }
-        try {
-            new Graphql(categoriesDao, snippetDao);
-        } catch (Exception e) {
-            Logger.error("Failed instantiating GraphGL Controller: " + e.getMessage(), e);
-            e.printStackTrace();
-        }
+		if (auth) {
+			new Authentication(userDao);
+		}
+		try {
+			new Graphql(categoriesDao, snippetDao);
+		} catch (Exception e) {
+			Logger.error("Failed instantiating GraphGL Controller: " + e.getMessage(), e);
+			e.printStackTrace();
+		}
 
-        // Specific routes
-        get("/ping", (request, response) -> "PONG");
-        get("/properties", (request, response) -> properties);
+		// Specific routes
+		get("/ping", (request, response) -> "PONG");
+		get("/properties", (request, response) -> properties);
 
-        exception(HttpException.class, (e, request, response) -> {
-            response.status(((HttpException) e).getCode().code);
-            response.body(((HttpException) e).getCode().toString() + ": " + e.getMessage());
-            Logger.info("Returning: " + e.toString());
-        });
+		exception(HttpException.class, (e, request, response) -> {
+			response.status(((HttpException) e).getCode().code);
+			response.body(((HttpException) e).getCode().toString() + ": " + e.getMessage());
+			Logger.info("Returning: " + e.toString());
+		});
 
-        Logger.info("Completed");
-    }
+		Logger.info("Completed");
+	}
 
-    public void setAuth(boolean auth) {
-        Logger.info("Setting authentication to: " + auth);
-        this.auth = auth;
-    }
+	public void setAuth(boolean auth) {
+		Logger.info("Setting authentication to: " + auth);
+		this.auth = auth;
+	}
 }
