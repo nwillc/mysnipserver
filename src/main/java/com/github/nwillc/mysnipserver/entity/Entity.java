@@ -17,6 +17,7 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
+import graphql.annotations.GraphQLDescription;
 import graphql.annotations.GraphQLField;
 
 import java.util.UUID;
@@ -33,6 +34,7 @@ public abstract class Entity {
 	}
 
 	@GraphQLField
+	@GraphQLDescription("The unique identifier")
 	public String getKey() {
 		return key;
 	}
