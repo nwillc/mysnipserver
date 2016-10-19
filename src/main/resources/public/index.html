@@ -45,9 +45,10 @@
 </head>
 <body>
 <script>
-    require(['graphql'],function(graphql) {
-        var request = new graphql.Graphql("foo","bar");
-        console.log("request: " + request.toString());
+    // Instantiate the app and kick it off
+    require(['app'],function(app) {
+        var application = new app.App();
+        application.loadCategories();
     });
 </script>
 <div class="ui-widget-header ui-corner-all" align="left">
@@ -113,5 +114,6 @@
     <select id="moveCategories"></select>
     <button id="performMove">Move</button>
 </div>
+
 </body>
 </html>
