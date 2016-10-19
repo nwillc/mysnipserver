@@ -25,12 +25,13 @@
     <link rel="stylesheet"
           href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"
           type="text/css"/>
-    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script data-main="scripts/main" src="scripts/require.js"></script>
+<!--    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="./js/graphql.js"></script>
     <script src="./js/cookies.js"></script>
     <script src="./js/index.js"></script>
-    <script src="//apis.google.com/js/platform.js?onload=gapiAuth2Load" async defer></script>
+    <script src="//apis.google.com/js/platform.js?onload=gapiAuth2Load" async defer></script>-->
     <style>
         label {
             display: block;
@@ -43,6 +44,12 @@
     </style>
 </head>
 <body>
+<script>
+    require(['graphql'],function(graphql) {
+        var request = new graphql.Graphql("foo","bar");
+        console.log("request: " + request.toString());
+    });
+</script>
 <div class="ui-widget-header ui-corner-all" align="left">
     <button id="logoutButton">Logout</button>
     <button id="buildInfoButton">About Snippets</button>
