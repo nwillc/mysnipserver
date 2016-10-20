@@ -39,10 +39,13 @@ define(['cookies', 'jquery'], function (cookies, $) {
             };
 
             this.onSignIn = (googleUser) => {
+                console.log("GoogleUser: " + JSON.stringify(googleUser));
+                <!--
                 $.get("v1/auth/" + googleUser.getAuthResponse().id_token, function () {
                     cookies.set("token", googleUser.getAuthResponse().id_token);
                     window.location.replace("/");
                 });
+                -->
             };
 
             // Bindings
