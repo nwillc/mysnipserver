@@ -17,11 +17,11 @@
   -->
 
 <HTML>
+
 <head>
     <meta charset="UTF-8">
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id"
-          content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
     <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="//apis.google.com/js/platform.js" async defer></script>
@@ -34,11 +34,14 @@
             background-color: #d9d9d9;
             border: 1px solid black;
             position: fixed;
-            margin-left: -150px; /* half of width */
-            margin-top: -2em; /* half of height */
+            margin-left: -150px;
+            /* half of width */
+            margin-top: -2em;
+            /* half of height */
             top: 50%;
             left: 50%;
         }
+        
         .bottom-box {
             width: 80px;
             position: fixed;
@@ -46,31 +49,32 @@
             top: 80%;
             left: 50%;
         }
-
     </style>
 </head>
+
 <BODY>
-<table class="center-box">
-    <tr>
-        <th align="right">User:</th>
-        <td><input size="20" id="username" type="text"></td>
-    </tr>
-    <tr>
-        <th align="right">Password:</th>
-        <td><input size="20" id="password" type="password"></td>
-    </tr>
-</table>
-<table class="bottom-box">
-    <tr>
-        <td align="center">
-            Or...
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-        </td>
-    </tr>
-</table>
+    <table class="center-box">
+        <tr>
+            <th align="right">User:</th>
+            <td><input size="20" id="username" type="text"></td>
+        </tr>
+        <tr>
+            <th align="right">Password:</th>
+            <td><input size="20" id="password" type="password"></td>
+        </tr>
+    </table>
+    <table class="bottom-box">
+        <tr>
+            <td align="center">
+                Or...
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+            </td>
+        </tr>
+    </table>
 </BODY>
+
 </HTML>

@@ -14,25 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/*
-function gapiAuth2Load() {
-    "use strict";
-    console.log("Loading gapi auth2");
-    gapi.load('auth2', function () {
-        gapi.auth2.init();
-    });
-}
-
-function gapiSignOut() {
-    "use strict";
-    APP.home.logout();
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-        console.log('User signed out of Google.');
-    });
-}
-*/
-
 define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphql) {
     return {
         App: function () {
@@ -232,6 +213,8 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
 
             // GO!
             this.loadCategories();
+            $('#page').show();
+            $('#loading').hide();
         }
     }
 });
