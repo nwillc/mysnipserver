@@ -23,11 +23,11 @@ define(['jquery-ui','jquery'], function(ui,$) {
             this.query = query;
             this.variables = {};
 
-            this.toString = () => {
+            this.toString = function () {
                 return JSON.stringify(this);
             };
 
-            this.execute = (consumer) => {
+            this.execute = function (consumer) {
                 console.log("Executing: " + this.toString());
                 $.post(this.url,
                     this.toString(),

@@ -33,10 +33,11 @@ function gapiSignOut() {
 }
 */
 
-define(['jquery-ui','jquery','graphql'], function(ui,$,graphql){
+define(['jquery-ui','jquery','graphql'], function (ui, $, graphql) {
     return {
-             App: function() {
+             App: function (auth2) {
                 "use strict";
+                this.auth2 = auth2;
                 // Instance variables and initialization
                 $('#tabs').tabs();
                 this.categories = $('#browseCategories');
@@ -73,7 +74,7 @@ define(['jquery-ui','jquery','graphql'], function(ui,$,graphql){
                 this.searchCategoryGQL = new graphql.Graphql(graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
 
                 // Functions
-                this.loadCategories = () => {
+                this.loadCategories = function () {
                     console.log("loadCategories");
                     this.categoryGQL.execute((response) => {
                         var list = response.data.categories.sort((a, b) => {
@@ -188,6 +189,9 @@ define(['jquery-ui','jquery','graphql'], function(ui,$,graphql){
                         method: 'DELETE',
                         success: () => window.location.replace("/login.html")
                     });
+                    this.auth2.signOut().then(function () {
+                        console.log('User signed out of Google.');
+                    });
                 };
 
                 this.buildInfo = () => {
@@ -222,7 +226,7 @@ define(['jquery-ui','jquery','graphql'], function(ui,$,graphql){
                 $('#buildInfoButton').click(this.buildInfo);
                 $('#updateButton').click(this.updateSnippet);
                 $('#moveButton').click(this.openMoveSnippet);
-               //    $('#logoutButton').click(gapiSignOut);
+                $('#logoutButton').click(this.logout);
                 $('#performMove').click(this.moveSnippet);
             }
         }

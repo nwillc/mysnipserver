@@ -31,7 +31,8 @@
     <script src="./js/graphql.js"></script>
     <script src="./js/cookies.js"></script>
     <script src="./js/index.js"></script>
-    <script src="//apis.google.com/js/platform.js?onload=gapiAuth2Load" async defer></script>-->
+    -->
+    <script src="//apis.google.com/js/platform.js?onload=gapiAuth2Load" async defer></script>
     <style>
         label {
             display: block;
@@ -45,9 +46,17 @@
 </head>
 <body>
 <script>
+    function gapiAuth2Load() {
+        "use strict";
+        console.log("Loading gapi auth2");
+        gapi.load('auth2', function () {
+            gapi.auth2.init();
+        });
+    }
+
     // Instantiate the app and kick it off
     require(['app'],function(app) {
-        var application = new app.App();
+        var application = new app.App(gapi.auth2.getAuthInstance());
         application.loadCategories();
     });
 </script>
