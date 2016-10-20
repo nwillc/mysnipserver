@@ -21,12 +21,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
-    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="//apis.google.com/js/platform.js" async defer></script>
-    <script src="/js/cookies.js"></script>
-    <script src="/js/login.js"></script>
+    <script data-main="scripts/main" src="scripts/require.js"></script>
     <style>
         .center-box {
             width: 300px;
@@ -53,6 +49,11 @@
 </head>
 
 <BODY>
+    <script>
+        require(['login'],function(login) {
+            var auth = new login.Login();  
+        });
+    </script>
     <table class="center-box">
         <tr>
             <th align="right">User:</th>
@@ -71,7 +72,7 @@
         </tr>
         <tr>
             <td>
-                <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+                <div id="google" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
             </td>
         </tr>
     </table>

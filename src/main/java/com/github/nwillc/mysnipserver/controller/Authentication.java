@@ -45,8 +45,10 @@ public class Authentication implements ToJson {
 	private static final String LOGIN_HTML = "/login.html";
 	private static final String[] NO_AUTH = {
 			LOGIN_HTML,
-			"/js/login.js",
-			"/js/cookies.js",
+			"/scripts/login.js",
+			"/scripts/cookies.js",
+			"/scripts/main.js",
+			"/scripts/require.js",
 			"/favicon.ico",
 			"/properties",
 			versionedPath(AUTH_PATH)
