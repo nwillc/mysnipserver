@@ -19,20 +19,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="google-signin-client_id"
-          content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
     <link rel="stylesheet"
           href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"
           type="text/css"/>
     <script data-main="scripts/main" src="scripts/require.js"></script>
-<!--    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="./js/graphql.js"></script>
-    <script src="./js/cookies.js"></script>
-    <script src="./js/index.js"></script>
-    -->
-    <script src="//apis.google.com/js/platform.js?onload=gapiAuth2Load" async defer></script>
     <style>
         label {
             display: block;
@@ -46,18 +37,9 @@
 </head>
 <body>
 <script>
-    function gapiAuth2Load() {
-        "use strict";
-        console.log("Loading gapi auth2");
-        gapi.load('auth2', function () {
-            gapi.auth2.init();
-        });
-    }
-
-    // Instantiate the app and kick it off
+    // Instantiate the app
     require(['app'],function(app) {
-        var application = new app.App(gapi.auth2.getAuthInstance());
-        application.loadCategories();
+        var application = new app.App();
     });
 </script>
 <div class="ui-widget-header ui-corner-all" align="left">
