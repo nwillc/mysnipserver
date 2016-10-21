@@ -53,6 +53,10 @@
         require(['login'],function(login) {
             var auth = new login.Login();  
         });
+
+        function helloWorld(user) {
+            console.log("User: " + JSON.stringify(user));
+        }
     </script>
     <table class="center-box">
         <tr>
@@ -72,7 +76,7 @@
         </tr>
         <tr>
             <td>
-                <div id="google" class="g-signin2" data-theme="dark"></div>
+                <div data-onsuccess="helloWorld" class="g-signin2" data-theme="dark"></div>
             </td>
         </tr>
     </table>
