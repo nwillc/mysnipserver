@@ -52,7 +52,7 @@ define(['cookies', 'jquery'], function (cookies, $) {
             $(this.username).keyup(this.validUsername);
             $(this.password).keyup(this.login);
             console.log("setting");
-            $('#google').attr('data-onsuccess',function(user) { this.onSignIn(user) });
+            $('#google').attr('data-onsuccess',function(user) { this.onSignIn(user); }.bind(this));
             console.log("done");
             // Go!
             this.validUsername();
