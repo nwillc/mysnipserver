@@ -50,10 +50,11 @@
 </head>
 <body>
     <script>
-        var auth;
+        var onSignIn;
 
         require(['login'],function(login) {
-            auth = new login.Login();
+            var auth = new login.Login();
+            onSignIn = auth.onSignIn;
         });
 
     </script>
@@ -75,7 +76,7 @@
         </tr>
         <tr>
             <td>
-                <div data-onsuccess="auth.onSignIn" class="g-signin2" data-theme="dark"></div>
+                <div data-onsuccess="onSignIn" class="g-signin2" data-theme="dark"></div>
             </td>
         </tr>
     </table>
