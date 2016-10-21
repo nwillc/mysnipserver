@@ -14,20 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-define(['cookies', 'jquery'], function (cookies, $) {
+define(["cookies", "jquery"], function (cookies, $) {
+    "use strict";
     return {
         Login: function () {
-            "use strict";
             // Instance variables
-            this.username = $('#username');
-            this.password = $('#password');
+            this.username = $("#username");
+            this.password = $("#password");
 
             // Event handlers
             this.validUsername = () => {
                 var notValid = !$(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
 
-                $(this.password).prop('disabled', notValid);
-                $(this.authButton).prop('disabled', notValid);
+                $(this.password).prop("disabled", notValid);
+                $(this.authButton).prop("disabled", notValid);
             };
 
             this.login = (event) => {

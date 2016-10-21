@@ -14,34 +14,34 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphql) {
+define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphql) {
     return {
         App: function () {
             "use strict";
 
             // Instance variables and initialization
-            $('#tabs').tabs();
-            this.categories = $('#browseCategories');
-            this.snippetCategories = $('#snippetCategories');
-            this.moveCategories = $('#moveCategories');
-            this.category = $('#category');
-            this.titles = $('#titles');
-            this.title = $('#title');
-            this.body = $('#body');
-            this.bodyInput = $('#bodyInput');
-            this.query = $('#query');
+            $("#tabs").tabs();
+            this.categories = $("#browseCategories");
+            this.snippetCategories = $("#snippetCategories");
+            this.moveCategories = $("#moveCategories");
+            this.category = $("#category");
+            this.titles = $("#titles");
+            this.title = $("#title");
+            this.body = $("#body");
+            this.bodyInput = $("#bodyInput");
+            this.query = $("#query");
 
-            this.searchDialog = $('#searchCategoryDialog');
+            this.searchDialog = $("#searchCategoryDialog");
             $(this.searchDialog).dialog({ width: 500 });
-            $(this.searchDialog).dialog('close');
+            $(this.searchDialog).dialog("close");
 
-            this.moveSnippetDialog = $('#moveSnippetDialog');
+            this.moveSnippetDialog = $("#moveSnippetDialog");
             $(this.moveSnippetDialog).dialog({ width: 500 });
-            $(this.moveSnippetDialog).dialog('close');
+            $(this.moveSnippetDialog).dialog("close");
 
-            this.buildInfoDialog = $('#buildInfoDialog');
+            this.buildInfoDialog = $("#buildInfoDialog");
             $(this.buildInfoDialog).dialog({ height: 200, width: 500 });
-            $(this.buildInfoDialog).dialog('close');
+            $(this.buildInfoDialog).dialog("close");
 
             var graphqlUrl = "v1/graphql";
             this.categoryGQL = new graphql.Graphql(graphqlUrl, "{ categories { key name }}");
@@ -84,8 +84,8 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
 
             this.loadTitles = (list) => {
                 console.log("loadTitles");
-                $('option', this.titles).remove();
-                $(this.body).val('');
+                $("option", this.titles).remove();
+                $(this.body).val("");
                 list.sort((a, b) => a.title.localeCompare(b.title)).forEach(element =>
                     this.titles.append($("<option></option>").attr("value", element.key).text(element.title)));
             };
@@ -101,7 +101,7 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
                 this.categoryCreateGQL.variables["name"] = $(this.category).val();
                 this.categoryCreateGQL.execute(() => {
                     this.loadCategories();
-                    $('#category').val('');
+                    $("#category").val("");
                 });
             };
 
@@ -112,8 +112,8 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
                 this.snippetCreateGQL.variables["body"] = $(this.bodyInput).val();
                 this.snippetCreateGQL.execute(() => {
                     this.loadCategories();
-                    $(this.title).val('');
-                    $(this.bodyInput).val('');
+                    $(this.title).val("");
+                    $(this.bodyInput).val("");
                 });
             };
 
@@ -132,7 +132,7 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
                 this.snippetUpdateGQL.variables["body"] = $(this.body).val();
                 this.snippetUpdateGQL.execute(() => {
                     this.loadAllTitles();
-                    $(this.moveSnippetDialog).dialog('close');
+                    $(this.moveSnippetDialog).dialog("close");
                 });
             };
 
@@ -148,7 +148,7 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
                 console.log("Search Category");
                 this.searchCategoryGQL.execute((response) => {
                     this.loadTitles(response.data.snippets);
-                    $(this.searchDialog).dialog('close');
+                    $(this.searchDialog).dialog("close");
                 });
             };
 
@@ -166,30 +166,30 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
             this.logout = () => {
                 console.log("logout");
                 $.ajax({
-                    url: 'v1/auth',
-                    method: 'DELETE',
+                    url: "v1/auth",
+                    method: "DELETE",
                     success: () => window.location.replace("/login.html")
                 });
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut().then(function () {
-                    console.log('User signed out of Google.');
+                    console.log("User signed out of Google.");
                 });
             };
 
             this.buildInfo = () => {
                 console.log("build info");
                 $.get("properties", data => {
-                    $(this.buildInfoDialog).dialog('open');
-                    $('#buildInfo').html(data);
+                    $(this.buildInfoDialog).dialog("open");
+                    $("#buildInfo").html(data);
                 });
             };
 
             this.openSearch = () => {
-                $(this.searchDialog).dialog('open');
+                $(this.searchDialog).dialog("open");
             };
 
             this.openMoveSnippet = () => {
-                $(this.moveSnippetDialog).dialog('open');
+                $(this.moveSnippetDialog).dialog("open");
             };
 
             this.moveDialog = () => {
@@ -199,22 +199,22 @@ define(['gapi', 'jquery-ui', 'jquery', 'graphql'], function (gapi, ui, $, graphq
             // Bindings
             $(this.categories).change(this.loadAllTitles);
             $(this.titles).change(this.loadBody);
-            $('#saveSnippetButton').click(this.saveSnippet);
-            $('#deleteButton').click(this.deleteSnippet);
-            $('#saveCategoryButton').click(this.saveCategory);
-            $('#deleteCategoryButton').click(this.deleteCategory);
-            $('#searchButton').click(this.openSearch);
-            $('#performSearch').click(this.performSearch);
-            $('#buildInfoButton').click(this.buildInfo);
-            $('#updateButton').click(this.updateSnippet);
-            $('#moveButton').click(this.openMoveSnippet);
-            $('#logoutButton').click(this.logout);
-            $('#performMove').click(this.moveSnippet);
+            $("#saveSnippetButton").click(this.saveSnippet);
+            $("#deleteButton").click(this.deleteSnippet);
+            $("#saveCategoryButton").click(this.saveCategory);
+            $("#deleteCategoryButton").click(this.deleteCategory);
+            $("#searchButton").click(this.openSearch);
+            $("#performSearch").click(this.performSearch);
+            $("#buildInfoButton").click(this.buildInfo);
+            $("#updateButton").click(this.updateSnippet);
+            $("#moveButton").click(this.openMoveSnippet);
+            $("#logoutButton").click(this.logout);
+            $("#performMove").click(this.moveSnippet);
 
             // GO!
             this.loadCategories();
-            $('#page').show();
-            $('#loading').hide();
+            $("#page").show();
+            $("#loading").hide();
         }
     }
 });

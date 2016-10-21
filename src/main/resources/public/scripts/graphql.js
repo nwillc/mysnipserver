@@ -14,11 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-define(['jquery-ui','jquery'], function(ui,$) {
+define(['jquery'], function ($) {
+    "use strict";
     return {
         Graphql: function (url, query) {
-            "use strict";
-
             this.url = url;
             this.query = query;
             this.variables = {};
@@ -28,10 +27,15 @@ define(['jquery-ui','jquery'], function(ui,$) {
             };
 
             this.execute = function (consumer) {
-                console.log("Executing: " + this.toString());
+                console.log("GraphQL Request: " + this);
                 $.post(this.url,
                     this.toString(),
-                    response => consumer(response)
+                    function (response) {
+                        if (response.errors != undefined) {
+                            console.log("GraphQL Errors: " + JSON.stringify(response.errors));
+                        }
+                        consumer(response);
+                    }
                 );
             };
         }
