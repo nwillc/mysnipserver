@@ -51,8 +51,9 @@ define(['cookies', 'jquery'], function (cookies, $) {
             // Bindings
             $(this.username).keyup(this.validUsername);
             $(this.password).keyup(this.login);
+            console.log("setting");
             $('#google').attr('data-onsuccess',this.onSignIn);
-
+            console.log("done");
             // Go!
             this.validUsername();
             $(this.username).focus();
