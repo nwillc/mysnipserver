@@ -21,6 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
     <script data-main="scripts/main" src="scripts/require.js"></script>
     <style>
@@ -49,11 +50,10 @@
 </head>
 <body>
     <script>
-        var helloWorld;
+        var auth;
 
         require(['login'],function(login) {
-            var auth = new login.Login();
-            helloWorld = auth.onSignIn;
+            auth = new login.Login();
         });
 
     </script>
@@ -75,7 +75,7 @@
         </tr>
         <tr>
             <td>
-                <div data-onsuccess="helloWorld" class="g-signin2" data-theme="dark"></div>
+                <div data-onsuccess="auth.onSignIn" class="g-signin2" data-theme="dark"></div>
             </td>
         </tr>
     </table>
