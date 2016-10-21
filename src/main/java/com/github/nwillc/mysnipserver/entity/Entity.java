@@ -22,7 +22,7 @@ import graphql.annotations.GraphQLField;
 
 import java.util.UUID;
 
-public abstract class Entity {
+public class Entity {
 	private String key;
 
 	public Entity() {
