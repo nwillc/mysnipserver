@@ -50,13 +50,13 @@
 </head>
 <body>
     <script>
+        var helloWorld;
+
         require(['login'],function(login) {
-            var auth = new login.Login();  
+            var auth = new login.Login();
+            helloWorld = auth.onSignIn;
         });
 
-        function helloWorld(user) {
-            console.log("User: " + JSON.stringify(user));
-        }
     </script>
     <table class="center-box">
         <tr>
