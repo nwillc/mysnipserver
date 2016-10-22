@@ -15,6 +15,7 @@
  */
 
 requirejs.config({
+    waitSeconds: 20,
     shim: {
         "jquery": {
             exports: "$"
