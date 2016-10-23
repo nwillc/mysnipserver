@@ -23,6 +23,7 @@ import com.github.nwillc.mysnipserver.entity.SnippetPredicate;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;
+import org.pmw.tinylog.Logger;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -51,16 +52,18 @@ public final class QuerySchema extends DaoConsumer {
 										 @GraphQLName(CATEGORY) final String category,
 										 @GraphQLName(MATCH) final String match) {
 		// TODO create predicate
-		Predicate<Snippet> predicate = null;
+		SnippetPredicate predicate = null;
 		if (category != null) {
 			predicate = new SnippetPredicate(SnippetPredicate.Field.category, category);
 		}
 		if (match != null) {
-			Predicate<Snippet> snippetPredicate = new SnippetPredicate(SnippetPredicate.Field.title, match)
+			SnippetPredicate snippetPredicate = new SnippetPredicate(SnippetPredicate.Field.title, match)
 					.or(new SnippetPredicate(SnippetPredicate.Field.body, match));
 
-			predicate = (predicate != null) ? predicate.and(snippetPredicate) : snippetPredicate;
+			predicate = (predicate != null) ? predicate.and(snippetPredicate.group()) : snippetPredicate;
 		}
+
+		Logger.info("Predicate: " + predicate);
 
 		Stream<Snippet> snippetStream = predicate != null ? getSnippetDao(env).find(predicate) :
 				getSnippetDao(env).findAll();

@@ -100,4 +100,22 @@ public class SnippetPredicateTest {
 
 		assertThat(predicate.test(snippet)).isFalse();
 	}
+
+	@Test
+	public void shouldToString() throws Exception {
+		SnippetPredicate predicate = new SnippetPredicate(category,"1");
+		System.out.println("Predicate: " + predicate);
+
+		predicate = predicate.negate();
+		System.out.println("Predicate: " + predicate);
+
+		predicate = predicate.group();
+		System.out.println("Predicate: " + predicate);
+
+		predicate = predicate.and(new SnippetPredicate(title, "title"));
+		System.out.println("Predicate: " + predicate);
+
+		predicate = predicate.or(new SnippetPredicate(body, "body"));
+		System.out.println("Predicate: " + predicate);
+	}
 }

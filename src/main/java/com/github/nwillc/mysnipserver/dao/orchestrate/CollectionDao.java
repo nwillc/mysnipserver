@@ -77,7 +77,10 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> find(Predicate<T> predicate) {
-		return findAll().filter(predicate);
+		Set<String> keys = stream(client.searchCollection(collection)
+				.get(tClass, predicate.toString())
+				.get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(toSet());
+		return find(keys);
 	}
 
 	@Override

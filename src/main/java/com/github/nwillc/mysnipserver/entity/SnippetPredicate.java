@@ -28,9 +28,29 @@ public class SnippetPredicate implements Predicate<Snippet> {
 	private final Field field;
 	private final String pattern;
 
+	private SnippetPredicate() {
+		this(null,null);
+	}
+
 	public SnippetPredicate(Field field, String pattern) {
 		this.field = field;
 		this.pattern = pattern;
+	}
+
+	public SnippetPredicate negate() {
+		return new Negated(this);
+	}
+
+	public SnippetPredicate group() {
+		    return new Grouped(this);
+	}
+
+	public SnippetPredicate and(SnippetPredicate other) {
+		return new And(this, other);
+	}
+
+	public SnippetPredicate or(SnippetPredicate other) {
+		return new Or(this, other);
 	}
 
 	@Override
@@ -44,5 +64,86 @@ public class SnippetPredicate implements Predicate<Snippet> {
 				return snippet.getBody().contains(pattern);
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return field.name() + ":\"" + pattern + '"';
+	}
+
+	private static class Negated extends SnippetPredicate {
+		final SnippetPredicate inside;
+
+		public Negated(SnippetPredicate inside) {
+			this.inside = inside;
+		}
+
+		@Override
+		public boolean test(Snippet snippet) {
+			return !inside.test(snippet);
+		}
+
+		@Override
+		public String toString() {
+			return "NOT " + inside.toString();
+		}
+	}
+
+	private static class Grouped extends SnippetPredicate {
+		final SnippetPredicate inside;
+
+		public Grouped(SnippetPredicate inside) {
+			this.inside = inside;
+		}
+
+		@Override
+		public boolean test(Snippet snippet) {
+			return inside.test(snippet);
+		}
+
+		@Override
+		public String toString() {
+			return "( " + inside.toString() + " )";
+		}
+	}
+
+	private static class Or extends SnippetPredicate {
+		final SnippetPredicate one;
+		final SnippetPredicate two;
+
+		public Or(SnippetPredicate one, SnippetPredicate two) {
+			this.one = one;
+			this.two = two;
+		}
+
+		@Override
+		public boolean test(Snippet snippet) {
+			return one.test(snippet) || two.test(snippet);
+		}
+
+		@Override
+		public String toString() {
+			return one.toString() + " OR " + two.toString();
+		}
+	}
+
+	private static class And extends SnippetPredicate {
+		final SnippetPredicate one;
+		final SnippetPredicate two;
+
+		public And(SnippetPredicate one, SnippetPredicate two) {
+			this.one = one;
+			this.two = two;
+		}
+
+		@Override
+		public boolean test(Snippet snippet) {
+			return one.test(snippet) && two.test(snippet);
+		}
+
+		@Override
+		public String toString() {
+			return one.toString() + " AND " + two.toString();
+		}
 	}
 }
