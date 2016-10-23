@@ -28,15 +28,24 @@ define(['jquery'], function ($) {
 
             this.execute = function (consumer) {
                 console.log("GraphQL Request: " + this);
-                $.post(this.url,
-                    this.toString(),
-                    function (response) {
-                        if (response.errors != undefined) {
+                $.ajax({
+                    url: this.url,
+                    async: true,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: this.toString(),
+                    dataType: "json",
+                    success: function (response) {
+                         if (response.errors != undefined) {
                             console.log("GraphQL Errors: " + JSON.stringify(response.errors));
-                        }
-                        consumer(response);
+                         }
+                         consumer(response);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log("Request failed: " + textStatus);
+                        console.log(errorThrown);
                     }
-                );
+                });
             };
         }
     }
