@@ -15,22 +15,34 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.dao;
+package com.github.nwillc.mysnipserver.entity;
 
-import com.github.nwillc.mysnipserver.entity.Entity;
-
-import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-public interface Dao<T extends Entity> {
-	Optional<T> findOne(final String key);
+public class SnippetPredicate implements Predicate<Snippet> {
+	public enum Field {
+		category,
+		title,
+		body
+	}
+	private final Field field;
+	private final String pattern;
 
-	Stream<T> findAll();
+	public SnippetPredicate(Field field, String pattern) {
+		this.field = field;
+		this.pattern = pattern;
+	}
 
-	Stream<T> find(Predicate<T> predicate);
-
-	void save(final T entity);
-
-	void delete(final String key);
+	@Override
+	public boolean test(Snippet snippet) {
+		switch (field) {
+			case category:
+				return snippet.getCategory().equals(pattern);
+			case title:
+				return snippet.getTitle().contains(pattern);
+			case body:
+				return snippet.getBody().contains(pattern);
+		}
+		return false;
+	}
 }

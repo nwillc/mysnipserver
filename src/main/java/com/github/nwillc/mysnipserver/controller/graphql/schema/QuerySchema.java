@@ -19,12 +19,14 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.mysnipserver.entity.SnippetPredicate;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,11 +50,20 @@ public final class QuerySchema extends DaoConsumer {
 	public static List<Snippet> snippets(final DataFetchingEnvironment env,
 										 @GraphQLName(CATEGORY) final String category,
 										 @GraphQLName(MATCH) final String match) {
-		Stream<Snippet> snippetStream = match != null ? getSnippetDao(env).find(match) :
-				getSnippetDao(env).findAll();
+		// TODO create predicate
+		Predicate<Snippet> predicate = null;
 		if (category != null) {
-			snippetStream = snippetStream.filter(snippet -> category.equals(snippet.getCategory()));
+			predicate = new SnippetPredicate(SnippetPredicate.Field.category, category);
 		}
+		if (match != null) {
+			Predicate<Snippet> snippetPredicate = new SnippetPredicate(SnippetPredicate.Field.title, match)
+					.or(new SnippetPredicate(SnippetPredicate.Field.body, match));
+
+			predicate = (predicate != null) ? predicate.and(snippetPredicate) : snippetPredicate;
+		}
+
+		Stream<Snippet> snippetStream = predicate != null ? getSnippetDao(env).find(predicate) :
+				getSnippetDao(env).findAll();
 		return snippetStream.collect(Collectors.toList());
 	}
 

@@ -23,6 +23,7 @@ import com.github.nwillc.mysnipserver.entity.Entity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class MemoryBackedDao<T extends Entity> implements Dao<T> {
@@ -44,9 +45,9 @@ public class MemoryBackedDao<T extends Entity> implements Dao<T> {
 	}
 
 	@Override
-	public Stream<T> find(String phrase) {
+	public Stream<T> find(Predicate<T> predicate) {
 		// Very lazy search that just looks for single word in the toString - for testing
-		return findAll().filter(e -> e.toString().contains(phrase));
+		return findAll().filter(predicate);
 	}
 
 	@Override

@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
@@ -75,11 +76,8 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 	}
 
 	@Override
-	public Stream<T> find(String query) {
-		Set<String> keys = stream(client.searchCollection(collection)
-				.get(tClass, query)
-				.get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(toSet());
-		return find(keys);
+	public Stream<T> find(Predicate<T> predicate) {
+		return findAll().filter(predicate);
 	}
 
 	@Override
