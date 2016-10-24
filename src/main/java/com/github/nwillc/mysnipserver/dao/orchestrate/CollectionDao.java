@@ -31,6 +31,7 @@ import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,11 +78,12 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> find(Predicate<T> predicate) {
-		Set<String> keys = stream(client.searchCollection(collection)
+		Set<String> keys = new HashSet<>();
+		client.searchCollection(collection)
 				.limit(LIMIT)
 				.withValues(false)
 				.get(tClass, predicate.toString())
-				.get().spliterator(), false).map(Result::getKvObject).map(KvObject::getKey).collect(toSet());
+				.get().forEach(r -> keys.add(r.getKvObject().getKey()));
 		return find(keys);
 	}
 
