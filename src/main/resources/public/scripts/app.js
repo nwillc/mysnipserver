@@ -40,7 +40,7 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             $(this.moveSnippetDialog).dialog("close");
 
             this.buildInfoDialog = $("#buildInfoDialog");
-            $(this.buildInfoDialog).dialog({ height: 200, width: 500 });
+            $(this.buildInfoDialog).dialog({ height: 300, width: 500 });
             $(this.buildInfoDialog).dialog("close");
 
             var graphqlUrl = "v1/graphql";
@@ -142,14 +142,16 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                 this.deleteCategoryGQL.execute(() => this.loadCategories());
             };
 
-            this.performSearch = () => {
-                this.searchCategoryGQL.variables["category"] = $(this.categories).val();
-                this.searchCategoryGQL.variables["match"] = $(query).val();
-                console.log("Search Category");
-                this.searchCategoryGQL.execute((response) => {
-                    this.loadTitles(response.data.snippets);
-                    $(this.searchDialog).dialog("close");
-                });
+            this.performSearch = (event) => {
+                if (event.keyCode === 13) {
+                   this.searchCategoryGQL.variables["category"] = $(this.categories).val();
+                   this.searchCategoryGQL.variables["match"] = $(this.query).val();
+                   console.log("Search Category");
+                   this.searchCategoryGQL.execute((response) => {
+                       this.loadTitles(response.data.snippets);
+                       $(this.searchDialog).dialog("close");
+                   });
+                }
             };
 
             this.updateSnippet = () => {
@@ -204,7 +206,7 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             $("#saveCategoryButton").click(this.saveCategory);
             $("#deleteCategoryButton").click(this.deleteCategory);
             $("#searchButton").click(this.openSearch);
-            $("#performSearch").click(this.performSearch);
+            $(this.query).keyup(this.performSearch);
             $("#buildInfoButton").click(this.buildInfo);
             $("#updateButton").click(this.updateSnippet);
             $("#moveButton").click(this.openMoveSnippet);
