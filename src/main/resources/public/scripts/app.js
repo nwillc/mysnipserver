@@ -144,13 +144,13 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
 
             this.performSearch = (event) => {
                 if (event.keyCode === 13) {
-                   this.searchCategoryGQL.variables["category"] = $(this.categories).val();
-                   this.searchCategoryGQL.variables["match"] = $(this.query).val();
-                   console.log("Search Category");
-                   this.searchCategoryGQL.execute((response) => {
-                       this.loadTitles(response.data.snippets);
-                       $(this.searchDialog).dialog("close");
-                   });
+                    this.searchCategoryGQL.variables["category"] = $(this.categories).val();
+                    this.searchCategoryGQL.variables["match"] = $(this.query).val();
+                    console.log("Search Category");
+                    this.searchCategoryGQL.execute((response) => {
+                        this.loadTitles(response.data.snippets);
+                        $(this.searchDialog).dialog("close");
+                    });
                 }
             };
 
