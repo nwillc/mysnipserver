@@ -67,11 +67,12 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> findAll() {
-		Set<String> keys = stream(client.listCollection(collection)
+		Set<String> keys = new HashSet<>();
+		client.listCollection(collection)
 				.limit(LIMIT)
 				.withValues(false)
 				.get(tClass)
-				.get().spliterator(), false).map(KvObject::getKey).collect(toSet());
+				.get().forEach(r -> keys.add(r.getKey()));
 		return find(keys);
 	}
 
@@ -110,10 +111,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
 	private Stream<T> find(Set<String> keys) {
 		return keys.stream().map(this::get).filter(Objects::nonNull);
-	}
-
-	public String getCollection() {
-		return collection;
 	}
 
 	private Cache<String, T> getCache(String name, Class<T> clz) {
