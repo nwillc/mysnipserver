@@ -30,16 +30,9 @@ import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
 
 public class CollectionDao<T extends Entity> implements Dao<T> {
 	private static final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();

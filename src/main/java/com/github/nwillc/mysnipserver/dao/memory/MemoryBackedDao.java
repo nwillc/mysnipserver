@@ -46,7 +46,6 @@ public class MemoryBackedDao<T extends Entity> implements Dao<T> {
 
 	@Override
 	public Stream<T> find(Predicate<T> predicate) {
-		// Very lazy search that just looks for single word in the toString - for testing
 		return findAll().filter(predicate);
 	}
 

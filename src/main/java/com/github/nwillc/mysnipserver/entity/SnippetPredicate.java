@@ -17,133 +17,82 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * This Predicate has a dual purpose. First it implements a traditional predicate to test if a Snippet matches a given
+ * field/pattern pair. Second it's toString will generate the Lucene query matching the logic of the Predicate. The field
+ * matching follows the following logic, key fields must match the pattern, text fields must contain the pattern.
+ */
 public class SnippetPredicate implements Predicate<Snippet> {
-	public enum Field {
-		category,
-		title,
-		body
-	}
-	private final Field field;
-	private final String pattern;
+    public enum Field {
+        key((s,p) -> s.getKey().equals(p)),
+        category((s, p) -> s.getCategory().equals(p)),
+        title((s, p) -> s.getTitle().contains(p)),
+        body((s, p) -> s.getBody().contains(p));
 
-	private SnippetPredicate() {
-		this(null,null);
-	}
+        final BiFunction<Snippet, String, Boolean> match;
 
-	public SnippetPredicate(Field field, String pattern) {
-		this.field = field;
-		this.pattern = pattern;
-	}
+        Field(BiFunction<Snippet, String, Boolean> match) {
+            this.match = match;
+        }
+    }
 
-	public SnippetPredicate negate() {
-		return new Negated(this);
-	}
+    private final Field field;
+    private final String pattern;
+    private final Function<Snippet, Boolean> test;
+    private final Function<SnippetPredicate, String> toString;
 
-	public SnippetPredicate group() {
-		    return new Grouped(this);
-	}
 
-	public SnippetPredicate and(SnippetPredicate other) {
-		return new And(this, other);
-	}
+    private SnippetPredicate(Field field, String pattern, Function<Snippet, Boolean> test, Function<SnippetPredicate, String> toString) {
+        this.field = field;
+        this.pattern = pattern;
+        this.toString = toString;
+        this.test = test;
+    }
 
-	public SnippetPredicate or(SnippetPredicate other) {
-		return new Or(this, other);
-	}
+    public SnippetPredicate(final Field field, final String pattern) {
+        this(field, pattern,
+                snippet -> field.match.apply(snippet, pattern),
+                snippetPredicate -> snippetPredicate.field.name() + ":\"" + snippetPredicate.pattern + '"'
+        );
+    }
 
-	@Override
-	public boolean test(Snippet snippet) {
-		switch (field) {
-			case category:
-				return snippet.getCategory().equals(pattern);
-			case title:
-				return snippet.getTitle().contains(pattern);
-			case body:
-				return snippet.getBody().contains(pattern);
-		}
-		return false;
-	}
+    public SnippetPredicate negate() {
+        return new SnippetPredicate(field, pattern,
+                snippet -> !test.apply(snippet), s -> "NOT " + toString.apply(this)
+        );
+    }
 
-	@Override
-	public String toString() {
-		return field.name() + ":\"" + pattern + '"';
-	}
+    public SnippetPredicate group() {
+        return new SnippetPredicate(field, pattern,
+                test, s -> "( " + toString.apply(this) + " )"
+        );
+    }
 
-	private static class Negated extends SnippetPredicate {
-		final SnippetPredicate inside;
+    public SnippetPredicate and(final SnippetPredicate other) {
+        return new SnippetPredicate(field, pattern,
+                snippet -> test.apply(snippet) && other.test(snippet),
+                s -> toString.apply(this) + " AND " + other.toString()
+        );
+    }
 
-		public Negated(SnippetPredicate inside) {
-			this.inside = inside;
-		}
+    public SnippetPredicate or(final SnippetPredicate other) {
+        return new SnippetPredicate(field, pattern,
+                snippet -> test.apply(snippet) || other.test(snippet),
+                s -> toString.apply(this) + " OR " + other.toString()
+        );
+    }
 
-		@Override
-		public boolean test(Snippet snippet) {
-			return !inside.test(snippet);
-		}
+    @Override
+    public boolean test(final Snippet snippet) {
+        return test.apply(snippet);
+    }
 
-		@Override
-		public String toString() {
-			return "NOT " + inside.toString();
-		}
-	}
-
-	private static class Grouped extends SnippetPredicate {
-		final SnippetPredicate inside;
-
-		public Grouped(SnippetPredicate inside) {
-			this.inside = inside;
-		}
-
-		@Override
-		public boolean test(Snippet snippet) {
-			return inside.test(snippet);
-		}
-
-		@Override
-		public String toString() {
-			return "( " + inside.toString() + " )";
-		}
-	}
-
-	private static class Or extends SnippetPredicate {
-		final SnippetPredicate one;
-		final SnippetPredicate two;
-
-		public Or(SnippetPredicate one, SnippetPredicate two) {
-			this.one = one;
-			this.two = two;
-		}
-
-		@Override
-		public boolean test(Snippet snippet) {
-			return one.test(snippet) || two.test(snippet);
-		}
-
-		@Override
-		public String toString() {
-			return one.toString() + " OR " + two.toString();
-		}
-	}
-
-	private static class And extends SnippetPredicate {
-		final SnippetPredicate one;
-		final SnippetPredicate two;
-
-		public And(SnippetPredicate one, SnippetPredicate two) {
-			this.one = one;
-			this.two = two;
-		}
-
-		@Override
-		public boolean test(Snippet snippet) {
-			return one.test(snippet) && two.test(snippet);
-		}
-
-		@Override
-		public String toString() {
-			return one.toString() + " AND " + two.toString();
-		}
-	}
+    @Override
+    public String toString() {
+        return toString.apply(this);
+    }
 }

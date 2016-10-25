@@ -66,11 +66,11 @@ public class Snippet extends Entity {
 
 	@Override
 	public String toString() {
-		return getClass().getName() +
-				"{key='" + getKey() + '\'' +
-				", category='" + category + '\'' +
-				", title='" + title + '\'' +
-				", body='" + body + '\'' +
+		return getClass().getSimpleName() +
+				"{key:\"" + getKey() + '"' +
+				", category:\"" + category + '"' +
+				", title:\"" + title + '"' +
+				", body:\"" + body + '"' +
 				'}';
 	}
 }
