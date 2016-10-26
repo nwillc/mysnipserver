@@ -21,7 +21,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
+    <meta name="google-signin-client_id"
+          content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
     <script data-main="scripts/main" src="scripts/require.js"></script>
     <style>
@@ -46,40 +47,42 @@
             top: 80%;
             left: 50%;
         }
+
     </style>
 </head>
 
 <body>
-    <script>
+<script>
         var onSignIn;
 
         require(['login'],function(login) {
             var auth = new login.Login();
             onSignIn = auth.onSignIn;
         });
-    </script>
-    <table class="center-box">
-        <tr>
-            <th align="right">User:</th>
-            <td><input size="20" id="username" type="text"></td>
-        </tr>
-        <tr>
-            <th align="right">Password:</th>
-            <td><input size="20" id="password" type="password"></td>
-        </tr>
-    </table>
-    <table class="bottom-box">
-        <tr>
-            <td align="center">
-                Or...
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div data-onsuccess="onSignIn" class="g-signin2" data-theme="dark"></div>
-            </td>
-        </tr>
-    </table>
+
+</script>
+<table class="center-box">
+    <tr>
+        <th align="right">User:</th>
+        <td><input size="20" id="username" type="text"></td>
+    </tr>
+    <tr>
+        <th align="right">Password:</th>
+        <td><input size="20" id="password" type="password"></td>
+    </tr>
+</table>
+<table class="bottom-box">
+    <tr>
+        <td align="center">
+            Or...
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div data-onsuccess="onSignIn" class="g-signin2" data-theme="dark"></div>
+        </td>
+    </tr>
+</table>
 </body>
 
 </html>

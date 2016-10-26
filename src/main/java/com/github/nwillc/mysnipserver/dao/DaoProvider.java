@@ -21,7 +21,7 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 
 public interface DaoProvider {
-	Dao<Category> getCategoryDao();
+    Dao<Category> getCategoryDao();
 
-	Dao<Snippet> getSnippetDao();
+    Dao<Snippet> getSnippetDao();
 }

@@ -23,30 +23,30 @@ import graphql.annotations.GraphQLField;
 import java.util.UUID;
 
 public class Entity {
-	private String key;
+    private String key;
 
-	public Entity() {
-		this(UUID.randomUUID().toString());
-	}
+    public Entity() {
+        this(UUID.randomUUID().toString());
+    }
 
-	public Entity(String key) {
-		this.key = key;
-	}
+    public Entity(String key) {
+        this.key = key;
+    }
 
-	@GraphQLField
-	@GraphQLDescription("The unique identifier")
-	public String getKey() {
-		return key;
-	}
+    @GraphQLField
+    @GraphQLDescription("The unique identifier")
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	@Override
-	public String toString() {
-		return "Entity{" +
-				"key='" + key + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "key='" + key + '\'' +
+                '}';
+    }
 }

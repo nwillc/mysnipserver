@@ -17,10 +17,23 @@
 package com.github.nwillc.mysnipserver.util.rest;
 
 import com.github.nwillc.contracts.UtilityClassContract;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class VersionTest extends UtilityClassContract {
-	@Override
-	public Class<?> getClassToTest() {
-		return Version.class;
-	}
+    @Override
+    public Class<?> getClassToTest() {
+        return Version.class;
+    }
+
+    @Test
+    public void testVersionedPath() throws Exception {
+        assertThat(Version.versionedPath("v2", "foo/bar")).isEqualTo("/v2/foo/bar");
+    }
+
+    @Test
+    public void testVersionedDefaultPath() throws Exception {
+        assertThat(Version.versionedPath("foo/bar")).isEqualTo("/v1/foo/bar");
+    }
 }

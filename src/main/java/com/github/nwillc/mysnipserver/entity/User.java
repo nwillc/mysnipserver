@@ -18,36 +18,36 @@
 package com.github.nwillc.mysnipserver.entity;
 
 public class User extends Entity {
-	private String username;
-	private String password;
+    private String username;
+    private String password;
 
-	public User() {
-	}
+    public User() {
+    }
 
-	public User(String password, String username) {
-		this.password = password;
-		this.username = username;
-	}
+    public User(String password, String username) {
+        this.password = password;
+        this.username = username;
+    }
 
-	@Override
-	public String getKey() {
-		return username;
-	}
+    @Override
+    public String getKey() {
+        return username;
+    }
 
-	@Override
-	public String toString() {
-		return "User{" +
-				"key='" + getKey() + '\'' +
-				", username='" + username + '\'' +
-				", password='" + (password == null ? "" : "*******") + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "User{" +
+                "key='" + getKey() + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + (password == null ? "" : "*******") + '\'' +
+                '}';
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 }

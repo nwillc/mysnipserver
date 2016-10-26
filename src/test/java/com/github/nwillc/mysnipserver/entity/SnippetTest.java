@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class SnippetTest {
 
-	@Test
-	public void testGraphQLAnnotations() throws Exception {
-		GraphQLObjectType snippet = GraphQLAnnotations.object(Snippet.class);
-		assertThat(snippet.getName()).isEqualTo(SNIPPET);
-		assertThat(snippet.getFieldDefinitions().size()).isEqualTo(4);
-		assertThat(snippet.getFieldDefinition(KEY)).isNotNull();
-		assertThat(snippet.getFieldDefinition(CATEGORY)).isNotNull();
-		assertThat(snippet.getFieldDefinition(TITLE)).isNotNull();
-		assertThat(snippet.getFieldDefinition(BODY)).isNotNull();
-	}
+    @Test
+    public void testGraphQLAnnotations() throws Exception {
+        GraphQLObjectType snippet = GraphQLAnnotations.object(Snippet.class);
+        assertThat(snippet.getName()).isEqualTo(SNIPPET);
+        assertThat(snippet.getFieldDefinitions().size()).isEqualTo(4);
+        assertThat(snippet.getFieldDefinition(KEY)).isNotNull();
+        assertThat(snippet.getFieldDefinition(CATEGORY)).isNotNull();
+        assertThat(snippet.getFieldDefinition(TITLE)).isNotNull();
+        assertThat(snippet.getFieldDefinition(BODY)).isNotNull();
+    }
 }

@@ -24,13 +24,13 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Dao<T extends Entity> {
-	Optional<T> findOne(final String key);
+    Optional<T> findOne(final String key);
 
-	Stream<T> findAll();
+    Stream<T> findAll();
 
-	Stream<T> find(Predicate<T> predicate);
+    Stream<T> find(Predicate<T> predicate);
 
-	void save(final T entity);
+    void save(final T entity);
 
-	void delete(final String key);
+    void delete(final String key);
 }

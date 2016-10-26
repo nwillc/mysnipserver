@@ -105,8 +105,8 @@ public class SnippetPredicateTest {
     public void testMatchCompound() throws Exception {
         SnippetPredicate predicate = new SnippetPredicate(category, "1")
                 .and(new SnippetPredicate(title, "title")
-                .or(new SnippetPredicate(body, "body"))
-                .group());
+                        .or(new SnippetPredicate(body, "body"))
+                        .group());
 
         Snippet match = new Snippet("1", "a title", "foo");
         assertThat(predicate.test(match)).isTrue();

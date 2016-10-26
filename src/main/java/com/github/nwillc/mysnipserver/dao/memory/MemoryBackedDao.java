@@ -27,30 +27,30 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class MemoryBackedDao<T extends Entity> implements Dao<T> {
-	private final Map<String, T> entities = new HashMap<>();
+    private final Map<String, T> entities = new HashMap<>();
 
-	@Override
-	public void delete(String s) {
-		entities.remove(s);
-	}
+    @Override
+    public void delete(String s) {
+        entities.remove(s);
+    }
 
-	@Override
-	public Optional<T> findOne(String s) {
-		return Optional.ofNullable(entities.get(s));
-	}
+    @Override
+    public Optional<T> findOne(String s) {
+        return Optional.ofNullable(entities.get(s));
+    }
 
-	@Override
-	public Stream<T> findAll() {
-		return entities.values().stream();
-	}
+    @Override
+    public Stream<T> findAll() {
+        return entities.values().stream();
+    }
 
-	@Override
-	public Stream<T> find(Predicate<T> predicate) {
-		return findAll().filter(predicate);
-	}
+    @Override
+    public Stream<T> find(Predicate<T> predicate) {
+        return findAll().filter(predicate);
+    }
 
-	@Override
-	public void save(T t) {
-		entities.put(t.getKey(), t);
-	}
+    @Override
+    public void save(T t) {
+        entities.put(t.getKey(), t);
+    }
 }

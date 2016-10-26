@@ -24,11 +24,11 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.DataFetchingEnvironment;
 
 public class DaoConsumer {
-	public static Dao<Category> getCategoryDao(DataFetchingEnvironment env) {
-		return ((DaoProvider) env.getSource()).getCategoryDao();
-	}
+    public static Dao<Category> getCategoryDao(DataFetchingEnvironment env) {
+        return ((DaoProvider) env.getSource()).getCategoryDao();
+    }
 
-	public static Dao<Snippet> getSnippetDao(DataFetchingEnvironment env) {
-		return ((DaoProvider) env.getSource()).getSnippetDao();
-	}
+    public static Dao<Snippet> getSnippetDao(DataFetchingEnvironment env) {
+        return ((DaoProvider) env.getSource()).getSnippetDao();
+    }
 }

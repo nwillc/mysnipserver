@@ -33,39 +33,39 @@ import java.util.stream.Collectors;
 
 public final class HttpUtils {
 
-	private HttpUtils() {
-	}
+    private HttpUtils() {
+    }
 
-	static public String appUrl(HttpServletRequest request) {
-		final String url = request.getRequestURL().toString();
-		final String uri = request.getRequestURI();
+    static public String appUrl(HttpServletRequest request) {
+        final String url = request.getRequestURL().toString();
+        final String uri = request.getRequestURI();
 
-		return url.substring(0, url.length() - uri.length());
-	}
+        return url.substring(0, url.length() - uri.length());
+    }
 
-	static public String httpPost(String url, Map<String, String> params) {
-		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-			HttpPost post = new HttpPost(url);
+    static public String httpPost(String url, Map<String, String> params) {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpPost post = new HttpPost(url);
 
-			if (params != null) {
-				post.setEntity(new UrlEncodedFormEntity(
-						params.entrySet().stream()
-								.map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
-								.collect(Collectors.toList())));
-			}
+            if (params != null) {
+                post.setEntity(new UrlEncodedFormEntity(
+                        params.entrySet().stream()
+                                .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
+                                .collect(Collectors.toList())));
+            }
 
-			HttpResponse response = client.execute(post);
-			try (InputStreamReader in = new InputStreamReader(response.getEntity().getContent());
-				 BufferedReader rd = new BufferedReader(in)) {
-				StringBuilder result = new StringBuilder();
-				String line;
-				while ((line = rd.readLine()) != null) {
-					result.append(line);
-				}
-				return result.toString();
-			}
-		} catch (Exception e) {
-			throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "failed processing " + url, e);
-		}
-	}
+            HttpResponse response = client.execute(post);
+            try (InputStreamReader in = new InputStreamReader(response.getEntity().getContent());
+                 BufferedReader rd = new BufferedReader(in)) {
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+                return result.toString();
+            }
+        } catch (Exception e) {
+            throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "failed processing " + url, e);
+        }
+    }
 }

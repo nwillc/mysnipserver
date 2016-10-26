@@ -25,16 +25,16 @@ import org.pmw.tinylog.Logger;
 import java.util.Optional;
 
 public class SnippetDao extends MemoryBackedDao<Snippet> {
-	final Dao<Category> categoryDao;
+    final Dao<Category> categoryDao;
 
-	public SnippetDao(Dao<Category> categoryDao) {
-		this.categoryDao = categoryDao;
-		Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
-		Logger.info("Found java category: " + java.isPresent());
-		java.ifPresent(c -> {
-			save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
-			save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));
-			save(new Snippet(c.getKey(), "jdk version", "java -version;\n"));
-		});
-	}
+    public SnippetDao(Dao<Category> categoryDao) {
+        this.categoryDao = categoryDao;
+        Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
+        Logger.info("Found java category: " + java.isPresent());
+        java.ifPresent(c -> {
+            save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
+            save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));
+            save(new Snippet(c.getKey(), "jdk version", "java -version;\n"));
+        });
+    }
 }

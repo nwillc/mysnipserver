@@ -27,12 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryTest {
 
-	@Test
-	public void testGraphQLAnnotations() throws Exception {
-		GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
-		assertThat(category.getName()).isEqualTo(CATEGORY);
-		assertThat(category.getFieldDefinitions().size()).isEqualTo(2);
-		assertThat(category.getFieldDefinition(KEY)).isNotNull();
-		assertThat(category.getFieldDefinition(NAME)).isNotNull();
-	}
+    @Test
+    public void testGraphQLAnnotations() throws Exception {
+        GraphQLObjectType category = GraphQLAnnotations.object(Category.class);
+        assertThat(category.getName()).isEqualTo(CATEGORY);
+        assertThat(category.getFieldDefinitions().size()).isEqualTo(2);
+        assertThat(category.getFieldDefinition(KEY)).isNotNull();
+        assertThat(category.getFieldDefinition(NAME)).isNotNull();
+    }
 }

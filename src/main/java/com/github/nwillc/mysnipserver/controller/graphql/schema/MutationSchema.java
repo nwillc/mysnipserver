@@ -30,43 +30,43 @@ import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSc
 @GraphQLName(MUTATION)
 public final class MutationSchema extends DaoConsumer {
 
-	@GraphQLField
-	public static Category category(final DataFetchingEnvironment env,
-									@GraphQLName(KEY) final String key,
-									@NotNull @GraphQLName(NAME) final String name) {
-		final Category category = new Category(name);
-		if (key != null) {
-			category.setKey(key);
-		}
-		getCategoryDao(env).save(category);
-		return category;
-	}
+    @GraphQLField
+    public static Category category(final DataFetchingEnvironment env,
+                                    @GraphQLName(KEY) final String key,
+                                    @NotNull @GraphQLName(NAME) final String name) {
+        final Category category = new Category(name);
+        if (key != null) {
+            category.setKey(key);
+        }
+        getCategoryDao(env).save(category);
+        return category;
+    }
 
-	@GraphQLField
-	public static Snippet snippet(final DataFetchingEnvironment env,
-								  @GraphQLName(KEY) final String key,
-								  @NotNull @GraphQLName(CATEGORY) final String category,
-								  @NotNull @GraphQLName(TITLE) final String title,
-								  @NotNull @GraphQLName(BODY) final String body) {
-		final Snippet snippet = new Snippet(category, title, body);
-		if (key != null) {
-			snippet.setKey(key);
-		}
-		getSnippetDao(env).save(snippet);
-		return snippet;
-	}
+    @GraphQLField
+    public static Snippet snippet(final DataFetchingEnvironment env,
+                                  @GraphQLName(KEY) final String key,
+                                  @NotNull @GraphQLName(CATEGORY) final String category,
+                                  @NotNull @GraphQLName(TITLE) final String title,
+                                  @NotNull @GraphQLName(BODY) final String body) {
+        final Snippet snippet = new Snippet(category, title, body);
+        if (key != null) {
+            snippet.setKey(key);
+        }
+        getSnippetDao(env).save(snippet);
+        return snippet;
+    }
 
-	@GraphQLField
-	public static boolean deleteCategory(final DataFetchingEnvironment env,
-										 @NotNull @GraphQLName(KEY) final String key) {
-		getCategoryDao(env).delete(key);
-		return true;
-	}
+    @GraphQLField
+    public static boolean deleteCategory(final DataFetchingEnvironment env,
+                                         @NotNull @GraphQLName(KEY) final String key) {
+        getCategoryDao(env).delete(key);
+        return true;
+    }
 
-	@GraphQLField
-	public static boolean deleteSnippet(final DataFetchingEnvironment env,
-										@NotNull @GraphQLName(KEY) final String key) {
-		getSnippetDao(env).delete(key);
-		return true;
-	}
+    @GraphQLField
+    public static boolean deleteSnippet(final DataFetchingEnvironment env,
+                                        @NotNull @GraphQLName(KEY) final String key) {
+        getSnippetDao(env).delete(key);
+        return true;
+    }
 }

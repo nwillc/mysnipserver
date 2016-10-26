@@ -35,43 +35,43 @@ import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSc
 @GraphQLName(QUERY)
 public final class QuerySchema extends DaoConsumer {
 
-	@GraphQLField
-	public static List<Category> categories(final DataFetchingEnvironment env) {
-		return getCategoryDao(env).findAll().collect(Collectors.toList());
-	}
+    @GraphQLField
+    public static List<Category> categories(final DataFetchingEnvironment env) {
+        return getCategoryDao(env).findAll().collect(Collectors.toList());
+    }
 
-	@GraphQLField
-	public static Category category(final DataFetchingEnvironment env,
-									@NotNull @GraphQLName(KEY) final String key) {
-		return getCategoryDao(env).findOne(key).orElse(null);
-	}
+    @GraphQLField
+    public static Category category(final DataFetchingEnvironment env,
+                                    @NotNull @GraphQLName(KEY) final String key) {
+        return getCategoryDao(env).findOne(key).orElse(null);
+    }
 
-	@GraphQLField
-	public static List<Snippet> snippets(final DataFetchingEnvironment env,
-										 @GraphQLName(CATEGORY) final String category,
-										 @GraphQLName(MATCH) final String match) {
-		// TODO create predicate
-		SnippetPredicate predicate = null;
-		if (category != null) {
-			predicate = new SnippetPredicate(SnippetPredicate.Field.category, category);
-		}
-		if (match != null) {
-			SnippetPredicate snippetPredicate = new SnippetPredicate(SnippetPredicate.Field.title, match)
-					.or(new SnippetPredicate(SnippetPredicate.Field.body, match));
+    @GraphQLField
+    public static List<Snippet> snippets(final DataFetchingEnvironment env,
+                                         @GraphQLName(CATEGORY) final String category,
+                                         @GraphQLName(MATCH) final String match) {
+        // TODO create predicate
+        SnippetPredicate predicate = null;
+        if (category != null) {
+            predicate = new SnippetPredicate(SnippetPredicate.Field.category, category);
+        }
+        if (match != null) {
+            SnippetPredicate snippetPredicate = new SnippetPredicate(SnippetPredicate.Field.title, match)
+                    .or(new SnippetPredicate(SnippetPredicate.Field.body, match));
 
-			predicate = (predicate != null) ? predicate.and(snippetPredicate.group()) : snippetPredicate;
-		}
+            predicate = (predicate != null) ? predicate.and(snippetPredicate.group()) : snippetPredicate;
+        }
 
-		Logger.info("Predicate: " + predicate);
+        Logger.info("Predicate: " + predicate);
 
-		Stream<Snippet> snippetStream = predicate != null ? getSnippetDao(env).find(predicate) :
-				getSnippetDao(env).findAll();
-		return snippetStream.collect(Collectors.toList());
-	}
+        Stream<Snippet> snippetStream = predicate != null ? getSnippetDao(env).find(predicate) :
+                getSnippetDao(env).findAll();
+        return snippetStream.collect(Collectors.toList());
+    }
 
-	@GraphQLField
-	public static Snippet snippet(final DataFetchingEnvironment env,
-								  @NotNull @GraphQLName(KEY) final String key) {
-		return getSnippetDao(env).findOne(key).orElse(null);
-	}
+    @GraphQLField
+    public static Snippet snippet(final DataFetchingEnvironment env,
+                                  @NotNull @GraphQLName(KEY) final String key) {
+        return getSnippetDao(env).findOne(key).orElse(null);
+    }
 }

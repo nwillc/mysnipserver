@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  */
 public class SnippetPredicate implements Predicate<Snippet> {
     public enum Field {
-        key((s,p) -> s.getKey().equals(p)),
+        key((s, p) -> s.getKey().equals(p)),
         category((s, p) -> s.getCategory().equals(p)),
         title((s, p) -> s.getTitle().contains(p)),
         body((s, p) -> s.getBody().contains(p));

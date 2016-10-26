@@ -15,12 +15,14 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.dao.memory;
+package com.github.nwillc.mysnipserver.util;
 
-import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.contracts.UtilityClassContract;
 
-public class UserDao extends MemoryBackedDao<User> {
-    public UserDao() {
-        save(new User("nick", "nwillc@gmail.com"));
+
+public class GoogleIdTokenUtilTest extends UtilityClassContract {
+    @Override
+    public Class<?> getClassToTest() {
+        return GoogleIdTokenUtil.class;
     }
 }

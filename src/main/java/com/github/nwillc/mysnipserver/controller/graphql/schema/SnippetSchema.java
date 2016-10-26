@@ -23,27 +23,27 @@ import graphql.schema.GraphQLSchema;
 import static graphql.schema.GraphQLSchema.newSchema;
 
 public class SnippetSchema {
-	public static final String CATEGORY = "category";
-	public static final String KEY = "key";
-	public static final String SNIPPET = "snippet";
-	public static final String NAME = "name";
-	public static final String TITLE = "title";
-	public static final String BODY = "body";
-	public static final String MATCH = "match";
-	public static final String QUERY = "query";
-	public static final String MUTATION = "mutation";
-	private final GraphQLSchema schema;
+    public static final String CATEGORY = "category";
+    public static final String KEY = "key";
+    public static final String SNIPPET = "snippet";
+    public static final String NAME = "name";
+    public static final String TITLE = "title";
+    public static final String BODY = "body";
+    public static final String MATCH = "match";
+    public static final String QUERY = "query";
+    public static final String MUTATION = "mutation";
+    private final GraphQLSchema schema;
 
 
-	public SnippetSchema() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-		schema = newSchema()
-				.query(GraphQLAnnotations.object(QuerySchema.class))
-				.mutation(GraphQLAnnotations.object(MutationSchema.class))
-				.build();
-	}
+    public SnippetSchema() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
+        schema = newSchema()
+                .query(GraphQLAnnotations.object(QuerySchema.class))
+                .mutation(GraphQLAnnotations.object(MutationSchema.class))
+                .build();
+    }
 
-	public GraphQLSchema getSchema() {
-		return schema;
-	}
+    public GraphQLSchema getSchema() {
+        return schema;
+    }
 
 }
