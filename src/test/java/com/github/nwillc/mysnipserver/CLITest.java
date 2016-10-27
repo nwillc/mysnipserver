@@ -17,22 +17,24 @@
 
 package com.github.nwillc.mysnipserver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 public class CLITest {
-    private final String[] expected = {"address", "help", "port", "store", "noauth"};
+	private final String[] expected = {"address", "help", "port", "store", "noauth"};
 
-    @Test
-    public void testOptionCount() throws Exception {
-        assertThat(CommandLineInterface.CLI.values()).hasSameSizeAs(expected);
-    }
+	@Test
+	public void testOptionCount() throws Exception {
+		assertThat(CommandLineInterface.CLI.values()).hasSameSizeAs(expected);
+	}
 
-    @Test
-    public void testExpectedOptions() throws Exception {
-        for (String value : expected) {
-            assertThat(CommandLineInterface.CLI.valueOf(value)).isNotNull();
-        }
-    }
+	@Test
+	public void testExpectedOptions() throws Exception {
+		for (String value : expected) {
+			assertThat(CommandLineInterface.CLI.valueOf(value)).isNotNull();
+		}
+	}
 }

@@ -19,22 +19,23 @@ package com.github.nwillc.mysnipserver.entity;
 
 import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLObjectType;
-import org.junit.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@Tag("unit")
 public class SnippetTest {
 
-    @Test
-    public void testGraphQLAnnotations() throws Exception {
-        GraphQLObjectType snippet = GraphQLAnnotations.object(Snippet.class);
-        assertThat(snippet.getName()).isEqualTo(SNIPPET);
-        assertThat(snippet.getFieldDefinitions().size()).isEqualTo(4);
-        assertThat(snippet.getFieldDefinition(KEY)).isNotNull();
-        assertThat(snippet.getFieldDefinition(CATEGORY)).isNotNull();
-        assertThat(snippet.getFieldDefinition(TITLE)).isNotNull();
-        assertThat(snippet.getFieldDefinition(BODY)).isNotNull();
-    }
+	@Test
+	public void testGraphQLAnnotations() throws Exception {
+		GraphQLObjectType snippet = GraphQLAnnotations.object(Snippet.class);
+		assertThat(snippet.getName()).isEqualTo(SNIPPET);
+		assertThat(snippet.getFieldDefinitions().size()).isEqualTo(4);
+		assertThat(snippet.getFieldDefinition(KEY)).isNotNull();
+		assertThat(snippet.getFieldDefinition(CATEGORY)).isNotNull();
+		assertThat(snippet.getFieldDefinition(TITLE)).isNotNull();
+		assertThat(snippet.getFieldDefinition(BODY)).isNotNull();
+	}
 }
