@@ -92,14 +92,14 @@ public class Authentication implements ToJson {
         Logger.info("Login attempt: " + USERNAME.from(request));
 
         final User user = dao.findOne(USERNAME.from(request))
-                .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED));
+                .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED));
 
         Logger.info("Found: " + user);
         if (PASSWORD.from(request).equals(user.getPassword())) {
             Session session = request.session(true);
             session.attribute(IS_LOGGED_IN, Boolean.TRUE);
         } else {
-            throw new HttpException(HttpStatusCode.UNAUTHERIZED);
+            throw new HttpException(HttpStatusCode.UNAUTHORIZED);
         }
         return Boolean.TRUE;
     }
@@ -110,12 +110,12 @@ public class Authentication implements ToJson {
             payload = GoogleIdTokenUtil.verify(TOKEN.from(request));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new HttpException(HttpStatusCode.UNAUTHERIZED, "Failed decoding payload", e);
+            throw new HttpException(HttpStatusCode.UNAUTHORIZED, "Failed decoding payload", e);
         }
 
-        payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Rejected"));
+        payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED, "Rejected"));
         Logger.info("Google auth: " + payload.get().getEmail());
-        dao.findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHERIZED, "Not registered user"));
+        dao.findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED, "Not registered user"));
         Session session = request.session(true);
         session.attribute(IS_LOGGED_IN, Boolean.TRUE);
         return Boolean.TRUE;

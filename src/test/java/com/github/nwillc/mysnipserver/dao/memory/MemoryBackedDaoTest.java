@@ -4,6 +4,7 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Entity;
 import org.junit.Test;
 
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +30,15 @@ public class MemoryBackedDaoTest {
         testEntityDao.save(new TestEntity("bar"));
         assertThat(testEntityDao.findAll().map(TestEntity::getKey).collect(Collectors.toList())).contains("foo", "bar");
     }
+
+	@Test
+	public void shouldFindPredicate() throws Exception {
+		final TestEntity foo = new TestEntity("foo");
+		testEntityDao.save(foo);
+		testEntityDao.save(new TestEntity("bar"));
+		Predicate<TestEntity> predicate = e -> e.getKey().equals(foo.getKey());
+		assertThat(testEntityDao.find(predicate).collect(Collectors.toList())).containsExactly(foo);
+	}
 
     @Test
     public void shouldSaveAndFindOne() throws Exception {
