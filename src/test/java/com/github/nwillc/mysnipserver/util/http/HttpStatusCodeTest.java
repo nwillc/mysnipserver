@@ -17,24 +17,27 @@
 
 package com.github.nwillc.mysnipserver.util.http;
 
-import static java.net.HttpURLConnection.*;
 
-public enum HttpStatusCode {
-    OK(HTTP_OK),
-    CREATED(HTTP_CREATED),
-    UNAUTHORIZED(HTTP_UNAUTHORIZED),
-    NOT_FOUND(HTTP_NOT_FOUND),
-    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR),
-    BAD_REQUEST(HTTP_BAD_REQUEST);
+import org.junit.Test;
 
-    public final int code;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    HttpStatusCode(int code) {
-        this.code = code;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class HttpStatusCodeTest {
+    private final List<String> labels = asList("OK","CREATED","UNAUTHORIZED","NOT_FOUND","INTERNAL_SERVER_ERROR","BAD_REQUEST");
+
+    @Test
+    public void testValues() throws Exception {
+        final List<String> strings = Arrays.stream(HttpStatusCode.values()).map(Enum::name).collect(Collectors.toList());
+        assertThat(strings).containsExactlyElementsOf(labels);
     }
 
-    @Override
-    public String toString() {
-        return name() + " (" + code + ')';
+    @Test
+    public void testValueOf() throws Exception {
+        labels.forEach(s -> assertThat(HttpStatusCode.valueOf(s)).isNotNull());
     }
 }

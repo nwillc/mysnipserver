@@ -18,6 +18,7 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
     return {
         App: function () {
             "use strict";
+            var _this = this;
 
             // Instance variables and initialization
             $("#tabs").tabs();
@@ -55,23 +56,23 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             this.searchCategoryGQL = new graphql.Graphql(graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
 
             // Functions
-            this.loadCategories = () => {
+            this.loadCategories = function () {
                 console.log("loadCategories");
-                this.categoryGQL.execute((response) => {
+                _this.categoryGQL.execute((response) => {
                     var list = response.data.categories.sort((a, b) => {
                         return a.name.localeCompare(b.name);
                     });
-                    $(this.categories).empty();
-                    $(this.snippetCategories).empty();
-                    $(this.moveCategories).empty();
+                    $(_this.categories).empty();
+                    $(_this.snippetCategories).empty();
+                    $(_this.moveCategories).empty();
                     list.forEach(element => {
-                        this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
-                        this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
-                        this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+                        _this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
+                        _this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
+                        _this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
                     });
 
                     window.setTimeout(() => {
-                        $(this.categories).change();
+                        $(_this.categories).change();
                     }, 1);
                 });
             };

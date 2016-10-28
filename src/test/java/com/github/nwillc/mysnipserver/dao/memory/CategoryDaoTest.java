@@ -15,26 +15,17 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.util.http;
+package com.github.nwillc.mysnipserver.dao.memory;
 
-import static java.net.HttpURLConnection.*;
 
-public enum HttpStatusCode {
-    OK(HTTP_OK),
-    CREATED(HTTP_CREATED),
-    UNAUTHORIZED(HTTP_UNAUTHORIZED),
-    NOT_FOUND(HTTP_NOT_FOUND),
-    INTERNAL_SERVER_ERROR(HTTP_INTERNAL_ERROR),
-    BAD_REQUEST(HTTP_BAD_REQUEST);
+import org.junit.Test;
 
-    public final int code;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    HttpStatusCode(int code) {
-        this.code = code;
-    }
-
-    @Override
-    public String toString() {
-        return name() + " (" + code + ')';
+public class CategoryDaoTest {
+    @Test
+    public void testConstructor() throws Exception {
+        final CategoryDao dao = new CategoryDao();
+        assertThat(dao.find(c -> c.getName().equals("Java")).count()).isEqualTo(1);
     }
 }
