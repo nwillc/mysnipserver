@@ -15,33 +15,34 @@
  */
 
 define(['jquery'], function ($) {
-    "use strict";
     return {
         Graphql: function (url, query) {
+            "use strict";
+            var _this = this;
             this.url = url;
             this.query = query;
             this.variables = {};
 
             this.toString = function () {
-                return JSON.stringify(this);
+                return JSON.stringify(_this);
             };
 
             this.execute = function (consumer) {
-                console.log("GraphQL Request: " + this);
+                console.log("GraphQL Request: " + _this);
                 $.ajax({
-                    url: this.url,
+                    url: _this.url,
                     async: true,
                     method: "POST",
                     contentType: "application/json",
-                    data: this.toString(),
+                    data: _this.toString(),
                     dataType: "json",
                     success: function (response) {
-                         if (response.errors != undefined) {
+                        if (response.errors != undefined) {
                             console.log("GraphQL Errors: " + JSON.stringify(response.errors));
-                         }
-                         consumer(response);
+                        }
+                        consumer(response);
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         console.log("Request failed: " + textStatus);
                         console.log(errorThrown);
                     }

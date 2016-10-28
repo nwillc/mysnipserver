@@ -59,13 +59,13 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             this.loadCategories = function () {
                 console.log("loadCategories");
                 _this.categoryGQL.execute(function (response) {
-                    var list = response.data.categories.sort((a, b) => {
+                    var list = response.data.categories.sort(function (a, b) {
                         return a.name.localeCompare(b.name);
                     });
                     $(_this.categories).empty();
                     $(_this.snippetCategories).empty();
                     $(_this.moveCategories).empty();
-                    list.forEach(element => {
+                    list.forEach(function (element) {
                         _this.categories.append($("<option></option>").attr("value", element.key).text(element.name));
                         _this.snippetCategories.append($("<option></option>").attr("value", element.key).text(element.name));
                         _this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
@@ -88,93 +88,93 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                 $("option", _this.titles).remove();
                 $(_this.body).val("");
                 list.sort(function (a, b) {
-                        return a.title.localeCompare(b.title);
-                    }).forEach(function (element) {
-                        _this.titles.append($("<option></option>").attr("value", element.key).text(element.title))
-                    });
+                    return a.title.localeCompare(b.title);
+                }).forEach(function (element) {
+                    _this.titles.append($("<option></option>").attr("value", element.key).text(element.title))
+                });
             };
 
-            this.loadBody = () => {
-                this.snippetBodyGQL.variables["snippet"] = $(this.titles).val();
+            this.loadBody = function () {
+                _this.snippetBodyGQL.variables["snippet"] = $(_this.titles).val();
                 console.log("Requesting snippet");
-                this.snippetBodyGQL.execute((response) => $(this.body).val(response.data.snippet.body));
+                _this.snippetBodyGQL.execute(function (response) { $(_this.body).val(response.data.snippet.body); });
             };
 
-            this.saveCategory = () => {
+            this.saveCategory = function () {
                 console.log("Create Category");
-                this.categoryCreateGQL.variables["name"] = $(this.category).val();
-                this.categoryCreateGQL.execute(() => {
-                    this.loadCategories();
+                _this.categoryCreateGQL.variables["name"] = $(_this.category).val();
+                _this.categoryCreateGQL.execute(function () {
+                    _this.loadCategories();
                     $("#category").val("");
                 });
             };
 
-            this.saveSnippet = () => {
+            this.saveSnippet = function () {
                 console.log("Create Snippet");
-                this.snippetCreateGQL.variables["category"] = $(this.snippetCategories).val();
-                this.snippetCreateGQL.variables["title"] = $(this.title).val();
-                this.snippetCreateGQL.variables["body"] = $(this.bodyInput).val();
-                this.snippetCreateGQL.execute(() => {
-                    this.loadCategories();
-                    $(this.title).val("");
-                    $(this.bodyInput).val("");
+                _this.snippetCreateGQL.variables["category"] = $(_this.snippetCategories).val();
+                _this.snippetCreateGQL.variables["title"] = $(_this.title).val();
+                _this.snippetCreateGQL.variables["body"] = $(_this.bodyInput).val();
+                _this.snippetCreateGQL.execute(function () {
+                    _this.loadCategories();
+                    $(_this.title).val("");
+                    $(_this.bodyInput).val("");
                 });
             };
 
-            this.deleteSnippet = () => {
-                this.deleteSnippetGQL.variables["snippet"] = $(titles).find("option:selected").val();
+            this.deleteSnippet = function () {
+                _this.deleteSnippetGQL.variables["snippet"] = $(titles).find("option:selected").val();
                 console.log("Delete Snippet");
-                this.deleteSnippetGQL.execute(() => this.loadCategories());
+                _this.deleteSnippetGQL.execute(function () { _this.loadCategories(); });
             };
 
-            this.moveSnippet = () => {
+            this.moveSnippet = function () {
                 var selected = $(titles).find("option:selected");
                 console.log("Move Snippet: " + $(selected).val());
-                this.snippetUpdateGQL.variables["key"] = selected.val();
-                this.snippetUpdateGQL.variables["category"] = $(this.moveCategories).val();
-                this.snippetUpdateGQL.variables["title"] = selected.text();
-                this.snippetUpdateGQL.variables["body"] = $(this.body).val();
-                this.snippetUpdateGQL.execute(() => {
-                    this.loadAllTitles();
-                    $(this.moveSnippetDialog).dialog("close");
+                _this.snippetUpdateGQL.variables["key"] = selected.val();
+                _this.snippetUpdateGQL.variables["category"] = $(_this.moveCategories).val();
+                _this.snippetUpdateGQL.variables["title"] = selected.text();
+                _this.snippetUpdateGQL.variables["body"] = $(_this.body).val();
+                _this.snippetUpdateGQL.execute(function () {
+                    _this.loadAllTitles();
+                    $(_this.moveSnippetDialog).dialog("close");
                 });
             };
 
-            this.deleteCategory = () => {
-                this.deleteCategoryGQL.variables["category"] = $(this.categories).val();
+            this.deleteCategory = function () {
+                _this.deleteCategoryGQL.variables["category"] = $(_this.categories).val();
                 console.log("Delete Category");
-                this.deleteCategoryGQL.execute(() => this.loadCategories());
+                _this.deleteCategoryGQL.execute(function () { _this.loadCategories(); });
             };
 
-            this.performSearch = (event) => {
+            this.performSearch = function (event) {
                 if (event.keyCode === 13) {
-                    this.searchCategoryGQL.variables["category"] = $(this.categories).val();
-                    this.searchCategoryGQL.variables["match"] = $(this.query).val();
+                    _this.searchCategoryGQL.variables["category"] = $(_this.categories).val();
+                    _this.searchCategoryGQL.variables["match"] = $(_this.query).val();
                     console.log("Search Category");
-                    this.searchCategoryGQL.execute((response) => {
-                        this.loadTitles(response.data.snippets);
-                        $(this.searchDialog).dialog("close");
+                    _this.searchCategoryGQL.execute(function (response) {
+                        _this.loadTitles(response.data.snippets);
+                        $(_this.searchDialog).dialog("close");
                     });
                 }
             };
 
-            this.updateSnippet = () => {
+            this.updateSnippet = function () {
                 console.log("Update Snippet");
-                this.snippetUpdateGQL.variables["key"] = $(this.titles).val();
-                this.snippetUpdateGQL.variables["category"] = $(this.categories).val();
-                this.snippetUpdateGQL.variables["title"] = $(this.titles).children(":selected").text();
-                this.snippetUpdateGQL.variables["body"] = $(this.body).val();
-                this.snippetUpdateGQL.execute(() => {
-                    this.loadAllTitles();
+                _this.snippetUpdateGQL.variables["key"] = $(_this.titles).val();
+                _this.snippetUpdateGQL.variables["category"] = $(_this.categories).val();
+                _this.snippetUpdateGQL.variables["title"] = $(_this.titles).children(":selected").text();
+                _this.snippetUpdateGQL.variables["body"] = $(_this.body).val();
+                _this.snippetUpdateGQL.execute(function () {
+                    _this.loadAllTitles();
                 });
             };
 
-            this.logout = () => {
+            this.logout = function () {
                 console.log("logout");
                 $.ajax({
                     url: "v1/auth",
                     method: "DELETE",
-                    success: () => window.location.replace("/login.html")
+                    success: function () { window.location.replace("/login.html"); }
                 });
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut().then(function () {
@@ -182,24 +182,24 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                 });
             };
 
-            this.buildInfo = () => {
+            this.buildInfo = function () {
                 console.log("build info");
-                $.get("properties", data => {
-                    $(this.buildInfoDialog).dialog("open");
+                $.get("properties", function (data) {
+                    $(_this.buildInfoDialog).dialog("open");
                     $("#buildInfo").html(data);
                 });
             };
 
-            this.openSearch = () => {
-                $(this.searchDialog).dialog("open");
+            this.openSearch = function () {
+                $(_this.searchDialog).dialog("open");
             };
 
-            this.openMoveSnippet = () => {
-                $(this.moveSnippetDialog).dialog("open");
+            this.openMoveSnippet = function () {
+                $(_this.moveSnippetDialog).dialog("open");
             };
 
-            this.moveDialog = () => {
-                this.moveSnippet();
+            this.moveDialog = function () {
+                _this.moveSnippet();
             };
 
             // Bindings

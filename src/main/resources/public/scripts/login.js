@@ -15,30 +15,32 @@
  */
 
 define(["cookies", "jquery"], function (cookies, $) {
-    "use strict";
     return {
         Login: function () {
+            "use strict";
+            var _this = this;
+
             // Instance variables
             this.username = $("#username");
             this.password = $("#password");
 
             // Event handlers
-            this.validUsername = () => {
-                var notValid = !$(this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
+            this.validUsername = function () {
+                var notValid = !$(_this.username).val().match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
 
-                $(this.password).prop("disabled", notValid);
-                $(this.authButton).prop("disabled", notValid);
+                $(_this.password).prop("disabled", notValid);
+                $(_this.authButton).prop("disabled", notValid);
             };
 
-            this.login = (event) => {
+            this.login = function (event) {
                 if (event.keyCode === 13) {
-                    $.get("v1/auth/" + $(this.username).val() + "/" + $(this.password).val(), function () {
+                    $.get("v1/auth/" + $(_this.username).val() + "/" + $(_this.password).val(), function () {
                         window.location.replace("/");
                     });
                 }
             };
 
-            this.onSignIn = (googleUser) => {
+            this.onSignIn = function (googleUser) {
                 $.get("v1/auth/" + googleUser.getAuthResponse().id_token, function () {
                     cookies.set("token", googleUser.getAuthResponse().id_token);
                     window.location.replace("/");
