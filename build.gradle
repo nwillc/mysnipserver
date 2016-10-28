@@ -61,20 +61,17 @@ dependencies {
             'org.tinylog:tinylog:1.2-beta-1',
             'com.graphql-java:graphql-java:2.1.0',
             'com.graphql-java:graphql-java-annotations:0.12.0'
-    runtime 'org.tinylog:slf4j-binding:1.2-beta-1',
-            "org.junit.jupiter:junit-jupiter-engine:5.0.0-M2"
+    runtime 'org.tinylog:slf4j-binding:1.2-beta-1'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.8.0',
             'org.mockito:mockito-core:2.2.9',
-            'org.assertj:assertj-core:3.5.2',
-            'org.junit.jupiter:junit-jupiter-api:5.0.0-M2'
+            'org.assertj:assertj-core:3.5.2'
 }
 
 configurations {
     compile.exclude group: 'org.slf4j', module: 'slf4j-simple'
 }
 
-apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'application'
 apply plugin: 'release'
 apply plugin: 'gradle-one-jar'
@@ -93,15 +90,23 @@ gradle.projectsEvaluated {
     }
 }
 
-junitPlatform {
-    engines {
-     //   include 'junit-juniper'
+test {
+
+    beforeTest { descriptor ->
+        logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
     }
-    tags {
-        include 'unit'
-        exclude 'integration'
+
+    afterSuite { descriptor, result ->
+        if (descriptor.parent == null) {
+            logger.lifecycle("\tTests run: " + result.testCount
+                    + ", Failures: " + result.failedTestCount
+                    + ", Skipped: " + result.skippedTestCount)
+        }
     }
-    includeClassNamePattern '.*Test'
+
+    testLogging {
+        exceptionFormat "full"
+    }
 }
 
 processResources.dependsOn buildInfo

@@ -19,18 +19,15 @@ package com.github.nwillc.mysnipserver.entity;
 
 import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLObjectType;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
+import org.junit.Test;
 
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("unit")
 public class CategoryTest {
 
 	@Test
-	void testGraphQLAnnotations(TestInfo testInfo) throws Exception {
+	public void testGraphQLAnnotations() throws Exception {
 		GraphQLObjectType category = null;
 		category = GraphQLAnnotations.object(Category.class);
 

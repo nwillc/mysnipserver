@@ -4,6 +4,7 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.OrchestrateClient;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -14,7 +15,6 @@ import javax.cache.Caching;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@Tag("integration")
 public class CollectionDaoTest {
 	private static final String ORCH_API_KEY = System.getenv("ORCH_API_KEY");
 	private CollectionDao<Snippet> dao;
@@ -29,6 +29,7 @@ public class CollectionDaoTest {
 		cache = Caching.getCachingProvider().getCacheManager().getCache("Snippet", String.class, Snippet.class);
 	}
 
+	@Ignore
 	@Test
 	public void shouldFindAll() throws Exception {
 		long c = dao.findAll().count();
@@ -36,6 +37,7 @@ public class CollectionDaoTest {
 		assertThat(cache).hasSize((int) c);
 	}
 
+	@Ignore
 	@Test
 	public void shouldCachePut() throws Exception {
 		Snippet snippet = new Snippet("Test", "A test", "test body");

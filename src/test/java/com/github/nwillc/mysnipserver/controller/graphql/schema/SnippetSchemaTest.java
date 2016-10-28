@@ -17,10 +17,8 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-@Tag("unit")
 public class SnippetSchemaTest {
 
 	@Test

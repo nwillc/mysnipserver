@@ -18,8 +18,7 @@
 package com.github.nwillc.mysnipserver.util.rest;
 
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import spark.Request;
 
 import java.util.List;
@@ -30,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Tag("unit")
 public class ParamsTest {
 	private List<String> values = asList("PASSWORD", "USERNAME", "TOKEN");
 	private List<String> labels = values.stream().map(s -> ":" + s.toLowerCase()).collect(Collectors.toList());

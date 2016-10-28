@@ -58,7 +58,7 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             // Functions
             this.loadCategories = function () {
                 console.log("loadCategories");
-                _this.categoryGQL.execute((response) => {
+                _this.categoryGQL.execute(function (response) {
                     var list = response.data.categories.sort((a, b) => {
                         return a.name.localeCompare(b.name);
                     });
@@ -71,24 +71,27 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                         _this.moveCategories.append($("<option></option>").attr("value", element.key).text(element.name));
                     });
 
-                    window.setTimeout(() => {
+                    window.setTimeout(function () {
                         $(_this.categories).change();
                     }, 1);
                 });
             };
 
-            this.loadAllTitles = () => {
-                this.categorySnippetsGQL.variables["category"] = $(this.categories).val();
+            this.loadAllTitles = function () {
+                _this.categorySnippetsGQL.variables["category"] = $(_this.categories).val();
                 console.log("Snippets for Category");
-                this.categorySnippetsGQL.execute((response) => this.loadTitles(response.data.snippets));
+                _this.categorySnippetsGQL.execute(function (response) { _this.loadTitles(response.data.snippets) });
             };
 
-            this.loadTitles = (list) => {
+            this.loadTitles = function (list) {
                 console.log("loadTitles");
-                $("option", this.titles).remove();
-                $(this.body).val("");
-                list.sort((a, b) => a.title.localeCompare(b.title)).forEach(element =>
-                    this.titles.append($("<option></option>").attr("value", element.key).text(element.title)));
+                $("option", _this.titles).remove();
+                $(_this.body).val("");
+                list.sort(function (a, b) {
+                        return a.title.localeCompare(b.title);
+                    }).forEach(function (element) {
+                        _this.titles.append($("<option></option>").attr("value", element.key).text(element.title))
+                    });
             };
 
             this.loadBody = () => {

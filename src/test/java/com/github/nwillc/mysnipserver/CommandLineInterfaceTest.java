@@ -18,12 +18,10 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.contracts.UtilityClassContract;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("unit")
 public class CommandLineInterfaceTest extends UtilityClassContract {
 	@Override
 	public Class<?> getClassToTest() {

@@ -20,18 +20,16 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("unit")
 public class QuerySchemaTest {
 	private GraphQLObjectType querySchema;
 
-	@BeforeEach
+	@Before
 	public void setUp() throws Exception {
 		querySchema = GraphQLAnnotations.object(QuerySchema.class);
 	}

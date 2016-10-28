@@ -17,15 +17,13 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.function.Predicate;
 
 import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("unit")
 public class SnippetPredicateTest {
 	private Snippet snippet = new Snippet("1", "a title", "a body");
 

@@ -18,12 +18,10 @@
 package com.github.nwillc.mysnipserver.util.http.error;
 
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("unit")
 public class HttpExceptionTest {
 	private final HttpException exception = new HttpException(HttpStatusCode.CREATED, "out of nothing");
 
