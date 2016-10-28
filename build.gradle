@@ -20,6 +20,7 @@ buildscript {
     repositories {
         mavenLocal()
         jcenter()
+        maven { url 'http://jcenter.bintray.com'}
         maven {
             url "https://maven.eveoh.nl/content/repositories/releases"
         }
@@ -41,6 +42,7 @@ plugins {
 
 repositories {
     jcenter()
+    maven { url 'http://jcenter.bintray.com'}
     mavenLocal()
     mavenCentral()
 }
