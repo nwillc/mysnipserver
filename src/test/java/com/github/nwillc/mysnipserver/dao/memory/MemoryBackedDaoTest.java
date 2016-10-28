@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
-/**
- *
- */
 public class MemoryBackedDaoTest {
     private Dao<TestEntity> testEntityDao = new MemoryBackedDao<>();
 

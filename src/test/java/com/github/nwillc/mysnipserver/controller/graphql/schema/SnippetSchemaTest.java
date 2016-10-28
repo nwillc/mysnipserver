@@ -19,14 +19,11 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import org.junit.Test;
 
-/**
- *
- */
 public class SnippetSchemaTest {
 
-    @Test
-    public void shouldGetSchema() throws Exception {
-        SnippetSchema snippetSchema = new SnippetSchema();
-    }
+	@Test
+	public void shouldGetSchema() throws Exception {
+		SnippetSchema snippetSchema = new SnippetSchema();
+	}
 
 }

@@ -26,17 +26,18 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.com.github.nwillc:vplugin:1.3.1",
+        classpath "gradle.plugin.com.github.nwillc:vplugin:1.3.3",
                 "gradle.plugin.com.github.nwillc:buildinfo:0.1.2",
                 'au.com.ish.gradle:release:2.2.2',
                 'org.tmatesoft.sqljet:sqljet:1.1.9',
-                'com.github.rholder:gradle-one-jar:1.0.4'
+                'com.github.rholder:gradle-one-jar:1.0.4',
+                'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
     }
 }
 
 plugins {
     id "java"
-    id "com.github.nwillc.vplugin" version "1.2.5"
+    id "com.github.nwillc.vplugin" version "1.3.3"
     id "com.github.nwillc.buildinfo" version "0.1.2"
 }
 
@@ -64,10 +65,9 @@ dependencies {
             'com.graphql-java:graphql-java-annotations:0.12.0'
     runtime 'org.tinylog:slf4j-binding:1.2-beta-1'
     testCompile 'junit:junit:4.12',
-            'com.github.nwillc:jdk_contract_tests:1.7.6',
-            'org.mockito:mockito-core:2.2.7',
+            'com.github.nwillc:jdk_contract_tests:1.8.0',
+            'org.mockito:mockito-core:2.2.9',
             'org.assertj:assertj-core:3.5.2'
-
 }
 
 configurations {
@@ -93,9 +93,6 @@ gradle.projectsEvaluated {
 }
 
 test {
-    useJUnit {
-        excludeCategories 'com.github.nwillc.mysnipserver.IntegrationTest'
-    }
 
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
@@ -114,12 +111,6 @@ test {
     }
 }
 
-task integrationTest(type: Test) {
-    useJUnit {
-        includeCategories 'com.github.nwillc.mysnipserver.IntegrationTest'
-    }
-}
-
 processResources.dependsOn buildInfo
 
 release {
@@ -133,7 +124,6 @@ task oneJar(type: OneJar) {
     mainClass = 'com.github.nwillc.mysnipserver.MySnipServer'
     additionalDir = file('build/resources/main')
 }
-
 
 jacocoTestReport {
     reports {
