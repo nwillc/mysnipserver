@@ -34,6 +34,8 @@ public class MongoDbModule extends AbstractModule {
         User user = new User("foo", "nwillc2");
         userDao.save(user);
         Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));
+        userDao.delete(user.getKey());
+        Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));
         bind(new TypeLiteral<MySnipServerApplication>() {
         }).toInstance(new MySnipServerApplication(
                 new MongoDbDao<>(client, Category.class),

@@ -53,6 +53,6 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, ToJson {
 
     @Override
     public void delete(String key) {
-
+        collection.deleteMany(eq("key",key));
     }
 }
