@@ -45,7 +45,7 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, ToJson {
         Document document = Document.parse(toJson(entity));
         if (one.isPresent()) {
             document = new Document("$set", document);
-            collection.updateOne(eq("key",entity.getKey()), document);
+            collection.updateMany(eq("key",entity.getKey()), document);
         } else {
             collection.insertOne(document);
         }

@@ -31,7 +31,7 @@ public class MongoDbModule extends AbstractModule {
         List<MongoCredential> auths = Collections.singletonList(credential);
         MongoClient client = new MongoClient(serverAddress, auths);
         MongoDbDao<User> userDao = new MongoDbDao<>(client, User.class);
-        User user = new User("foo", "nwillc2");
+        User user = new User("foo", "nwillc");
         userDao.save(user);
         Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));
         userDao.delete(user.getKey());
