@@ -48,7 +48,8 @@
     <div class="ui-widget-header ui-corner-all" align="left">
         <button id="logoutButton">Logout</button>
         <button id="buildInfoButton">About Snippets</button>
-        <button id="exportButton">Export All</button>
+        <button id="exportButton">Export</button>
+        <button id="fileImportButton">Import</button>
     </div>
     <div id="tabs">
         <ul>
@@ -107,6 +108,9 @@
         <label for="moveCategories">Category:</label>
         <select id="moveCategories"></select>
         <button id="performMove">Move</button>
+    </div>
+    <div id="fileImportDialog" title="File Import">
+        <input id="filename" type="file" name="files" multiple />
     </div>
 </div>
 </body>

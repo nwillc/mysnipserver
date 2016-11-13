@@ -44,6 +44,10 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             $(this.buildInfoDialog).dialog({ height: 300, width: 500 });
             $(this.buildInfoDialog).dialog("close");
 
+            this.fileImportDialog = $("#fileImportDialog");
+            $(this.fileImportDialog).dialog({ height: 100, width: 450 });
+            $(this.fileImportDialog).dialog("close");
+
             var graphqlUrl = "v1/graphql";
             this.categoryGQL = new graphql.Graphql(graphqlUrl, "{ categories { key name }}");
             this.categorySnippetsGQL = new graphql.Graphql(graphqlUrl, "query($category: String!){ snippets ( category: $category ) { key title }}");
@@ -209,6 +213,22 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                 });
             };
 
+            this.import = function (evt) {
+                var files = evt.target.files;
+                for (var i = 0, f; f = files[i]; i++) {
+                    console.log("File " + f);
+                    var reader = new FileReader();
+                    reader.onloadend = function(result) {
+                          if (result.target.readyState == FileReader.DONE) {
+                            console.log(result.target.result);
+                          }
+                        };
+                     var blob = f.slice(0, f.size);
+                     reader.readAsBinaryString(blob);
+                }
+                $(_this.fileImportDialog).dialog("close");
+            };
+
             this.openSearch = function () {
                 $(_this.searchDialog).dialog("open");
             };
@@ -219,6 +239,10 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
 
             this.moveDialog = function () {
                 _this.moveSnippet();
+            };
+
+            this.openFileImport = function () {
+                $(_this.fileImportDialog).dialog("open");
             };
 
             // Bindings
@@ -236,6 +260,8 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             $("#logoutButton").click(this.logout);
             $("#performMove").click(this.moveSnippet);
             $("#exportButton").click(this.export);
+            $("#fileImportButton").click(this.openFileImport);
+            $("#filename").change(this.import);
 
             // GO!
             this.loadCategories();
