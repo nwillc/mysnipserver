@@ -36,7 +36,7 @@ public class QuerySchemaTest {
 
 	@Test
 	public void testCount() throws Exception {
-		assertThat(querySchema.getFieldDefinitions()).hasSize(4);
+		assertThat(querySchema.getFieldDefinitions()).hasSize(5);
 	}
 
 	@Test
