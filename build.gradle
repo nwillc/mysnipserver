@@ -58,11 +58,11 @@ dependencies {
             'javax.cache:cache-api:1.0.0',
             'com.google.api-client:google-api-client:1.22.0',
             'com.google.http-client:google-http-client:1.22.0',
-            'com.github.ben-manes.caffeine:caffeine:2.3.3',
-            'com.github.ben-manes.caffeine:jcache:2.3.3',
+            'com.github.ben-manes.caffeine:caffeine:2.3.5',
+            'com.github.ben-manes.caffeine:jcache:2.3.5',
             'org.tinylog:tinylog:1.2-beta-1',
             'com.graphql-java:graphql-java:2.2.0',
-            'com.graphql-java:graphql-java-annotations:0.13.0'
+            'com.graphql-java:graphql-java-annotations:0.13.1'
     runtime 'org.tinylog:slf4j-binding:1.2-beta-1'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.8.0',
@@ -81,7 +81,7 @@ apply plugin: "jacoco"
 apply plugin: "pmd"
 
 group = "com.github.nwillc"
-version = "2.3.6"
+version = "2.4.0"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 mainClassName = "com.github.nwillc.mysnipserver.MySnipServer"

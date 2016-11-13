@@ -54,6 +54,7 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             this.deleteSnippetGQL = new graphql.Graphql(graphqlUrl, "mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
             this.deleteCategoryGQL = new graphql.Graphql(graphqlUrl, "mutation($category: String!) { deleteCategory ( key: $category ) }");
             this.searchCategoryGQL = new graphql.Graphql(graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
+            this.datastoreGQL = new graphql.Graphql(graphqlUrl, "{ datastore { categories { key name }  snippets { key category title body } }}");
 
             // Functions
             this.loadCategories = function () {
@@ -190,6 +191,24 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                 });
             };
 
+            this.export = function () {
+                var filename = "export.json";
+                console.log("export: " + filename);
+                _this.datastoreGQL.execute(function (response) {
+                    var blob = new Blob([JSON.stringify(response.data.datastore)], { type: 'application/json' });
+                    if (window.navigator.msSaveOrOpenBlob) {
+                        window.navigator.msSaveBlob(blob, filename);
+                    } else {
+                        var elem = window.document.createElement('a');
+                        elem.href = window.URL.createObjectURL(blob);
+                        elem.download = filename;
+                        document.body.appendChild(elem);
+                        elem.click();
+                        document.body.removeChild(elem);
+                    }
+                });
+            };
+
             this.openSearch = function () {
                 $(_this.searchDialog).dialog("open");
             };
@@ -216,6 +235,7 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             $("#moveButton").click(this.openMoveSnippet);
             $("#logoutButton").click(this.logout);
             $("#performMove").click(this.moveSnippet);
+            $("#exportButton").click(this.export);
 
             // GO!
             this.loadCategories();

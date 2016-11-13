@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.DataStore;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.SnippetPredicate;
 import graphql.annotations.GraphQLField;
@@ -50,7 +51,6 @@ public final class QuerySchema extends DaoConsumer {
     public static List<Snippet> snippets(final DataFetchingEnvironment env,
                                          @GraphQLName(CATEGORY) final String category,
                                          @GraphQLName(MATCH) final String match) {
-        // TODO create predicate
         SnippetPredicate predicate = null;
         if (category != null) {
             predicate = new SnippetPredicate(SnippetPredicate.Field.category, category);
@@ -67,6 +67,21 @@ public final class QuerySchema extends DaoConsumer {
         Stream<Snippet> snippetStream = predicate != null ? getSnippetDao(env).find(predicate) :
                 getSnippetDao(env).findAll();
         return snippetStream.collect(Collectors.toList());
+    }
+
+    @GraphQLField
+    public static DataStore datastore(final DataFetchingEnvironment env) {
+        return new DataStore() {
+            @Override
+            public List<Category> getCategories() {
+                return categories(env);
+            }
+
+            @Override
+            public List<Snippet> getSnippets() {
+                return snippets(env, null, null);
+            }
+        };
     }
 
     @GraphQLField
