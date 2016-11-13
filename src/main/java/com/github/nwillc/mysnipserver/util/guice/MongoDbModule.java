@@ -30,10 +30,14 @@ public class MongoDbModule extends AbstractModule {
                 MONGO_DB_PASSWORD.toCharArray());
         List<MongoCredential> auths = Collections.singletonList(credential);
         MongoClient client = new MongoClient(serverAddress, auths);
+        MongoDbDao<User> userDao = new MongoDbDao<>(client, User.class);
+        User user = new User("foo", "nwillc2");
+        userDao.save(user);
+        Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));
         bind(new TypeLiteral<MySnipServerApplication>() {
         }).toInstance(new MySnipServerApplication(
                 new MongoDbDao<>(client, Category.class),
                 new MongoDbDao<>(client, Snippet.class),
-                new MongoDbDao<>(client, User.class)));
+                userDao));
     }
 }

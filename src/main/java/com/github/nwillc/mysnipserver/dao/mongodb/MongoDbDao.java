@@ -4,34 +4,34 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Entity;
 import com.github.nwillc.mysnipserver.util.ToJson;
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class MongoDbDao<T extends Entity> implements Dao<T>, ToJson {
-    private final MongoClient client;
     private final Class<T> tClass;
-    private final MongoCollection collection;
+    private final MongoCollection<Document> collection;
 
     public MongoDbDao(final MongoClient client, final Class<T> tClass) {
-        this.client = client;
         this.tClass = tClass;
         collection =  client.getDatabase("snippets").getCollection(tClass.getSimpleName());
     }
 
     @Override
     public Optional<T> findOne(String key) {
-        return null;
+        Document document = collection.find(eq("key",key)).first();
+        return document == null ? Optional.empty() : Optional.of(fromJson(document.toJson(), tClass));
     }
 
     @Override
     public Stream<T> findAll() {
-        FindIterable<T> findIterable = collection.find();
-        return StreamSupport.stream(findIterable.spliterator(),false);
+        return StreamSupport.stream(collection.find().spliterator(), false).map(d -> fromJson(d.toJson(),tClass));
     }
 
     @Override
@@ -41,7 +41,14 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, ToJson {
 
     @Override
     public void save(T entity) {
-        collection.insertOne(entity);
+        Optional<T> one = findOne(entity.getKey());
+        Document document = Document.parse(toJson(entity));
+        if (one.isPresent()) {
+            document = new Document("$set", document);
+            collection.updateOne(eq("key",entity.getKey()), document);
+        } else {
+            collection.insertOne(document);
+        }
     }
 
     @Override

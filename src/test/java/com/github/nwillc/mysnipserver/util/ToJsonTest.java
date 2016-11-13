@@ -47,6 +47,19 @@ public class ToJsonTest implements ToJson {
 		assertThat(toJson(sample)).isEqualTo("{\"number\":1,\"str\":\"one\",\"flag\":true,\"dead\":null,\"bits\":[1,2,3]}");
 	}
 
+	@Test
+	public void testFromJson() throws Exception {
+		Simple simple = fromJson("{ \"name\": \"foo\", \"value\": \"bar\" }", Simple.class);
+		assertThat(simple).isNotNull();
+		assertThat(simple.name).isEqualTo("foo");
+		assertThat(simple.value).isEqualTo("bar");
+	}
+
+	static class Simple {
+		public String name;
+		public String value;
+	}
+
 	static class Sample {
 		final private Long number;
 		final public String str;

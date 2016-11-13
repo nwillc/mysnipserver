@@ -18,11 +18,16 @@
 package com.github.nwillc.mysnipserver.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
+import java.io.IOException;
+
 public interface ToJson {
-    ThreadLocal<ObjectMapper> mapper = ThreadLocal.withInitial(() -> new ObjectMapper().registerModule(new Jdk8Module()));
+    ThreadLocal<ObjectMapper> mapper = ThreadLocal.withInitial(() ->
+            new ObjectMapper().registerModule(new Jdk8Module())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false));
 
     default ObjectMapper getMapper() {
         return mapper.get();
@@ -33,6 +38,14 @@ public interface ToJson {
             return mapper.get().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("JSON generation", e);
+        }
+    }
+
+    default <T> T fromJson(String json, Class<T> tClass) {
+        try {
+            return mapper.get().readValue(json, tClass);
+        } catch (IOException e) {
+            throw new RuntimeException("JSON parsing", e);
         }
     }
 }
