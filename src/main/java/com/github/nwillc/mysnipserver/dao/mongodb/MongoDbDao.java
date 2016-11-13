@@ -36,7 +36,7 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, ToJson {
 
     @Override
     public Stream<T> find(Predicate<T> predicate) {
-        return null;
+        return findAll().filter(predicate);
     }
 
     @Override
