@@ -62,7 +62,7 @@ public final class CommandLineInterface {
         options.addOption(option);
 
         option = new Option(CLI.store.name().substring(0, 1), CLI.store.name(), true,
-                "Storage mechanism, MemoryBacked or Orchestrate.");
+                "Storage mechanism, MemoryBacked, MongoDb or Orchestrate.");
         option.setArgName(CLI.store.name());
         option.setArgs(1);
         option.setType(String.class);

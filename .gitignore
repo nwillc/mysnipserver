@@ -2,7 +2,8 @@
 build
 mysnipserver.iml
 .idea
-env.*
+env.sh
 .ruby-version
 src/main/resources/build.json
 notes
+*~
