@@ -220,7 +220,10 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                     var reader = new FileReader();
                     reader.onloadend = function(result) {
                           if (result.target.readyState == FileReader.DONE) {
+                            var data = JSON.parse(result.target.result);
                             console.log(result.target.result);
+                            // Save categories
+                            // Save snippets
                           }
                         };
                      var blob = f.slice(0, f.size);
