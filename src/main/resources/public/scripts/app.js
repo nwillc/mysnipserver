@@ -85,7 +85,10 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
             this.loadAllTitles = function () {
                 _this.categorySnippetsGQL.variables["category"] = $(_this.categories).val();
                 console.log("Snippets for Category");
-                _this.categorySnippetsGQL.execute(function (response) { _this.loadTitles(response.data.snippets) });
+                _this.categorySnippetsGQL.execute(function (response) {
+                    console.log("Response: " + JSON.stringify(response));
+                    _this.loadTitles(response.data.snippets);
+                });
             };
 
             this.loadTitles = function (list) {
@@ -223,6 +226,9 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                             var data = JSON.parse(result.target.result);
                             console.log(result.target.result);
                             // Save categories
+                            data.categories.forEach(function(category) {
+                                console.log("Category: " + JSON.stringify(category));
+                            });
                             // Save snippets
                           }
                         };
