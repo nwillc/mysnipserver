@@ -7,4 +7,4 @@ export PATH=${JAVA_HOME}/bin:${PATH}
 JAVA_OPTS=-Djava.awt.headless=true
 
 cd ${OPENSHIFT_REPO_DIR}
-java ${JAVA_OPTS} -jar build/libs/*-standalone.jar -s Orchestrate -a ${OPENSHIFT_DIY_IP} -p 8080 |& /usr/bin/logshifter -tag snippets &
+java ${JAVA_OPTS} -jar build/libs/*-standalone.jar -s MongoDb -a ${OPENSHIFT_DIY_IP} -p 8080 |& /usr/bin/logshifter -tag snippets &
