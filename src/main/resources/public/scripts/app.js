@@ -235,15 +235,22 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                                     if (catMap.size == data.categories.length) {
                                         var completed = 0;
                                         data.snippets.forEach(function(snippet){
-                                            _this.snippetCreateGQL.variables["category"] = catMap.get(snippet.category);
-                                            _this.snippetCreateGQL.variables["title"] = snippet.title;
-                                            _this.snippetCreateGQL.variables["body"] = snippet.body;
-                                            _this.snippetCreateGQL.execute(function () {
-                                                completed = completed + 1;
+                                            if (!catMap.has(snippet.category)) {
+                                                completed += 1;
                                                 if (completed == data.snippets.length) {
                                                     _this.loadCategories();
                                                 }
-                                            });
+                                            } else {
+                                                _this.snippetCreateGQL.variables["category"] = catMap.get(snippet.category);
+                                                _this.snippetCreateGQL.variables["title"] = snippet.title;
+                                                _this.snippetCreateGQL.variables["body"] = snippet.body;
+                                                _this.snippetCreateGQL.execute(function () {
+                                                    completed = completed + 1;
+                                                    if (completed == data.snippets.length) {
+                                                        _this.loadCategories();
+                                                    }
+                                                });
+                                            }
                                         });
                                     }
                                 });
