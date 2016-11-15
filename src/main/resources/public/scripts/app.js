@@ -224,12 +224,31 @@ define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphq
                     reader.onloadend = function(result) {
                           if (result.target.readyState == FileReader.DONE) {
                             var data = JSON.parse(result.target.result);
-                            console.log(result.target.result);
                             // Save categories
+                            var catMap = new Map();
                             data.categories.forEach(function(category) {
                                 console.log("Category: " + JSON.stringify(category));
+                                _this.categoryCreateGQL.variables["name"] = category.name;
+                                _this.categoryCreateGQL.execute(function (response) {
+                                    console.log("Mapping: " + category.key + " -> " + response.data.category.key);
+                                    catMap.set(category.key,response.data.category.key);
+                                    if (catMap.size == data.categories.length) {
+                                        var completed = 0;
+                                        data.snippets.forEach(function(snippet){
+                                            _this.snippetCreateGQL.variables["category"] = catMap.get(snippet.category);
+                                            _this.snippetCreateGQL.variables["title"] = snippet.title;
+                                            _this.snippetCreateGQL.variables["body"] = snippet.body;
+                                            _this.snippetCreateGQL.execute(function () {
+                                                completed = completed + 1;
+                                                if (completed == data.snippets.length) {
+                                                    _this.loadCategories();
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
                             });
-                            // Save snippets
+
                           }
                         };
                      var blob = f.slice(0, f.size);

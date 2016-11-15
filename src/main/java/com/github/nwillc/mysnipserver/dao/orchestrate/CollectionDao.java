@@ -102,11 +102,11 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return cache.get(key);
     }
 
-    private Stream<T> find(Set<String> keys) {
+    public Stream<T> find(Set<String> keys) {
         return keys.stream().map(this::get).filter(Objects::nonNull);
     }
 
-    private Cache<String, T> getCache(String name, Class<T> clz) {
+    public Cache<String, T> getCache(String name, Class<T> clz) {
         final Cache<String, T> cache = Caching.getCachingProvider().getCacheManager().getCache(name,
                 String.class, clz);
         if (cache != null) {
@@ -120,7 +120,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         return cacheManager.createCache(collection, configuration);
     }
 
-    private class OrchestrateLoader implements CacheLoader<String, T> {
+    public class OrchestrateLoader implements CacheLoader<String, T> {
         @Override
         public T load(String key) throws CacheLoaderException {
             KvObject<T> categoryKvObject = client.kv(collection, key)
