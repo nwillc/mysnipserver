@@ -17,16 +17,16 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
+import com.groupon.uuid.UUID;
 import graphql.annotations.GraphQLDescription;
 import graphql.annotations.GraphQLField;
 
-import java.util.UUID;
 
 public class Entity {
     private String key;
 
     public Entity() {
-        this(UUID.randomUUID().toString());
+        this(new UUID().toString());
     }
 
     public Entity(String key) {
