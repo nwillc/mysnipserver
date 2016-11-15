@@ -25,7 +25,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ToJsonTest implements ToJson {
+public class JsonMapperTest implements JsonMapper {
 	@Test
 	public void testGetMapper() throws Exception {
 		final ObjectMapper mapper = getMapper();

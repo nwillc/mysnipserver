@@ -19,8 +19,8 @@ package com.github.nwillc.mysnipserver.util.guice;
 
 import com.github.nwillc.mysnipserver.MySnipServerApplication;
 import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
+import com.github.nwillc.mysnipserver.dao.memory.MemoryBackedDao;
 import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
-import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import org.pmw.tinylog.Logger;
@@ -31,8 +31,8 @@ public class MemoryBackedModule extends AbstractModule {
     @Override
     protected void configure() {
         Logger.info("Configuring Memory Backed module.");
-        CategoryDao categoryDao = new CategoryDao();
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        }).toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new UserDao()));
+        final CategoryDao categoryDao = new CategoryDao();
+        bind(new TypeLiteral<MySnipServerApplication>() {})
+                .toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new MemoryBackedDao<>()));
     }
 }

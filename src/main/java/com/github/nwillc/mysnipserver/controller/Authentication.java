@@ -20,7 +20,7 @@ package com.github.nwillc.mysnipserver.controller;
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.util.GoogleIdTokenUtil;
-import com.github.nwillc.mysnipserver.util.ToJson;
+import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -39,7 +39,7 @@ import static com.github.nwillc.mysnipserver.util.rest.Params.*;
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 import static spark.Spark.before;
 
-public class Authentication implements ToJson {
+public class Authentication implements JsonMapper {
     private static final String AUTH_PATH = "auth";
     private static final String IS_LOGGED_IN = "loggedIn.true";
     private static final String LOGIN_HTML = "/login.html";

@@ -22,7 +22,7 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.DaoProvider;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.util.ToJson;
+import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.error.HttpException;
 import graphql.ExecutionResult;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
 
-public class Graphql implements ToJson, DaoProvider {
+public class Graphql implements JsonMapper, DaoProvider {
     static final String GRAPHQL_PATH = "graphql";
     private static final String QUERY = "query";
     private static final String ERRORS = "errors";

@@ -24,7 +24,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import java.io.IOException;
 
-public interface ToJson {
+public interface JsonMapper {
     ThreadLocal<ObjectMapper> mapper = ThreadLocal.withInitial(() ->
             new ObjectMapper().registerModule(new Jdk8Module())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false));

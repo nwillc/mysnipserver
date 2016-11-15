@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
+    private final static String ADMIN = "nwillc@gmail.com";
     private final Dao<Category> categoriesDao;
     private final Dao<Snippet> snippetDao;
     private final Dao<User> userDao;
@@ -48,6 +49,11 @@ public class MySnipServerApplication implements SparkApplication {
         this.categoriesDao = categoriesDao;
         this.snippetDao = snippetDao;
         this.userDao = userDao;
+        // bootstrap admin account
+        if (!userDao.findOne(ADMIN).isPresent()) {
+            Logger.warn("Bootstrapping admin account");
+            userDao.save(new User(ADMIN, ADMIN));
+        }
         try (
                 final InputStreamReader isr = new InputStreamReader(getClass().getResourceAsStream("/build.json"));
                 final BufferedReader bufferedReader = new BufferedReader(isr)

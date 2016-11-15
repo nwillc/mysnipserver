@@ -2,7 +2,7 @@ package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Entity;
-import com.github.nwillc.mysnipserver.util.ToJson;
+import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class MongoDbDao<T extends Entity> implements Dao<T>, ToJson {
+public class MongoDbDao<T extends Entity> implements Dao<T>, JsonMapper {
     private final Class<T> tClass;
     private final MongoCollection<Document> collection;
 
