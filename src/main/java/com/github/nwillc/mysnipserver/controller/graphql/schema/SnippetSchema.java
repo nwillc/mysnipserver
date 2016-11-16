@@ -18,7 +18,6 @@
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import graphql.annotations.GraphQLAnnotations;
-import graphql.annotations.StreamConnection;
 import graphql.schema.GraphQLSchema;
 
 import static graphql.schema.GraphQLSchema.newSchema;

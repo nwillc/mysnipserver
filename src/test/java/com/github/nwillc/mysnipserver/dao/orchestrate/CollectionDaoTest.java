@@ -3,11 +3,9 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.OrchestrateClient;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 
 import javax.cache.Cache;
 import javax.cache.Caching;

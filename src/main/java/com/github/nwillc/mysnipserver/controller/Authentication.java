@@ -109,7 +109,6 @@ public class Authentication implements JsonMapper {
         try {
             payload = GoogleIdTokenUtil.verify(TOKEN.from(request));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new HttpException(HttpStatusCode.UNAUTHORIZED, "Failed decoding payload", e);
         }
 
