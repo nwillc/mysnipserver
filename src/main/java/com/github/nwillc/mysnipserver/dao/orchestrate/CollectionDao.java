@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver.dao.orchestrate;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.util.CacheFactory;
 import io.orchestrate.client.Client;
 import io.orchestrate.client.KvObject;
 import org.pmw.tinylog.Logger;
@@ -50,7 +51,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         this.collection = collection;
         this.tClass = tClass;
         this.client = client;
-        cache = getCache(collection, tClass);
+        cache = CacheFactory.getCache(collection, tClass, OrchestrateLoader::new);
     }
 
     @Override
@@ -104,20 +105,6 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
 
     public Stream<T> find(Set<String> keys) {
         return keys.stream().map(this::get).filter(Objects::nonNull);
-    }
-
-    public Cache<String, T> getCache(String name, Class<T> clz) {
-        final Cache<String, T> cache = Caching.getCachingProvider().getCacheManager().getCache(name,
-                String.class, clz);
-        if (cache != null) {
-            return cache;
-        }
-        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
-        configuration.setTypes(String.class, tClass);
-        configuration.setStoreByValue(false);
-        configuration.setReadThrough(true);
-        configuration.setCacheLoaderFactory((Factory<CacheLoader<String, T>>) OrchestrateLoader::new);
-        return cacheManager.createCache(collection, configuration);
     }
 
     public class OrchestrateLoader implements CacheLoader<String, T> {
