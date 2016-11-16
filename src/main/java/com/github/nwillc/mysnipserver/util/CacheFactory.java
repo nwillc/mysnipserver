@@ -28,20 +28,20 @@ import javax.cache.integration.CacheLoader;
 public final class CacheFactory {
     private static final CacheManager CACHE_MANAGER = Caching.getCachingProvider().getCacheManager();
 
-    private CacheFactory() {}
+    private CacheFactory() {
+    }
 
-     public static <T> Cache<String, T> getCache(final String name, final Class<T> clz,
-                                                 final Factory<CacheLoader<String,T>> factory) {
-        final Cache<String, T> cache = Caching.getCachingProvider().getCacheManager().getCache(name,
-                String.class, clz);
+    public static <T> Cache<String, T> getCache(final Class<T> clz,
+                                                final Factory<CacheLoader<String, T>> factory) {
+        final Cache<String, T> cache = CACHE_MANAGER.getCache(clz.getSimpleName(), String.class, clz);
         if (cache != null) {
             return cache;
         }
-        MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
+        final MutableConfiguration<String, T> configuration = new MutableConfiguration<>();
         configuration.setTypes(String.class, clz);
         configuration.setStoreByValue(false);
         configuration.setReadThrough(true);
-         configuration.setCacheLoaderFactory(factory);
-        return CACHE_MANAGER.createCache(name, configuration);
+        configuration.setCacheLoaderFactory(factory);
+        return CACHE_MANAGER.createCache(clz.getSimpleName(), configuration);
     }
 }

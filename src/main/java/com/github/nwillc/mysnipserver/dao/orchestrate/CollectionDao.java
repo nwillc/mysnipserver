@@ -51,7 +51,7 @@ public class CollectionDao<T extends Entity> implements Dao<T> {
         this.collection = collection;
         this.tClass = tClass;
         this.client = client;
-        cache = CacheFactory.getCache(collection, tClass, OrchestrateLoader::new);
+        cache = CacheFactory.getCache(tClass, OrchestrateLoader::new);
     }
 
     @Override
