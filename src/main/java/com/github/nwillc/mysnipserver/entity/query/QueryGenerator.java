@@ -17,17 +17,44 @@
 
 package com.github.nwillc.mysnipserver.entity.query;
 
+import com.github.nwillc.mysnipserver.entity.Entity;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.function.Predicate;
 
 import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
 
-public class QueryGenerator {
-    private Deque<Filter> filters = new ArrayDeque<>();
+public class QueryGenerator<T extends Entity> implements Filter<T> {
+    private Deque<Filter<T>> filters = new ArrayDeque<>();
 
-    public QueryGenerator eq(Field key, String value) {
-        filters.addLast(new EqFilter(key, value));
+    public QueryGenerator<T> eq(Class<T> tClass, String key, String value) {
+        filters.addLast(new EqFilter<>(tClass, key, value));
         return this;
+    }
+
+    public QueryGenerator<T> not() {
+        filters.addFirst(new NotFilter<>(filters.getFirst()));
+        return this;
+    }
+
+    public QueryGenerator<T> and() {
+        Filter<T> and = new AndFilter<>(filters);
+        filters.clear();
+        filters.addFirst(and);
+        return this;
+    }
+
+    public QueryGenerator<T> or() {
+        Filter<T> and = new OrFilter<>(filters);
+        filters.clear();
+        filters.addFirst(and);
+        return this;
+    }
+
+    @Override
+    public Predicate<T> toPredicate() {
+        return filters.getFirst().toPredicate();
     }
 
     @Override
@@ -35,23 +62,4 @@ public class QueryGenerator {
         return filters.getFirst().toString();
     }
 
-
-    public QueryGenerator not() {
-        filters.addFirst(new NotFilter(filters.getFirst()));
-        return this;
-    }
-
-    public QueryGenerator and() {
-        Filter and = new AndFilter(filters);
-        filters.clear();
-        filters.addFirst(and);
-        return this;
-    }
-
-    public QueryGenerator or() {
-        Filter and = new OrFilter(filters);
-        filters.clear();
-        filters.addFirst(and);
-        return this;
-    }
 }

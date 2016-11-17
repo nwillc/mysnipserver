@@ -17,11 +17,21 @@
 
 package com.github.nwillc.mysnipserver.entity.query;
 
-public class NotFilter implements Filter {
+import com.github.nwillc.mysnipserver.entity.Entity;
+
+import java.util.function.Predicate;
+
+public class NotFilter<T extends Entity> implements Filter<T> {
     private final Filter filter;
 
     public NotFilter(Filter filter) {
         this.filter = filter;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Predicate<T> toPredicate() {
+        return filter.toPredicate().negate();
     }
 
     @Override

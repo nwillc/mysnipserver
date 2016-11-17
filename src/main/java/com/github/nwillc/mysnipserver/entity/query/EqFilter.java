@@ -19,25 +19,28 @@ package com.github.nwillc.mysnipserver.entity.query;
 
 
 import com.github.nwillc.mysnipserver.entity.Entity;
-import com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
+import com.github.nwillc.mysnipserver.util.Accessor;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class EqFilter<T extends Entity> implements Filter {
-    private final Field field;
+public class EqFilter<T extends Entity> implements Filter<T> {
+    private final String fieldName;
     private final String value;
+    private final Function<T, String> function;
 
-    public EqFilter(Field field, String value) {
-        this.field = field;
+    public EqFilter(final Class<T> tClass, String fieldName, String value) {
+        this.fieldName = fieldName;
         this.value = value;
+        function = Accessor.getFunction(fieldName, tClass);
     }
 
     public Predicate<T> toPredicate() {
-        return null;
+        return t -> function.apply(t).equals(value);
     }
 
     @Override
     public String toString() {
-        return "eq(\"" + field.name() + "\",\"" + value + "\")";
+        return "eq(\"" + fieldName + "\",\"" + value + "\")";
     }
 }

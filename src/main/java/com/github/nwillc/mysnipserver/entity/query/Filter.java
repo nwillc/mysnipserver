@@ -17,5 +17,10 @@
 
 package com.github.nwillc.mysnipserver.entity.query;
 
-public interface Filter {
+import com.github.nwillc.mysnipserver.entity.Entity;
+
+import java.util.function.Predicate;
+
+public interface Filter<T extends Entity> {
+    Predicate<T> toPredicate();
 }

@@ -17,15 +17,27 @@
 
 package com.github.nwillc.mysnipserver.entity.query;
 
+import com.github.nwillc.mysnipserver.entity.Entity;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class AndFilter implements Filter {
-    private final Collection<Filter> filters;
+public class AndFilter<T extends Entity> implements Filter<T> {
+    private final Collection<Filter<T>> filters;
 
-    public AndFilter(Collection<Filter> filters) {
+    public AndFilter(Collection<Filter<T>> filters) {
         this.filters = new ArrayList<>(filters);
+    }
+
+    @Override
+    public Predicate<T> toPredicate() {
+        Predicate<T> result = null;
+        for (Filter<T> filter : filters) {
+            result = (result == null) ? filter.toPredicate() : result.and(filter.toPredicate());
+        }
+        return result;
     }
 
     @Override
