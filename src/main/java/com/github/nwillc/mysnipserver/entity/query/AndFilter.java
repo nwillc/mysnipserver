@@ -42,6 +42,6 @@ public class AndFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public String toString() {
-        return "and(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ")";
+        return "and(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ')';
     }
 }

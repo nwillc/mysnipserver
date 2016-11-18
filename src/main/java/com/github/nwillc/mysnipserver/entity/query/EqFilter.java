@@ -35,6 +35,7 @@ public class EqFilter<T extends Entity> implements Filter<T> {
         function = Accessor.getFunction(fieldName, tClass);
     }
 
+    @Override
     public Predicate<T> toPredicate() {
         return t -> function.apply(t).equals(value);
     }

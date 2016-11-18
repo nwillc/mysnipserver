@@ -36,6 +36,6 @@ public class NotFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public String toString() {
-        return "not(" + filter + ")";
+        return "not(" + filter + ')';
     }
 }

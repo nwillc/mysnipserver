@@ -21,6 +21,7 @@ import com.github.nwillc.mysnipserver.entity.Entity;
 
 import java.util.function.Predicate;
 
+@FunctionalInterface
 public interface Filter<T extends Entity> {
     Predicate<T> toPredicate();
 }

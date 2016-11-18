@@ -33,11 +33,15 @@ public class OrFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public Predicate<T> toPredicate() {
-        return null;
+        Predicate<T> result = null;
+        for (Filter<T> filter : filters) {
+            result = (result == null) ? filter.toPredicate() : result.or(filter.toPredicate());
+        }
+        return result;
     }
 
     @Override
     public String toString() {
-        return "or(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ")";
+        return "or(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ')';
     }
 }

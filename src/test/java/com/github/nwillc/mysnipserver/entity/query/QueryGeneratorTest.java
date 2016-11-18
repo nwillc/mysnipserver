@@ -56,6 +56,20 @@ public class QueryGeneratorTest {
     }
 
     @Test
+    public void testOrPredicateTrue() throws Exception {
+        QueryGenerator<Bean> generator = queryGenerator
+                .eq(Bean.class, "value", "42")
+                .eq(Bean.class, "value", "43")
+                .or();
+        Predicate<Bean> predicate = generator.toPredicate();
+        Bean bean = new Bean("key", "42");
+        assertThat(predicate.test(bean)).isTrue();
+
+        bean = new Bean("key", "22");
+        assertThat(predicate.test(bean)).isFalse();
+    }
+
+    @Test
     public void testAndPredicateTrue() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
                 .eq(Bean.class, "value", "42")

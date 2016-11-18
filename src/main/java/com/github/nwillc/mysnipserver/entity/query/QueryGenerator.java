@@ -23,10 +23,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Predicate;
 
-import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
-
 public class QueryGenerator<T extends Entity> implements Filter<T> {
-    private Deque<Filter<T>> filters = new ArrayDeque<>();
+    private final Deque<Filter<T>> filters = new ArrayDeque<>();
 
     public QueryGenerator<T> eq(Class<T> tClass, String key, String value) {
         filters.addLast(new EqFilter<>(tClass, key, value));
