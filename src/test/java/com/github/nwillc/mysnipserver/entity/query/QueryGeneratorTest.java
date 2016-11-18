@@ -81,6 +81,21 @@ public class QueryGeneratorTest {
     }
 
     @Test
+    public void testComplexPredicate() throws Exception {
+        QueryGenerator<Bean> generator = queryGenerator
+                .eq(Bean.class, "value", "foo")
+                .eq(Bean.class, "second", "foo")
+                .or()
+                .eq(Bean.class, "key", "1")
+                .and();
+        Predicate<Bean> predicate = generator.toPredicate();
+        Bean bean = new Bean("1", "test");
+        bean.setSecond("foo");
+        System.out.println("Bean: " + bean);
+        assertThat(predicate.test(bean)).isTrue();
+    }
+
+    @Test
     public void testAndPredicateFalse() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
                 .eq(Bean.class, "value", "42")
@@ -128,6 +143,7 @@ public class QueryGeneratorTest {
 
     public class Bean extends Entity {
         private final String value;
+        private String second;
 
         public Bean(String key, String value) {
             super(key);
@@ -136,6 +152,23 @@ public class QueryGeneratorTest {
 
         public String getValue() {
             return value;
+        }
+
+        public String getSecond() {
+            return second;
+        }
+
+        public void setSecond(String second) {
+            this.second = second;
+        }
+
+        @Override
+        public String toString() {
+            return "Bean{" +
+                    "key='" + getKey() + '\'' +
+                    " value='" + value + '\'' +
+                    ", second='" + second + '\'' +
+                    '}';
         }
     }
 }

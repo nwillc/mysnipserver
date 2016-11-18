@@ -48,12 +48,12 @@ public final class Accessor {
                 try {
                     return (R) field.get(t);
                 } catch (IllegalAccessException e) {
-                    Logger.error("Can not access field.", e);
+                    Logger.error("Can not access field: " + clz.getName() + '.' + fieldName, e);
                 }
                 return null;
             };
         } catch (NoSuchFieldException e) {
-            Logger.error("No such field", e);
+            Logger.error("No such field: " + clz.getName() + '.' + fieldName, e);
         }
         return null;
     }
