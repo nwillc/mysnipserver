@@ -81,7 +81,7 @@ public class QueryGeneratorTest {
     }
 
     @Test
-    public void testComplexPredicate() throws Exception {
+    public void testComplexPredicateTrue() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
                 .eq(Bean.class, "value", "foo")
                 .eq(Bean.class, "second", "foo")
@@ -91,8 +91,21 @@ public class QueryGeneratorTest {
         Predicate<Bean> predicate = generator.toPredicate();
         Bean bean = new Bean("1", "test");
         bean.setSecond("foo");
-        System.out.println("Bean: " + bean);
         assertThat(predicate.test(bean)).isTrue();
+    }
+
+    @Test
+    public void testComplexPredicateFalse() throws Exception {
+        QueryGenerator<Bean> generator = queryGenerator
+                .eq(Bean.class, "value", "foo")
+                .eq(Bean.class, "second", "foo")
+                .or()
+                .eq(Bean.class, "key", "2")
+                .and();
+        Predicate<Bean> predicate = generator.toPredicate();
+        Bean bean = new Bean("1", "test");
+        bean.setSecond("foo");
+        assertThat(predicate.test(bean)).isFalse();
     }
 
     @Test

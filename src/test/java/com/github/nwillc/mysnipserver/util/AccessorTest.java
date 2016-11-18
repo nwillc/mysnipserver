@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.util;
 
 import com.github.nwillc.contracts.UtilityClassContract;
+import com.github.nwillc.mysnipserver.entity.Entity;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -40,7 +41,16 @@ public class AccessorTest extends UtilityClassContract {
         assertThat(accessor.apply(bean)).isEqualTo("foo");
     }
 
-    public static class Bean {
+    @Test
+    public void getSuperFunction() throws Exception {
+        final Bean bean = new Bean("foo");
+
+        Function<Bean,String> accessor = Accessor.getFunction("key", Bean.class);
+        assertThat(accessor).isNotNull();
+        assertThat(accessor.apply(bean)).isEqualTo(bean.getKey());
+    }
+
+    public static class Bean extends Entity {
         private final String value;
 
         public Bean(String value) {

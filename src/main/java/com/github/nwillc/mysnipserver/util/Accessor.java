@@ -25,6 +25,7 @@ import java.util.function.Function;
 
 /**
  * A utility to convert Reflection access to a function.
+ *
  * @since 2.5.0
  */
 public final class Accessor {
@@ -33,28 +34,39 @@ public final class Accessor {
 
     /**
      * Create a Function from a instance variable name that returns it's value in a class.
+     *
      * @param fieldName the instance variable name
-     * @param clz the class
-     * @param <T> the instance type of the argument to the function
-     * @param <R> the return type of the function/
+     * @param clz       the class
+     * @param <T>       the instance type of the argument to the function
+     * @param <R>       the return type of the function/
      * @return
      */
     @SuppressWarnings("unchecked")
     public static <T, R> Function<T, R> getFunction(final String fieldName, final Class<T> clz) {
-        try {
-            Field field = clz.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return t -> {
-                try {
-                    return (R) field.get(t);
-                } catch (IllegalAccessException e) {
-                    Logger.error("Can not access field: " + clz.getName() + '.' + fieldName, e);
-                }
-                return null;
-            };
-        } catch (NoSuchFieldException e) {
-            Logger.error("No such field: " + clz.getName() + '.' + fieldName, e);
+
+        Field f = null;
+        Class<?> tmpClass = clz;
+        do {
+            try {
+                f = tmpClass.getDeclaredField(fieldName);
+                f.setAccessible(true);
+                break;
+            } catch (NoSuchFieldException e) {
+                tmpClass = tmpClass.getSuperclass();
+            }
+        } while (tmpClass != null);
+
+        if (f == null) {
+            return null;
         }
-        return null;
+        final Field field = f;
+        return t -> {
+            try {
+                return (R) field.get(t);
+            } catch (IllegalAccessException e) {
+                Logger.error("Can not access field: " + clz.getName() + '.' + fieldName, e);
+            }
+            return null;
+        };
     }
 }
