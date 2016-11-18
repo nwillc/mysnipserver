@@ -33,36 +33,37 @@ public final class Accessor {
     }
 
     /**
-     * Create a Function from a instance variable name that returns it's value in a class.
+     * Create a Function from a instance variable name that returns it's value in a class, or super classes.
      *
      * @param fieldName the instance variable name
      * @param clz       the class
      * @param <T>       the instance type of the argument to the function
-     * @param <R>       the return type of the function/
-     * @return
+     * @return an accessor function
      */
     @SuppressWarnings("unchecked")
-    public static <T, R> Function<T, R> getFunction(final String fieldName, final Class<T> clz) {
+    public static <T> Function<T, String> getFunction(final String fieldName, final Class<T> clz)
+            throws NoSuchFieldException {
 
-        Field f = null;
-        Class<?> tmpClass = clz;
+        Field field = null;
+        Class<?> classPtr = clz;
         do {
             try {
-                f = tmpClass.getDeclaredField(fieldName);
-                f.setAccessible(true);
+                field = classPtr.getDeclaredField(fieldName);
+                field.setAccessible(true);
                 break;
             } catch (NoSuchFieldException e) {
-                tmpClass = tmpClass.getSuperclass();
+                classPtr = classPtr.getSuperclass();
             }
-        } while (tmpClass != null);
+        } while (classPtr != null);
 
-        if (f == null) {
-            return null;
+        if (field == null) {
+            throw new NoSuchFieldException("No field " + fieldName + " found in " + clz.getName());
         }
-        final Field field = f;
+
+        final Field finalField = field;
         return t -> {
             try {
-                return (R) field.get(t);
+                return finalField.get(t).toString();
             } catch (IllegalAccessException e) {
                 Logger.error("Can not access field: " + clz.getName() + '.' + fieldName, e);
             }

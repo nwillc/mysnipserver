@@ -22,17 +22,23 @@ import com.github.nwillc.mysnipserver.entity.Entity;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class QueryGenerator<T extends Entity> implements Filter<T> {
     private final Deque<Filter<T>> filters = new ArrayDeque<>();
 
-    public QueryGenerator<T> eq(Class<T> tClass, String key, String value) {
+    public QueryGenerator<T> contains(Class<T> tClass, String key, String value) throws NoSuchFieldException {
+        filters.addLast(new ContainsFilter<>(tClass, key, value));
+        return this;
+    }
+
+    public QueryGenerator<T> eq(Class<T> tClass, String key, String value) throws NoSuchFieldException {
         filters.addLast(new EqFilter<>(tClass, key, value));
         return this;
     }
 
     public QueryGenerator<T> not() {
-        filters.addFirst(new NotFilter<>(filters.getFirst()));
+        filters.addFirst(new NotFilter<>(filters.removeFirst()));
         return this;
     }
 
@@ -52,12 +58,20 @@ public class QueryGenerator<T extends Entity> implements Filter<T> {
 
     @Override
     public Predicate<T> toPredicate() {
-        return filters.getFirst().toPredicate();
+        if (filters.isEmpty()) {
+            return null;
+        }
+
+        if (filters.size() == 1) {
+            return filters.getFirst().toPredicate();
+        }
+
+        return new OrFilter<>(filters).toPredicate();
     }
 
     @Override
     public String toString() {
-        return filters.getFirst().toString();
+        return filters.stream().map(Filter::toString).collect(Collectors.joining(", "));
     }
 
 }

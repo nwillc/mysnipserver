@@ -21,6 +21,8 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.DataStore;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.SnippetPredicate;
+import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
+import com.github.nwillc.mysnipserver.entity.query.QueryGenerator;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;
@@ -28,6 +30,7 @@ import org.pmw.tinylog.Logger;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,20 +54,33 @@ public final class QuerySchema extends DaoConsumer {
     public static List<Snippet> snippets(final DataFetchingEnvironment env,
                                          @GraphQLName(CATEGORY) final String category,
                                          @GraphQLName(MATCH) final String match) {
-        SnippetPredicate predicate = null;
-        if (category != null) {
-            predicate = new SnippetPredicate(SnippetPredicate.Field.category, category);
-        }
+        QueryGenerator<Snippet> queryGenerator = new QueryGenerator<>();
+
         if (match != null) {
-            SnippetPredicate snippetPredicate = new SnippetPredicate(SnippetPredicate.Field.title, match)
-                    .or(new SnippetPredicate(SnippetPredicate.Field.body, match));
-
-            predicate = (predicate != null) ? predicate.and(snippetPredicate.group()) : snippetPredicate;
+            try {
+                queryGenerator.contains(Snippet.class, Field.title.name(), match)
+                        .contains(Snippet.class, Field.body.name(), match)
+                        .or();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
         }
 
-        Logger.info("Predicate: " + predicate);
+        if (category != null) {
+            try {
+                queryGenerator.eq(Snippet.class, Field.category.name(), category);
+                if(match != null) {
+                    queryGenerator.and();
+                }
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+        Logger.info("Query: " + queryGenerator);
+        Predicate<Snippet> snippetPredicate = queryGenerator.toPredicate();
 
-        Stream<Snippet> snippetStream = predicate != null ? getSnippetDao(env).find(predicate) :
+        Stream<Snippet> snippetStream = snippetPredicate != null ?
+                getSnippetDao(env).find(snippetPredicate) :
                 getSnippetDao(env).findAll();
         return snippetStream.collect(Collectors.toList());
     }

@@ -24,12 +24,12 @@ import com.github.nwillc.mysnipserver.util.Accessor;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class EqFilter<T extends Entity> implements Filter<T> {
+public class ContainsFilter<T extends Entity> implements Filter<T> {
     private final String fieldName;
     private final String value;
     private final Function<T, String> function;
 
-    public EqFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
+    public ContainsFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
         this.fieldName = fieldName;
         this.value = value;
         function = Accessor.getFunction(fieldName, tClass);
@@ -37,11 +37,11 @@ public class EqFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public Predicate<T> toPredicate() {
-        return t -> function.apply(t).equals(value);
+        return t -> function.apply(t).contains(value);
     }
 
     @Override
     public String toString() {
-        return "eq(\"" + fieldName + "\",\"" + value + "\")";
+        return "regex(\"" + fieldName + "\",\"" + value + "\",\"i\")";
     }
 }
