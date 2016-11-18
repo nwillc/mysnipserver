@@ -124,7 +124,7 @@ public class QueryGeneratorTest {
     public void testEq() throws Exception {
         QueryGenerator generator = queryGenerator
                 .contains(Bean.class, "key", "42");
-        assertThat(generator.toString()).isEqualTo("contains(\"key\",\"42\")");
+        assertThat(generator.toString()).isEqualTo("regex(\"key\",\"42\",\"i\")");
     }
 
     @Test
@@ -132,7 +132,7 @@ public class QueryGeneratorTest {
         QueryGenerator generator = queryGenerator
                 .contains(Bean.class, "key","1")
                 .not();
-        assertThat(generator.toString()).isEqualTo("not(contains(\"key\",\"1\"))");
+        assertThat(generator.toString()).isEqualTo("not(regex(\"key\",\"1\",\"i\"))");
     }
 
     @Test
@@ -141,7 +141,7 @@ public class QueryGeneratorTest {
                 .contains(Bean.class, "key","1")
                 .contains(Bean.class, "key","2")
                 .and();
-        assertThat(generator.toString()).isEqualTo("and(contains(\"key\",\"1\"),contains(\"key\",\"2\"))");
+        assertThat(generator.toString()).isEqualTo("and(regex(\"key\",\"1\",\"i\"),regex(\"key\",\"2\",\"i\"))");
 
     }
 
@@ -151,7 +151,7 @@ public class QueryGeneratorTest {
                 .contains(Bean.class, "key","1")
                 .contains(Bean.class, "key","2")
                 .or();
-        assertThat(generator.toString()).isEqualTo("or(contains(\"key\",\"1\"),contains(\"key\",\"2\"))");
+        assertThat(generator.toString()).isEqualTo("or(regex(\"key\",\"1\",\"i\"),regex(\"key\",\"2\",\"i\"))");
 
     }
 
