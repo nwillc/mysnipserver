@@ -15,8 +15,9 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.dao;
+package com.github.nwillc.mysnipserver.controller;
 
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 

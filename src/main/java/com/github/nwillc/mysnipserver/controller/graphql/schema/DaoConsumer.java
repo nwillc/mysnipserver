@@ -18,7 +18,7 @@
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.dao.DaoProvider;
+import com.github.nwillc.mysnipserver.controller.DaoProvider;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.DataFetchingEnvironment;
