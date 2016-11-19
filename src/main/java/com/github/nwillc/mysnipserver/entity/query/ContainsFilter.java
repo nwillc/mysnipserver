@@ -20,6 +20,7 @@ package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
 import com.github.nwillc.mysnipserver.util.Accessor;
+import org.bson.conversions.Bson;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -38,6 +39,11 @@ public class ContainsFilter<T extends Entity> implements Filter<T> {
     @Override
     public Predicate<T> toPredicate() {
         return t -> function.apply(t).contains(value);
+    }
+
+    @Override
+    public Bson toBson() {
+        return null;
     }
 
     @Override

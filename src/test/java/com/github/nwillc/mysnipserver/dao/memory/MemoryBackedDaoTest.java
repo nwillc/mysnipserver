@@ -19,9 +19,9 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.entity.query.QueryGenerator;
 import org.junit.Test;
 
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,12 +46,13 @@ public class MemoryBackedDaoTest {
     }
 
 	@Test
-	public void shouldFindPredicate() throws Exception {
+	public void shouldFindFilter() throws Exception {
 		final TestEntity foo = new TestEntity("foo");
 		testEntityDao.save(foo);
 		testEntityDao.save(new TestEntity("bar"));
-		Predicate<TestEntity> predicate = e -> e.getKey().equals(foo.getKey());
-		assertThat(testEntityDao.find(predicate).collect(Collectors.toList())).containsExactly(foo);
+        QueryGenerator<TestEntity> generator = new QueryGenerator<>();
+        generator.eq(TestEntity.class, "key", "foo");
+		assertThat(testEntityDao.find(generator.toFilter()).collect(Collectors.toList())).containsExactly(foo);
 	}
 
     @Test

@@ -19,11 +19,11 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.entity.query.Filter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class MemoryBackedDao<T extends Entity> implements Dao<T> {
@@ -45,8 +45,8 @@ public class MemoryBackedDao<T extends Entity> implements Dao<T> {
     }
 
     @Override
-    public Stream<T> find(Predicate<T> predicate) {
-        return findAll().filter(predicate);
+    public Stream<T> find(Filter<T> filter) {
+        return findAll().filter(filter.toPredicate());
     }
 
     @Override

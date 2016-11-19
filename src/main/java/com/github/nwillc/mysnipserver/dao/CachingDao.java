@@ -18,13 +18,13 @@
 package com.github.nwillc.mysnipserver.dao;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.entity.query.Filter;
 import com.github.nwillc.mysnipserver.util.CacheFactory;
 
 import javax.cache.Cache;
 import javax.cache.configuration.Factory;
 import javax.cache.integration.CacheLoader;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class CachingDao<T extends Entity> implements Dao<T> {
@@ -50,8 +50,8 @@ public class CachingDao<T extends Entity> implements Dao<T> {
     }
 
     @Override
-    public Stream<T> find(Predicate<T> predicate) {
-        return dao.find(predicate).peek(entity -> cache.put(entity.getKey(), entity));
+    public Stream<T> find(Filter<T> filter) {
+        return dao.find(filter).peek(entity -> cache.put(entity.getKey(), entity));
     }
 
     @Override

@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import org.bson.conversions.Bson;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -56,17 +57,26 @@ public class QueryGenerator<T extends Entity> implements Filter<T> {
         return this;
     }
 
-    @Override
-    public Predicate<T> toPredicate() {
+    public Filter<T> toFilter() {
         if (filters.isEmpty()) {
             return null;
         }
 
         if (filters.size() == 1) {
-            return filters.getFirst().toPredicate();
+            return filters.getFirst();
         }
 
-        return new OrFilter<>(filters).toPredicate();
+        return new OrFilter<>(filters);
+    }
+
+    @Override
+    public Predicate<T> toPredicate() {
+        return filters.isEmpty() ? null : toFilter().toPredicate();
+    }
+
+    @Override
+    public Bson toBson() {
+        return null;
     }
 
     @Override

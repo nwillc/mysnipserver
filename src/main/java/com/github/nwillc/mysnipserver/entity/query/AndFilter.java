@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +39,11 @@ public class AndFilter<T extends Entity> implements Filter<T> {
             result = (result == null) ? filter.toPredicate() : result.and(filter.toPredicate());
         }
         return result;
+    }
+
+    @Override
+    public Bson toBson() {
+        return null;
     }
 
     @Override

@@ -20,8 +20,7 @@ package com.github.nwillc.mysnipserver.controller.graphql.schema;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.DataStore;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.entity.SnippetPredicate;
-import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
+import com.github.nwillc.mysnipserver.entity.query.Filter;
 import com.github.nwillc.mysnipserver.entity.query.QueryGenerator;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
@@ -30,11 +29,11 @@ import org.pmw.tinylog.Logger;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
+import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
 
 @GraphQLName(QUERY)
 public final class QuerySchema extends DaoConsumer {
@@ -77,10 +76,10 @@ public final class QuerySchema extends DaoConsumer {
             }
         }
         Logger.info("Query: " + queryGenerator);
-        Predicate<Snippet> snippetPredicate = queryGenerator.toPredicate();
+        Filter<Snippet> filter = queryGenerator.toFilter();
 
-        Stream<Snippet> snippetStream = snippetPredicate != null ?
-                getSnippetDao(env).find(snippetPredicate) :
+        Stream<Snippet> snippetStream = filter != null ?
+                getSnippetDao(env).find(filter) :
                 getSnippetDao(env).findAll();
         return snippetStream.collect(Collectors.toList());
     }

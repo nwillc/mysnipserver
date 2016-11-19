@@ -18,6 +18,8 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 
+import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.query.QueryGenerator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +28,8 @@ public class CategoryDaoTest {
     @Test
     public void testConstructor() throws Exception {
         final CategoryDao dao = new CategoryDao();
-        assertThat(dao.find(c -> c.getName().equals("Java")).count()).isEqualTo(1);
+        QueryGenerator<Category> generator = new QueryGenerator<>();
+        generator.eq(Category.class, "name", "Java");
+        assertThat(dao.find(generator.toFilter()).count()).isEqualTo(1);
     }
 }

@@ -18,10 +18,11 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import org.bson.conversions.Bson;
 
 import java.util.function.Predicate;
 
-@FunctionalInterface
 public interface Filter<T extends Entity> {
     Predicate<T> toPredicate();
+    Bson toBson();
 }

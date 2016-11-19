@@ -18,9 +18,9 @@
 package com.github.nwillc.mysnipserver.dao;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.entity.query.Filter;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Dao<T extends Entity> {
@@ -28,7 +28,7 @@ public interface Dao<T extends Entity> {
 
     Stream<T> findAll();
 
-    Stream<T> find(Predicate<T> predicate);
+    Stream<T> find(Filter<T> filter);
 
     void save(final T entity);
 

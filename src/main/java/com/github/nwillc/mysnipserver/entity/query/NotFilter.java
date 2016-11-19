@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import org.bson.conversions.Bson;
 
 import java.util.function.Predicate;
 
@@ -32,6 +33,11 @@ public class NotFilter<T extends Entity> implements Filter<T> {
     @SuppressWarnings("unchecked")
     public Predicate<T> toPredicate() {
         return filter.toPredicate().negate();
+    }
+
+    @Override
+    public Bson toBson() {
+        return null;
     }
 
     @Override
