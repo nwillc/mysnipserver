@@ -18,7 +18,7 @@
 package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.dao.HasKey;
 import com.github.nwillc.mysnipserver.dao.query.Filter;
 import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.mongodb.MongoClient;
@@ -31,7 +31,7 @@ import java.util.stream.StreamSupport;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class MongoDbDao<T extends Entity> implements Dao<T>, JsonMapper {
+public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper {
     private final Class<T> tClass;
     private final MongoCollection<Document> collection;
 
@@ -41,7 +41,7 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, JsonMapper {
     }
 
     @Override
-    public Optional<T> findOne(String key) {
+    public Optional<T> findOne(K key) {
         Document document = collection.find(eq("key",key)).first();
         return document == null ? Optional.empty() : Optional.of(fromJson(document.toJson(), tClass));
     }
@@ -71,7 +71,7 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, JsonMapper {
     }
 
     @Override
-    public void delete(String key) {
+    public void delete(K key) {
         collection.deleteMany(eq("key",key));
     }
 }

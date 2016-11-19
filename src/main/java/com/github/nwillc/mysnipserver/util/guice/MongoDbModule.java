@@ -47,7 +47,7 @@ public class MongoDbModule extends AbstractModule {
                 MONGO_DB_PASSWORD.toCharArray());
         List<MongoCredential> auths = Collections.singletonList(credential);
         MongoClient client = new MongoClient(serverAddress, auths);
-        MongoDbDao<User> userDao = new MongoDbDao<>(client, User.class);
+        MongoDbDao<String, User> userDao = new MongoDbDao<>(client, User.class);
         User user = new User("foo", "nwillc");
         userDao.save(user);
         Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));

@@ -17,11 +17,11 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
+import com.github.nwillc.mysnipserver.dao.query.Filter;
+import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.DataStore;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.dao.query.Filter;
-import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;

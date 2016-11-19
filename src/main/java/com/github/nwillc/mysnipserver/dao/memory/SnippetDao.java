@@ -24,10 +24,10 @@ import org.pmw.tinylog.Logger;
 
 import java.util.Optional;
 
-public class SnippetDao extends MemoryBackedDao<Snippet> {
-    final Dao<Category> categoryDao;
+public class SnippetDao extends MemoryBackedDao<String, Snippet> {
+    final Dao<String, Category> categoryDao;
 
-    public SnippetDao(Dao<Category> categoryDao) {
+    public SnippetDao(Dao<String, Category> categoryDao) {
         this.categoryDao = categoryDao;
         Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
         Logger.info("Found java category: " + java.isPresent());

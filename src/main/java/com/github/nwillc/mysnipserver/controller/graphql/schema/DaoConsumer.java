@@ -17,18 +17,18 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.controller.DaoProvider;
+import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.schema.DataFetchingEnvironment;
 
 public class DaoConsumer {
-    public static Dao<Category> getCategoryDao(DataFetchingEnvironment env) {
+    public static Dao<String, Category> getCategoryDao(DataFetchingEnvironment env) {
         return ((DaoProvider) env.getSource()).getCategoryDao();
     }
 
-    public static Dao<Snippet> getSnippetDao(DataFetchingEnvironment env) {
+    public static Dao<String, Snippet> getSnippetDao(DataFetchingEnvironment env) {
         return ((DaoProvider) env.getSource()).getSnippetDao();
     }
 }

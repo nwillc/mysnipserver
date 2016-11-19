@@ -18,8 +18,8 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.entity.Entity;
 import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
+import com.github.nwillc.mysnipserver.entity.Entity;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
 public class MemoryBackedDaoTest {
-    private Dao<TestEntity> testEntityDao = new MemoryBackedDao<>();
+    private Dao<String, TestEntity> testEntityDao = new MemoryBackedDao<>();
 
     @Test
     public void shouldDelete() throws Exception {

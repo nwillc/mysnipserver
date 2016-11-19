@@ -53,11 +53,11 @@ public class Authentication implements JsonMapper {
             "/properties",
             versionedPath(AUTH_PATH)
     };
-    private final Dao<User> dao;
+    private final Dao<String, User> dao;
     private final Set<String> noAuth = new HashSet<>();
 
     @Inject
-    public Authentication(Dao<User> dao) {
+    public Authentication(Dao<String, User> dao) {
         this.dao = dao;
         before(this::check);
         for (String path : NO_AUTH) {

@@ -43,10 +43,11 @@ public class Graphql implements JsonMapper, DaoProvider {
     private static final String ERRORS = "errors";
     private static final String DATA = "data";
     private final GraphQL graphql;
-    private final Dao<Category> categoryDao;
-    private final Dao<Snippet> snippetDao;
+    private final Dao<String, Category> categoryDao;
+    private final Dao<String, Snippet> snippetDao;
 
-    public Graphql(Dao<Category> categoryDao, Dao<Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
+    public Graphql(Dao<String,Category> categoryDao,
+                   Dao<String, Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
         this.categoryDao = categoryDao;
         this.snippetDao = snippetDao;
         graphql = new GraphQL(new SnippetSchema().getSchema());
@@ -54,12 +55,12 @@ public class Graphql implements JsonMapper, DaoProvider {
     }
 
     @Override
-    public Dao<Category> getCategoryDao() {
+    public Dao<String, Category> getCategoryDao() {
         return categoryDao;
     }
 
     @Override
-    public Dao<Snippet> getSnippetDao() {
+    public Dao<String, Snippet> getSnippetDao() {
         return snippetDao;
     }
 

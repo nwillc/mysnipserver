@@ -17,14 +17,13 @@
 
 package com.github.nwillc.mysnipserver.dao;
 
-import com.github.nwillc.mysnipserver.entity.Entity;
 import com.github.nwillc.mysnipserver.dao.query.Filter;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface Dao<T extends Entity> {
-    Optional<T> findOne(final String key);
+public interface Dao<K,T extends HasKey<K>> {
+    Optional<T> findOne(final K key);
 
     Stream<T> findAll();
 
@@ -32,5 +31,5 @@ public interface Dao<T extends Entity> {
 
     void save(final T entity);
 
-    void delete(final String key);
+    void delete(final K key);
 }

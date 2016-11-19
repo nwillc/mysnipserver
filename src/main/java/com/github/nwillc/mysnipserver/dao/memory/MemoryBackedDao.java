@@ -18,7 +18,7 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.dao.HasKey;
 import com.github.nwillc.mysnipserver.dao.query.Filter;
 
 import java.util.HashMap;
@@ -26,16 +26,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class MemoryBackedDao<T extends Entity> implements Dao<T> {
-    private final Map<String, T> entities = new HashMap<>();
+public class MemoryBackedDao<K, T extends HasKey<K>> implements Dao<K,T> {
+    private final Map<K, T> entities = new HashMap<>();
 
     @Override
-    public void delete(String s) {
+    public void delete(K s) {
         entities.remove(s);
     }
 
     @Override
-    public Optional<T> findOne(String s) {
+    public Optional<T> findOne(K s) {
         return Optional.ofNullable(entities.get(s));
     }
 

@@ -36,16 +36,16 @@ import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
     private final static String ADMIN = "nwillc@gmail.com";
-    private final Dao<Category> categoriesDao;
-    private final Dao<Snippet> snippetDao;
-    private final Dao<User> userDao;
+    private final Dao<String, Category> categoriesDao;
+    private final Dao<String, Snippet> snippetDao;
+    private final Dao<String, User> userDao;
     private boolean auth;
     private String properties = "";
 
     @Inject
-    public MySnipServerApplication(Dao<Category> categoriesDao,
-                                   Dao<Snippet> snippetDao,
-                                   Dao<User> userDao) {
+    public MySnipServerApplication(Dao<String, Category> categoriesDao,
+                                   Dao<String, Snippet> snippetDao,
+                                   Dao<String, User> userDao) {
         this.categoriesDao = categoriesDao;
         this.snippetDao = snippetDao;
         this.userDao = userDao;
