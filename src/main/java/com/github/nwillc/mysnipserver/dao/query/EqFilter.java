@@ -15,34 +15,40 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.entity.query;
+package com.github.nwillc.mysnipserver.dao.query;
+
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.github.nwillc.mysnipserver.util.Accessor;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class NotFilter<T extends Entity> implements Filter<T> {
-    private final Filter filter;
+public class EqFilter<T extends Entity> implements Filter<T> {
+    private final String fieldName;
+    private final String value;
+    private final Function<T, String> function;
 
-    public NotFilter(Filter filter) {
-        this.filter = filter;
+    public EqFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
+        this.fieldName = fieldName;
+        this.value = value;
+        function = Accessor.getFunction(fieldName, tClass);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Predicate<T> toPredicate() {
-        return filter.toPredicate().negate();
+        return t -> function.apply(t).equals(value);
     }
 
     @Override
     public Bson toBson() {
-        return Filters.not(filter.toBson());
+        return Filters.eq(fieldName,value);
     }
 
     @Override
     public String toString() {
-        return "not(" + filter + ')';
+        return "eq(\"" + fieldName + "\",\"" + value + "\")";
     }
 }

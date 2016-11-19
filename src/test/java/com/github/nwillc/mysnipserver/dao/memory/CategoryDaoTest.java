@@ -19,7 +19,7 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 
 import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.mysnipserver.entity.query.QueryGenerator;
+import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -15,43 +15,34 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.entity.query;
-
+package com.github.nwillc.mysnipserver.dao.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
-import com.github.nwillc.mysnipserver.util.Accessor;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ContainsFilter<T extends Entity> implements Filter<T> {
-    private final String fieldName;
-    private final String value;
-    private final Function<T, String> function;
+public class NotFilter<T extends Entity> implements Filter<T> {
+    private final Filter filter;
 
-    public ContainsFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
-        this.fieldName = fieldName;
-        this.value = value;
-        function = Accessor.getFunction(fieldName, tClass);
+    public NotFilter(Filter filter) {
+        this.filter = filter;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Predicate<T> toPredicate() {
-        return t -> function.apply(t).contains(value);
+        return filter.toPredicate().negate();
     }
 
     @Override
     public Bson toBson() {
-        return Filters.regex(fieldName, valueRegex());
+        return Filters.not(filter.toBson());
     }
 
-    private String valueRegex() {
-        return ".*" + value + ".*";
-    }
     @Override
     public String toString() {
-        return "regex(\"" + fieldName + "\",\"" + valueRegex() + "\",\"i\")";
+        return "not(" + filter + ')';
     }
 }

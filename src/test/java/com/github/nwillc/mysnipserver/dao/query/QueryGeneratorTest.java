@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.entity.query;
+package com.github.nwillc.mysnipserver.dao.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
 import org.junit.Before;

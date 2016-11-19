@@ -15,40 +15,40 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.entity.query;
-
+package com.github.nwillc.mysnipserver.dao.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
-import com.github.nwillc.mysnipserver.util.Accessor;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public class EqFilter<T extends Entity> implements Filter<T> {
-    private final String fieldName;
-    private final String value;
-    private final Function<T, String> function;
+public class AndFilter<T extends Entity> implements Filter<T> {
+    private final Collection<Filter<T>> filters;
 
-    public EqFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
-        this.fieldName = fieldName;
-        this.value = value;
-        function = Accessor.getFunction(fieldName, tClass);
+    public AndFilter(Collection<Filter<T>> filters) {
+        this.filters = new ArrayList<>(filters);
     }
 
     @Override
     public Predicate<T> toPredicate() {
-        return t -> function.apply(t).equals(value);
+        Predicate<T> result = null;
+        for (Filter<T> filter : filters) {
+            result = (result == null) ? filter.toPredicate() : result.and(filter.toPredicate());
+        }
+        return result;
     }
 
     @Override
     public Bson toBson() {
-        return Filters.eq(fieldName,value);
+        return Filters.and(filters.stream().map(Filter::toBson).collect(Collectors.toList()));
     }
 
     @Override
     public String toString() {
-        return "eq(\"" + fieldName + "\",\"" + value + "\")";
+        return "and(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ')';
     }
 }
