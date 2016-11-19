@@ -20,6 +20,7 @@ package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
 import com.github.nwillc.mysnipserver.util.Accessor;
+import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
 import java.util.function.Function;
@@ -43,7 +44,7 @@ public class EqFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public Bson toBson() {
-        return null;
+        return Filters.eq(fieldName,value);
     }
 
     @Override
