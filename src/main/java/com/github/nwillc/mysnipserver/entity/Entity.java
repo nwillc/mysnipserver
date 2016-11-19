@@ -35,6 +35,7 @@ public class Entity extends HasKey<String> {
 
     @GraphQLField
     @GraphQLDescription("The unique identifier")
+    @Override
     public String getKey() {
         return super.getKey();
     }
