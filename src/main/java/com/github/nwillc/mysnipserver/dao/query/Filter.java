@@ -17,12 +17,11 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.github.nwillc.mysnipserver.entity.Entity;
 import org.bson.conversions.Bson;
 
 import java.util.function.Predicate;
 
-public interface Filter<T extends Entity> {
+public interface Filter<T> {
     Predicate<T> toPredicate();
     Bson toBson();
 }

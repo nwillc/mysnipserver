@@ -17,13 +17,11 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.github.nwillc.mysnipserver.entity.Entity;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.stream.Collectors;
 
-public class QueryGenerator<T extends Entity> {
+public class QueryGenerator<T> {
     private final Deque<Filter<T>> filters = new ArrayDeque<>();
     private final Class<T> tClass;
 

@@ -17,7 +17,6 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.github.nwillc.mysnipserver.entity.Entity;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
@@ -26,7 +25,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class AndFilter<T extends Entity> implements Filter<T> {
+public class AndFilter<T> implements Filter<T> {
     private final Collection<Filter<T>> filters;
 
     public AndFilter(Collection<Filter<T>> filters) {

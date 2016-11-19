@@ -18,7 +18,6 @@
 package com.github.nwillc.mysnipserver.dao.query;
 
 
-import com.github.nwillc.mysnipserver.entity.Entity;
 import com.github.nwillc.mysnipserver.util.Accessor;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
@@ -26,7 +25,7 @@ import org.bson.conversions.Bson;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ContainsFilter<T extends Entity> implements Filter<T> {
+public class ContainsFilter<T> implements Filter<T> {
     private final String fieldName;
     private final String value;
     private final Function<T, String> function;

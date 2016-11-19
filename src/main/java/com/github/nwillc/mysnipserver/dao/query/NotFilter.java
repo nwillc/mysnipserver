@@ -17,13 +17,12 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.github.nwillc.mysnipserver.entity.Entity;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
 import java.util.function.Predicate;
 
-public class NotFilter<T extends Entity> implements Filter<T> {
+public class NotFilter<T> implements Filter<T> {
     private final Filter filter;
 
     public NotFilter(Filter filter) {
