@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
 import java.util.function.Predicate;
@@ -37,7 +38,7 @@ public class NotFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public Bson toBson() {
-        return null;
+        return Filters.not(filter.toBson());
     }
 
     @Override

@@ -48,12 +48,14 @@ public class MongoDbDao<T extends Entity> implements Dao<T>, JsonMapper {
 
     @Override
     public Stream<T> findAll() {
-        return StreamSupport.stream(collection.find().spliterator(), false).map(d -> fromJson(d.toJson(),tClass));
+        return StreamSupport.stream(collection.find().spliterator(), false)
+                .map(d -> fromJson(d.toJson(),tClass));
     }
 
     @Override
     public Stream<T> find(Filter<T> filter) {
-        return findAll().filter(filter.toPredicate());
+        return StreamSupport.stream(collection.find(filter.toBson()).spliterator(), false)
+                .map(d -> fromJson(d.toJson(), tClass));
     }
 
     @Override

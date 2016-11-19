@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
+import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class AndFilter<T extends Entity> implements Filter<T> {
 
     @Override
     public Bson toBson() {
-        return null;
+        return Filters.and(filters.stream().map(Filter::toBson).collect(Collectors.toList()));
     }
 
     @Override
