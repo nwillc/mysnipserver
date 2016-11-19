@@ -17,36 +17,26 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
+import com.github.nwillc.mysnipserver.dao.HasKey;
 import com.groupon.uuid.UUID;
 import graphql.annotations.GraphQLDescription;
 import graphql.annotations.GraphQLField;
 
 
-public class Entity {
-    private String key;
+public class Entity extends HasKey<String> {
 
     public Entity() {
         this(new UUID().toString());
     }
 
     public Entity(String key) {
-        this.key = key;
+        super(key);
     }
 
     @GraphQLField
     @GraphQLDescription("The unique identifier")
     public String getKey() {
-        return key;
+        return super.getKey();
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    @Override
-    public String toString() {
-        return "Entity{" +
-                "key='" + key + '\'' +
-                '}';
-    }
 }
