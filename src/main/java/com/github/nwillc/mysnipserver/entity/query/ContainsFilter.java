@@ -46,8 +46,11 @@ public class ContainsFilter<T extends Entity> implements Filter<T> {
         return null;
     }
 
+    private String valueRegex() {
+        return ".*" + value + ".*";
+    }
     @Override
     public String toString() {
-        return "regex(\"" + fieldName + "\",\"" + value + "\",\"i\")";
+        return "regex(\"" + fieldName + "\",\"" + valueRegex() + "\",\"i\")";
     }
 }

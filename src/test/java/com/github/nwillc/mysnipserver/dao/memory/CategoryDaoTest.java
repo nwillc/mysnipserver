@@ -28,8 +28,8 @@ public class CategoryDaoTest {
     @Test
     public void testConstructor() throws Exception {
         final CategoryDao dao = new CategoryDao();
-        QueryGenerator<Category> generator = new QueryGenerator<>();
-        generator.eq(Category.class, "name", "Java");
-        assertThat(dao.find(generator.toFilter()).count()).isEqualTo(1);
+        QueryGenerator<Category> generator = new QueryGenerator<>(Category.class);
+        generator.eq("name", "Java");
+        assertThat(dao.find(generator.getFilter()).count()).isEqualTo(1);
     }
 }

@@ -28,8 +28,8 @@ public class SnippetDaoTest {
     @Test
     public void testConstructor() throws Exception {
         final SnippetDao dao = new SnippetDao(new CategoryDao());
-        QueryGenerator<Snippet> generator = new QueryGenerator<>();
-        generator.eq(Snippet.class, "title", "import");
-        assertThat(dao.find(generator.toFilter()).count()).isEqualTo(1);
+        QueryGenerator<Snippet> generator = new QueryGenerator<>(Snippet.class);
+        generator.eq("title", "import");
+        assertThat(dao.find(generator.getFilter()).count()).isEqualTo(1);
     }
 }

@@ -50,9 +50,9 @@ public class MemoryBackedDaoTest {
 		final TestEntity foo = new TestEntity("foo");
 		testEntityDao.save(foo);
 		testEntityDao.save(new TestEntity("bar"));
-        QueryGenerator<TestEntity> generator = new QueryGenerator<>();
-        generator.eq(TestEntity.class, "key", "foo");
-		assertThat(testEntityDao.find(generator.toFilter()).collect(Collectors.toList())).containsExactly(foo);
+        QueryGenerator<TestEntity> generator = new QueryGenerator<>(TestEntity.class);
+        generator.eq("key", "foo");
+		assertThat(testEntityDao.find(generator.getFilter()).collect(Collectors.toList())).containsExactly(foo);
 	}
 
     @Test

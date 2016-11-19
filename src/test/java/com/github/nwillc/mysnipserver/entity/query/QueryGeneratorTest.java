@@ -30,14 +30,14 @@ public class QueryGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        queryGenerator = new QueryGenerator<>();
+        queryGenerator = new QueryGenerator<>(Bean.class);
     }
 
     @Test
     public void testEqPredicate() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "value", "42");
-        Predicate<Bean> predicate = generator.toPredicate();
+                .contains("value", "42");
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
         Bean bean = new Bean("key", "42");
         assertThat(predicate.test(bean)).isTrue();
         bean = new Bean("key", "NaN");
@@ -47,8 +47,8 @@ public class QueryGeneratorTest {
     @Test
     public void testNotPredicate() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "key", "10").not();
-        Predicate<Bean> predicate = generator.toPredicate();
+                .contains("key", "10").not();
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
 
         Bean bean = new Bean("10", "42");
         assertThat(predicate.test(bean)).isFalse();
@@ -59,10 +59,10 @@ public class QueryGeneratorTest {
     @Test
     public void testOrPredicateTrue() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "value", "42")
-                .contains(Bean.class, "value", "43")
+                .contains("value", "42")
+                .contains("value", "43")
                 .or();
-        Predicate<Bean> predicate = generator.toPredicate();
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
         Bean bean = new Bean("key", "42");
         assertThat(predicate.test(bean)).isTrue();
 
@@ -73,10 +73,10 @@ public class QueryGeneratorTest {
     @Test
     public void testAndPredicateTrue() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "value", "42")
-                .contains(Bean.class, "value", "42")
+                .contains("value", "42")
+                .contains("value", "42")
                 .and();
-        Predicate<Bean> predicate = generator.toPredicate();
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
         Bean bean = new Bean("key", "42");
         assertThat(predicate.test(bean)).isTrue();
     }
@@ -84,12 +84,12 @@ public class QueryGeneratorTest {
     @Test
     public void testComplexPredicateTrue() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "value", "foo")
-                .contains(Bean.class, "second", "foo")
+                .contains("value", "foo")
+                .contains("second", "foo")
                 .or()
-                .contains(Bean.class, "key", "1")
+                .contains("key", "1")
                 .and();
-        Predicate<Bean> predicate = generator.toPredicate();
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
         Bean bean = new Bean("1", "test");
         bean.setSecond("foo");
         assertThat(predicate.test(bean)).isTrue();
@@ -98,12 +98,12 @@ public class QueryGeneratorTest {
     @Test
     public void testComplexPredicateFalse() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "value", "foo")
-                .contains(Bean.class, "second", "foo")
+                .contains("value", "foo")
+                .contains("second", "foo")
                 .or()
-                .contains(Bean.class, "key", "2")
+                .contains("key", "2")
                 .and();
-        Predicate<Bean> predicate = generator.toPredicate();
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
         Bean bean = new Bean("1", "test");
         bean.setSecond("foo");
         assertThat(predicate.test(bean)).isFalse();
@@ -112,10 +112,10 @@ public class QueryGeneratorTest {
     @Test
     public void testAndPredicateFalse() throws Exception {
         QueryGenerator<Bean> generator = queryGenerator
-                .contains(Bean.class, "value", "42")
-                .contains(Bean.class, "value", "44")
+                .contains("value", "42")
+                .contains("value", "44")
                 .and();
-        Predicate<Bean> predicate = generator.toPredicate();
+        Predicate<Bean> predicate = generator.getFilter().toPredicate();
         Bean bean = new Bean("key", "42");
         assertThat(predicate.test(bean)).isFalse();
     }
@@ -123,35 +123,35 @@ public class QueryGeneratorTest {
     @Test
     public void testEq() throws Exception {
         QueryGenerator generator = queryGenerator
-                .contains(Bean.class, "key", "42");
-        assertThat(generator.toString()).isEqualTo("regex(\"key\",\"42\",\"i\")");
+                .contains("key", "42");
+        assertThat(generator.toString()).isEqualTo("regex(\"key\",\".*42.*\",\"i\")");
     }
 
     @Test
     public void testNot() throws Exception {
         QueryGenerator generator = queryGenerator
-                .contains(Bean.class, "key","1")
+                .contains("key","1")
                 .not();
-        assertThat(generator.toString()).isEqualTo("not(regex(\"key\",\"1\",\"i\"))");
+        assertThat(generator.toString()).isEqualTo("not(regex(\"key\",\".*1.*\",\"i\"))");
     }
 
     @Test
     public void testAnd() throws Exception {
         QueryGenerator generator = queryGenerator
-                .contains(Bean.class, "key","1")
-                .contains(Bean.class, "key","2")
+                .contains("key","1")
+                .contains("key","2")
                 .and();
-        assertThat(generator.toString()).isEqualTo("and(regex(\"key\",\"1\",\"i\"),regex(\"key\",\"2\",\"i\"))");
+        assertThat(generator.toString()).isEqualTo("and(regex(\"key\",\".*1.*\",\"i\"),regex(\"key\",\".*2.*\",\"i\"))");
 
     }
 
     @Test
     public void testOr() throws Exception {
         QueryGenerator generator = queryGenerator
-                .contains(Bean.class, "key","1")
-                .contains(Bean.class, "key","2")
+                .contains("key","1")
+                .contains("key","2")
                 .or();
-        assertThat(generator.toString()).isEqualTo("or(regex(\"key\",\"1\",\"i\"),regex(\"key\",\"2\",\"i\"))");
+        assertThat(generator.toString()).isEqualTo("or(regex(\"key\",\".*1.*\",\"i\"),regex(\"key\",\".*2.*\",\"i\"))");
 
     }
 

@@ -18,22 +18,25 @@
 package com.github.nwillc.mysnipserver.entity.query;
 
 import com.github.nwillc.mysnipserver.entity.Entity;
-import org.bson.conversions.Bson;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class QueryGenerator<T extends Entity> implements Filter<T> {
+public class QueryGenerator<T extends Entity> {
     private final Deque<Filter<T>> filters = new ArrayDeque<>();
+    private final Class<T> tClass;
 
-    public QueryGenerator<T> contains(Class<T> tClass, String key, String value) throws NoSuchFieldException {
+    public QueryGenerator(Class<T> tClass) {
+        this.tClass = tClass;
+    }
+
+    public QueryGenerator<T> contains(String key, String value) throws NoSuchFieldException {
         filters.addLast(new ContainsFilter<>(tClass, key, value));
         return this;
     }
 
-    public QueryGenerator<T> eq(Class<T> tClass, String key, String value) throws NoSuchFieldException {
+    public QueryGenerator<T> eq(String key, String value) throws NoSuchFieldException {
         filters.addLast(new EqFilter<>(tClass, key, value));
         return this;
     }
@@ -57,7 +60,7 @@ public class QueryGenerator<T extends Entity> implements Filter<T> {
         return this;
     }
 
-    public Filter<T> toFilter() {
+    public Filter<T> getFilter() {
         if (filters.isEmpty()) {
             return null;
         }
@@ -67,16 +70,6 @@ public class QueryGenerator<T extends Entity> implements Filter<T> {
         }
 
         return new OrFilter<>(filters);
-    }
-
-    @Override
-    public Predicate<T> toPredicate() {
-        return filters.isEmpty() ? null : toFilter().toPredicate();
-    }
-
-    @Override
-    public Bson toBson() {
-        return null;
     }
 
     @Override

@@ -53,12 +53,12 @@ public final class QuerySchema extends DaoConsumer {
     public static List<Snippet> snippets(final DataFetchingEnvironment env,
                                          @GraphQLName(CATEGORY) final String category,
                                          @GraphQLName(MATCH) final String match) {
-        QueryGenerator<Snippet> queryGenerator = new QueryGenerator<>();
+        QueryGenerator<Snippet> queryGenerator = new QueryGenerator<>(Snippet.class);
 
         if (match != null) {
             try {
-                queryGenerator.contains(Snippet.class, Field.title.name(), match)
-                        .contains(Snippet.class, Field.body.name(), match)
+                queryGenerator.contains(Field.title.name(), match)
+                        .contains(Field.body.name(), match)
                         .or();
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
@@ -67,7 +67,7 @@ public final class QuerySchema extends DaoConsumer {
 
         if (category != null) {
             try {
-                queryGenerator.eq(Snippet.class, Field.category.name(), category);
+                queryGenerator.eq(Field.category.name(), category);
                 if(match != null) {
                     queryGenerator.and();
                 }
@@ -76,7 +76,7 @@ public final class QuerySchema extends DaoConsumer {
             }
         }
         Logger.info("Query: " + queryGenerator);
-        Filter<Snippet> filter = queryGenerator.toFilter();
+        Filter<Snippet> filter = queryGenerator.getFilter();
 
         Stream<Snippet> snippetStream = filter != null ?
                 getSnippetDao(env).find(filter) :
