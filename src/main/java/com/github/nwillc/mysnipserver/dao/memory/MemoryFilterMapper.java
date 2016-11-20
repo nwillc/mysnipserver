@@ -17,10 +17,9 @@
 
 package com.github.nwillc.mysnipserver.dao.memory;
 
-import com.github.nwillc.mysnipserver.dao.query.EqFilter;
 import com.github.nwillc.mysnipserver.dao.query.Filter;
 import com.github.nwillc.mysnipserver.dao.query.FilterMapper;
-import com.github.nwillc.mysnipserver.dao.query.KVFilter;
+import com.github.nwillc.mysnipserver.dao.query.Comparison;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -33,35 +32,36 @@ public class MemoryFilterMapper<T> implements FilterMapper<T> {
     @Override
     @SuppressWarnings("unchecked")
     public void accept(Filter<T> tFilter) {
-        if (tFilter instanceof KVFilter) {
-            final String value = ((KVFilter) tFilter).getValue();
-            final Function<T, String> accessor = ((KVFilter) tFilter).getAccessor();
+        Predicate<T> one, two;
+        Function<T, String> accessor;
+        String value;
 
-            if (tFilter instanceof EqFilter) {
+        switch (tFilter.getOperator()) {
+            case EQ:
+                accessor = ((Comparison) tFilter).getAccessor();
+                value = ((Comparison) tFilter).getValue();
                 predicates.addLast(t -> accessor.apply(t).equals(value));
-            } else {
+                break;
+            case CONTAINS:
+                accessor = ((Comparison) tFilter).getAccessor();
+                value = ((Comparison) tFilter).getValue();
                 predicates.addLast(t -> accessor.apply(t).contains(value));
-            }
-        } else {
-            final Predicate<T> first;
-            final Predicate<T> second;
-            switch (tFilter.getClass().getSimpleName()) {
-
-                case "NotFilter":
-                    first = predicates.removeLast();
-                    predicates.addLast(t -> !first.test(t));
-                    break;
-                case "AndFilter":
-                    first = predicates.removeLast();
-                    second = predicates.removeLast();
-                    predicates.addLast(t -> first.test(t) && second.test(t));
-                    break;
-                case "OrFilter":
-                    first = predicates.removeLast();
-                    second = predicates.removeLast();
-                    predicates.addLast(t -> first.test(t) || second.test(t));
-                    break;
-            }
+                break;
+            case NOT:
+                one = predicates.removeLast();
+                predicates.addLast(t -> !one.test(t));
+                break;
+            case AND:
+                one = predicates.removeLast();
+                two = predicates.removeLast();
+                predicates.addLast(t -> one.test(t)
+                        && two.test(t));
+                break;
+            case OR:
+                one = predicates.removeLast();
+                two = predicates.removeLast();
+                predicates.addLast(t -> one.test(t) || two.test(t));
+                break;
         }
     }
 

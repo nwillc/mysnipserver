@@ -35,6 +35,11 @@ public class AndFilter<T> implements Filter<T> {
     }
 
     @Override
+    public Operator getOperator() {
+        return Operator.AND;
+    }
+
+    @Override
     public String toString() {
         return "and(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ')';
     }

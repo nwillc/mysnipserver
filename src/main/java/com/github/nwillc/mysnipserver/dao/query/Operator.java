@@ -17,19 +17,10 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-
-public class ContainsFilter<T> extends KVFilter<T> {
-
-    public ContainsFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
-         super(tClass, fieldName, value);
-    }
-
-    private String valueRegex() {
-        return ".*" + getValue() + ".*";
-    }
-
-    @Override
-    public String toString() {
-        return "regex(\"" + getFieldName() + "\",\"" + valueRegex() + "\",\"i\")";
-    }
+public enum Operator {
+    EQ,
+    CONTAINS,
+    NOT,
+    AND,
+    OR
 }

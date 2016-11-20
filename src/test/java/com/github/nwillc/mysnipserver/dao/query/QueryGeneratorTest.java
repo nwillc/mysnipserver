@@ -35,7 +35,7 @@ public class QueryGeneratorTest {
     public void testEq() throws Exception {
         QueryGenerator generator = queryGenerator
                 .contains("key", "42");
-        assertThat(generator.toString()).isEqualTo("regex(\"key\",\".*42.*\",\"i\")");
+        assertThat(generator.toString()).isEqualTo("contains(\"key\",\"42\")");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class QueryGeneratorTest {
         QueryGenerator generator = queryGenerator
                 .contains("key","1")
                 .not();
-        assertThat(generator.toString()).isEqualTo("not(regex(\"key\",\".*1.*\",\"i\"))");
+        assertThat(generator.toString()).isEqualTo("not(contains(\"key\",\"1\"))");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class QueryGeneratorTest {
                 .contains("key","1")
                 .contains("key","2")
                 .and();
-        assertThat(generator.toString()).isEqualTo("and(regex(\"key\",\".*1.*\",\"i\"),regex(\"key\",\".*2.*\",\"i\"))");
+        assertThat(generator.toString()).isEqualTo("and(contains(\"key\",\"1\"),contains(\"key\",\"2\"))");
 
     }
 
@@ -62,7 +62,7 @@ public class QueryGeneratorTest {
                 .contains("key","1")
                 .contains("key","2")
                 .or();
-        assertThat(generator.toString()).isEqualTo("or(regex(\"key\",\".*1.*\",\"i\"),regex(\"key\",\".*2.*\",\"i\"))");
+        assertThat(generator.toString()).isEqualTo("or(contains(\"key\",\"1\"),contains(\"key\",\"2\"))");
 
     }
 

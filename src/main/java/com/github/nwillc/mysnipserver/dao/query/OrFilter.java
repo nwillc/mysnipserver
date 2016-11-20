@@ -35,6 +35,11 @@ public class OrFilter<T> implements Filter<T> {
     }
 
     @Override
+    public Operator getOperator() {
+        return Operator.OR;
+    }
+
+    @Override
     public String toString() {
         return "or(" + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ')';
     }

@@ -21,15 +21,17 @@ import com.github.nwillc.mysnipserver.util.Accessor;
 
 import java.util.function.Function;
 
-public abstract class KVFilter<T> implements Filter<T> {
+public class Comparison<T> implements Filter<T> {
     private final String value;
     private final String fieldName;
     private final Function<T, String> accessor;
+    private final Operator operator;
 
-    public KVFilter(Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
+    public Comparison(Class<T> tClass, String fieldName, String value, Operator operator) throws NoSuchFieldException {
         accessor = Accessor.getFunction(fieldName, tClass);
         this.fieldName = fieldName;
         this.value = value;
+        this.operator = operator;
     }
 
     public Function<T, String> getAccessor() {
@@ -39,5 +41,15 @@ public abstract class KVFilter<T> implements Filter<T> {
     public String getFieldName() { return fieldName; }
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public Operator getOperator() {
+        return operator;
+    }
+
+    @Override
+    public String toString() {
+        return operator.name().toLowerCase() + "(\"" + getFieldName() + "\",\"" + getValue() + "\")";
     }
 }

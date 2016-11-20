@@ -31,6 +31,11 @@ public class NotFilter<T> implements Filter<T> {
     }
 
     @Override
+    public Operator getOperator() {
+        return Operator.NOT;
+    }
+
+    @Override
     public String toString() {
         return "not(" + filter + ')';
     }

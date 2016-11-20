@@ -24,4 +24,6 @@ public interface Filter<T> extends Consumer<FilterMapper<T>> {
     default void accept(FilterMapper<T> tFilterMapper) {
         tFilterMapper.accept(this);
     }
+
+    Operator getOperator();
 }

@@ -30,12 +30,12 @@ public class QueryGenerator<T> {
     }
 
     public QueryGenerator<T> contains(String key, String value) throws NoSuchFieldException {
-        filters.addLast(new ContainsFilter<>(tClass, key, value));
+        filters.addLast(new Comparison<>(tClass, key, value, Operator.CONTAINS));
         return this;
     }
 
     public QueryGenerator<T> eq(String key, String value) throws NoSuchFieldException {
-        filters.addLast(new EqFilter<>(tClass, key, value));
+        filters.addLast(new Comparison<>(tClass, key, value, Operator.EQ));
         return this;
     }
 

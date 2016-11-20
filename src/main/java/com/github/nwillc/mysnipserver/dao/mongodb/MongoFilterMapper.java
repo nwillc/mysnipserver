@@ -17,10 +17,9 @@
 
 package com.github.nwillc.mysnipserver.dao.mongodb;
 
-import com.github.nwillc.mysnipserver.dao.query.EqFilter;
+import com.github.nwillc.mysnipserver.dao.query.Comparison;
 import com.github.nwillc.mysnipserver.dao.query.Filter;
 import com.github.nwillc.mysnipserver.dao.query.FilterMapper;
-import com.github.nwillc.mysnipserver.dao.query.KVFilter;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
@@ -28,37 +27,38 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class MongoFilterMapper<T> implements FilterMapper<T> {
-    final Deque<Bson> bsons = new ArrayDeque<>();
+    private Deque<Bson> bsons = new ArrayDeque<>();
 
     @Override
     public void accept(Filter<T> tFilter) {
-        if (tFilter instanceof KVFilter) {
-            final String fieldName = ((KVFilter) tFilter).getFieldName();
-            final String value = ((KVFilter) tFilter).getValue();
+        String fieldName, value;
+        Bson bson;
 
-            if (tFilter instanceof EqFilter) {
+        switch (tFilter.getOperator()) {
+            case EQ:
+                fieldName = ((Comparison<T>) tFilter).getFieldName();
+                value = ((Comparison<T>) tFilter).getValue();
                 bsons.addLast(Filters.eq(fieldName, value));
-            } else {
+                break;
+            case CONTAINS:
+                fieldName = ((Comparison<T>) tFilter).getFieldName();
+                value = ((Comparison<T>) tFilter).getValue();
                 bsons.addLast(Filters.regex(fieldName, ".*" + value + ".*", "i"));
-            }
-        } else {
-            final Bson bson;
-            switch (tFilter.getClass().getSimpleName()) {
-                case "NotFilter":
-                    bson = bsons.removeLast();
-                    bsons.addLast(Filters.not(bson));
-                    break;
-                case "AndFilter":
-                    bson = Filters.and(bsons);
-                    bsons.clear();
-                    bsons.addLast(bson);
-                    break;
-                case "OrFilter":
-                    bson = Filters.or(bsons);
-                    bsons.clear();
-                    bsons.addLast(bson);
-                    break;
-            }
+                break;
+            case NOT:
+                bson = bsons.removeLast();
+                bsons.addLast(Filters.not(bson));
+                break;
+            case AND:
+                bson = Filters.and(bsons);
+                bsons = new ArrayDeque<>();
+                bsons.addLast(bson);
+                break;
+            case OR:
+                bson = Filters.or(bsons);
+                bsons = new ArrayDeque<>();
+                bsons.addLast(bson);
+                break;
         }
     }
 
