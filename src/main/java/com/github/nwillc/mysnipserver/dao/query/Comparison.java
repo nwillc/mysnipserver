@@ -21,17 +21,16 @@ import com.github.nwillc.mysnipserver.util.Accessor;
 
 import java.util.function.Function;
 
-public class Comparison<T> implements Filter<T> {
+public class Comparison<T> extends Filter<T> {
     private final String value;
     private final String fieldName;
     private final Function<T, String> accessor;
-    private final Operator operator;
 
     public Comparison(Class<T> tClass, String fieldName, String value, Operator operator) throws NoSuchFieldException {
+        super(operator);
         accessor = Accessor.getFunction(fieldName, tClass);
         this.fieldName = fieldName;
         this.value = value;
-        this.operator = operator;
     }
 
     public Function<T, String> getAccessor() {
@@ -44,12 +43,7 @@ public class Comparison<T> implements Filter<T> {
     }
 
     @Override
-    public Operator getOperator() {
-        return operator;
-    }
-
-    @Override
     public String toString() {
-        return operator.name().toLowerCase() + "(\"" + getFieldName() + "\",\"" + getValue() + "\")";
+        return getOperator().name().toLowerCase() + "(\"" + getFieldName() + "\",\"" + getValue() + "\")";
     }
 }

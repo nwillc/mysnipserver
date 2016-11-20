@@ -17,12 +17,14 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
+import org.antlr.v4.runtime.atn.SemanticContext;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.stream.Collectors;
 
 public class QueryGenerator<T> {
-    private final Deque<Filter<T>> filters = new ArrayDeque<>();
+    private Deque<Filter<T>> filters = new ArrayDeque<>();
     private final Class<T> tClass;
 
     public QueryGenerator(Class<T> tClass) {
@@ -40,20 +42,20 @@ public class QueryGenerator<T> {
     }
 
     public QueryGenerator<T> not() {
-        filters.addFirst(new NotFilter<>(filters.removeFirst()));
+        filters.addFirst(new OpFilter<>(Operator.NOT, filters.removeFirst()));
         return this;
     }
 
     public QueryGenerator<T> and() {
-        Filter<T> and = new AndFilter<>(filters);
-        filters.clear();
+        Filter<T> and = new OpFilter<>(Operator.AND, filters);
+        filters = new ArrayDeque<>();
         filters.addFirst(and);
         return this;
     }
 
     public QueryGenerator<T> or() {
-        Filter<T> and = new OrFilter<>(filters);
-        filters.clear();
+        Filter<T> and = new OpFilter<>(Operator.OR, filters);
+        filters = new ArrayDeque<>();
         filters.addFirst(and);
         return this;
     }
@@ -67,7 +69,7 @@ public class QueryGenerator<T> {
             return filters.getFirst();
         }
 
-        return new OrFilter<>(filters);
+        return new OpFilter<>(Operator.OR,filters);
     }
 
     @Override
