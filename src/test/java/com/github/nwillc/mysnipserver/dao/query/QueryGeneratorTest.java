@@ -21,8 +21,6 @@ import com.github.nwillc.mysnipserver.entity.Entity;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.function.Predicate;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class QueryGeneratorTest {

@@ -21,6 +21,7 @@ import com.github.nwillc.mysnipserver.dao.query.Filter;
 import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.DataStore;
+import com.github.nwillc.mysnipserver.entity.Field;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
@@ -33,7 +34,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
-import static com.github.nwillc.mysnipserver.entity.SnippetPredicate.Field;
 
 @GraphQLName(QUERY)
 public final class QuerySchema extends DaoConsumer {
@@ -68,7 +68,7 @@ public final class QuerySchema extends DaoConsumer {
         if (category != null) {
             try {
                 queryGenerator.eq(Field.category.name(), category);
-                if(match != null) {
+                if (match != null) {
                     queryGenerator.and();
                 }
             } catch (NoSuchFieldException e) {

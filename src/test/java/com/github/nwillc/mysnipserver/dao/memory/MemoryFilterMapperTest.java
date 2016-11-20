@@ -19,8 +19,10 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import org.junit.Test;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import java.util.function.Predicate;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MemoryFilterMapperTest {
     @Test
