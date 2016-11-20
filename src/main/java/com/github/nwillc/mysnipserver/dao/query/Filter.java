@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface Filter<T> extends Consumer<FilterMapper<T>> {
-    Predicate<T> toPredicate();
     Bson toBson();
 
     @Override

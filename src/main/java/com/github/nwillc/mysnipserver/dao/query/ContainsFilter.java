@@ -34,11 +34,6 @@ public class ContainsFilter<T> extends KVFilter<T> {
     }
 
     @Override
-    public Predicate<T> toPredicate() {
-        return t -> function.apply(t).contains(getValue());
-    }
-
-    @Override
     public Bson toBson() {
         return Filters.regex(getFieldName(), valueRegex());
     }

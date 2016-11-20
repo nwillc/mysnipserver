@@ -30,12 +30,6 @@ public class NotFilter<T> implements Filter<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Predicate<T> toPredicate() {
-        return filter.toPredicate().negate();
-    }
-
-    @Override
     public void accept(FilterMapper<T> tFilterMapper) {
         filter.accept(tFilterMapper);
         tFilterMapper.accept(this);

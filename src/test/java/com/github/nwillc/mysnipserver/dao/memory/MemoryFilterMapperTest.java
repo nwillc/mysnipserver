@@ -37,7 +37,53 @@ public class MemoryFilterMapperTest {
         assertThat(predicate.test(bean)).isFalse();
     }
 
+    @Test
+    public void testNot() throws Exception {
+        QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1").not();
+
+        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        generator.getFilter().accept(b);
+        Predicate<Bean> predicate = b.getPredicate();
+        Bean bean = new Bean();
+        bean.value = "1";
+        assertThat(predicate.test(bean)).isFalse();
+        bean.value = "2";
+        assertThat(predicate.test(bean)).isTrue();
+    }
+
+    @Test
+    public void testAnd() throws Exception {
+        QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1").eq("value2","2").and();
+
+        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        generator.getFilter().accept(b);
+        Predicate<Bean> predicate = b.getPredicate();
+        Bean bean = new Bean();
+        bean.value = "1";
+        bean.value2 = "2";
+        assertThat(predicate.test(bean)).isTrue();
+        bean.value2 = "3";
+        assertThat(predicate.test(bean)).isFalse();
+    }
+
+    @Test
+    public void testOr() throws Exception {
+        QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1").eq("value","2").or();
+
+        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        generator.getFilter().accept(b);
+        Predicate<Bean> predicate = b.getPredicate();
+        Bean bean = new Bean();
+        bean.value = "1";
+        assertThat(predicate.test(bean)).isTrue();
+        bean.value = "2";
+        assertThat(predicate.test(bean)).isTrue();
+        bean.value = "3";
+        assertThat(predicate.test(bean)).isFalse();
+    }
+
     class Bean {
         public String value;
+        public String value2;
     }
 }

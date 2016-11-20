@@ -35,15 +35,6 @@ public class AndFilter<T> implements Filter<T> {
     }
 
     @Override
-    public Predicate<T> toPredicate() {
-        Predicate<T> result = null;
-        for (Filter<T> filter : filters) {
-            result = (result == null) ? filter.toPredicate() : result.and(filter.toPredicate());
-        }
-        return result;
-    }
-
-    @Override
     public void accept(FilterMapper<T> tFilterMapper) {
         filters.forEach(tFilter -> tFilter.accept(tFilterMapper));
         tFilterMapper.accept(this);

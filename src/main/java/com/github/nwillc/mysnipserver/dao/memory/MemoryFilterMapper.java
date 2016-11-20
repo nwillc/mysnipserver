@@ -35,19 +35,33 @@ public class MemoryFilterMapper<T> implements FilterMapper<T> {
     public void accept(Filter<T> tFilter) {
         if (tFilter instanceof KVFilter) {
             final String value = ((KVFilter) tFilter).getValue();
-            final Function<T,String> accessor = ((KVFilter) tFilter).getAccessor();
+            final Function<T, String> accessor = ((KVFilter) tFilter).getAccessor();
 
             if (tFilter instanceof EqFilter) {
-               predicates.addLast(t -> accessor.apply(t).equals(value));
+                predicates.addLast(t -> accessor.apply(t).equals(value));
             } else {
-               predicates.addLast(t -> accessor.apply(t).contains(value));
+                predicates.addLast(t -> accessor.apply(t).contains(value));
             }
         } else {
-           switch (tFilter.getClass().getSimpleName()) {
-               case "NotFilter":
-                   predicates.addLast(t -> !predicates.getLast().test(t));
-                   break;
-           }
+            final Predicate<T> first;
+            final Predicate<T> second;
+            switch (tFilter.getClass().getSimpleName()) {
+
+                case "NotFilter":
+                    first = predicates.removeLast();
+                    predicates.addLast(t -> !first.test(t));
+                    break;
+                case "AndFilter":
+                    first = predicates.removeLast();
+                    second = predicates.removeLast();
+                    predicates.addLast(t -> first.test(t) && second.test(t));
+                    break;
+                case "OrFilter":
+                    first = predicates.removeLast();
+                    second = predicates.removeLast();
+                    predicates.addLast(t -> first.test(t) || second.test(t));
+                    break;
+            }
         }
     }
 

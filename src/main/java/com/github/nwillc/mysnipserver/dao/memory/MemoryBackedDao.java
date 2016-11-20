@@ -46,7 +46,9 @@ public class MemoryBackedDao<K, T extends HasKey<K>> implements Dao<K,T> {
 
     @Override
     public Stream<T> find(Filter<T> filter) {
-        return findAll().filter(filter.toPredicate());
+        MemoryFilterMapper<T> mapper = new MemoryFilterMapper<>();
+        filter.accept(mapper);
+        return findAll().filter(mapper.getPredicate());
     }
 
     @Override

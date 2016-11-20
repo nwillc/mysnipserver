@@ -34,11 +34,6 @@ public class EqFilter<T> extends KVFilter<T> {
     }
 
     @Override
-    public Predicate<T> toPredicate() {
-        return t -> function.apply(t).equals(getValue());
-    }
-
-    @Override
     public Bson toBson() {
         return Filters.eq(getFieldName(), getValue());
     }
