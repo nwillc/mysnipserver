@@ -21,6 +21,7 @@ import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.HasKey;
 import com.github.nwillc.mysnipserver.dao.query.Filter;
 import com.github.nwillc.mysnipserver.util.JsonMapper;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -38,6 +39,7 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
     public MongoDbDao(final MongoClient client, final Class<T> tClass) {
         this.tClass = tClass;
         collection =  client.getDatabase("snippets").getCollection(tClass.getSimpleName());
+        collection.createIndex(new BasicDBObject("key",1));
     }
 
     @Override
