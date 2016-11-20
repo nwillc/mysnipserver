@@ -25,32 +25,29 @@ import org.bson.conversions.Bson;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ContainsFilter<T> implements Filter<T> {
-    private final String fieldName;
-    private final String value;
+public class ContainsFilter<T> extends KVFilter<T> {
     private final Function<T, String> function;
 
     public ContainsFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
-        this.fieldName = fieldName;
-        this.value = value;
+         super(tClass, fieldName, value);
         function = Accessor.getFunction(fieldName, tClass);
     }
 
     @Override
     public Predicate<T> toPredicate() {
-        return t -> function.apply(t).contains(value);
+        return t -> function.apply(t).contains(getValue());
     }
 
     @Override
     public Bson toBson() {
-        return Filters.regex(fieldName, valueRegex());
+        return Filters.regex(getFieldName(), valueRegex());
     }
 
     private String valueRegex() {
-        return ".*" + value + ".*";
+        return ".*" + getValue() + ".*";
     }
     @Override
     public String toString() {
-        return "regex(\"" + fieldName + "\",\"" + valueRegex() + "\",\"i\")";
+        return "regex(\"" + getFieldName() + "\",\"" + valueRegex() + "\",\"i\")";
     }
 }

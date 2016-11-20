@@ -17,34 +17,18 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
+import org.junit.Test;
 
-import com.github.nwillc.mysnipserver.util.Accessor;
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
+public class FilterMapperTest {
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-public class EqFilter<T> extends KVFilter<T> {
-    private final Function<T, String> function;
-
-    public EqFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
-        super(tClass, fieldName, value);
-        function = Accessor.getFunction(fieldName, tClass);
+    @Test
+    public void testVisitor() throws Exception {
+        QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class);
+        generator.eq("foo","bar").eq("foo","baz").or();
+        generator.getFilter().accept(System.out::println);
     }
 
-    @Override
-    public Predicate<T> toPredicate() {
-        return t -> function.apply(t).equals(getValue());
-    }
-
-    @Override
-    public Bson toBson() {
-        return Filters.eq(getFieldName(), getValue());
-    }
-
-    @Override
-    public String toString() {
-        return "eq(\"" + getFieldName() + "\",\"" + getValue() + "\")";
+    class Bean {
+        String foo;
     }
 }

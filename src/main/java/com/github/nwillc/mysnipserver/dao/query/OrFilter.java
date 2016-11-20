@@ -42,6 +42,12 @@ public class OrFilter<T> implements Filter<T> {
     }
 
     @Override
+    public void accept(FilterMapper<T> tFilterMapper) {
+        filters.forEach(tFilter -> tFilter.accept(tFilterMapper));
+        tFilterMapper.accept(this);
+    }
+
+    @Override
     public Bson toBson() {
         return Filters.or(filters.stream().map(Filter::toBson).collect(Collectors.toList()));
     }

@@ -15,19 +15,29 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.dao.query;
+package com.github.nwillc.mysnipserver.dao.memory;
 
-import org.bson.conversions.Bson;
-
-import java.util.function.Consumer;
+import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
+import org.junit.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.util.function.Predicate;
 
-public interface Filter<T> extends Consumer<FilterMapper<T>> {
-    Predicate<T> toPredicate();
-    Bson toBson();
+public class MemoryFilterMapperTest {
+    @Test
+    public void testEquals() throws Exception {
+        QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1");
 
-    @Override
-    default void accept(FilterMapper<T> tFilterMapper) {
-        tFilterMapper.accept(this);
+        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        generator.getFilter().accept(b);
+        Predicate<Bean> predicate = b.getPredicate();
+        Bean bean = new Bean();
+        bean.value = "1";
+        assertThat(predicate.test(bean)).isTrue();
+        bean.value = "2";
+        assertThat(predicate.test(bean)).isFalse();
+    }
+
+    class Bean {
+        public String value;
     }
 }

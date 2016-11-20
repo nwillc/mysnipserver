@@ -23,9 +23,9 @@ import org.bson.conversions.Bson;
 import java.util.function.Predicate;
 
 public class NotFilter<T> implements Filter<T> {
-    private final Filter filter;
+    private final Filter<T> filter;
 
-    public NotFilter(Filter filter) {
+    public NotFilter(Filter<T> filter) {
         this.filter = filter;
     }
 
@@ -33,6 +33,12 @@ public class NotFilter<T> implements Filter<T> {
     @SuppressWarnings("unchecked")
     public Predicate<T> toPredicate() {
         return filter.toPredicate().negate();
+    }
+
+    @Override
+    public void accept(FilterMapper<T> tFilterMapper) {
+        filter.accept(tFilterMapper);
+        tFilterMapper.accept(this);
     }
 
     @Override
