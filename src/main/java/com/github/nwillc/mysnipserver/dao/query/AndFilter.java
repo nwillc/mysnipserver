@@ -17,15 +17,9 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AndFilter<T> implements Filter<T> {
     private final Collection<Filter<T>> filters;
@@ -38,11 +32,6 @@ public class AndFilter<T> implements Filter<T> {
     public void accept(FilterMapper<T> tFilterMapper) {
         filters.forEach(tFilter -> tFilter.accept(tFilterMapper));
         tFilterMapper.accept(this);
-    }
-
-    @Override
-    public Bson toBson() {
-        return Filters.and(filters.stream().map(Filter::toBson).collect(Collectors.toList()));
     }
 
     @Override

@@ -19,11 +19,8 @@ package com.github.nwillc.mysnipserver.dao.query;
 
 
 import com.github.nwillc.mysnipserver.util.Accessor;
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class ContainsFilter<T> extends KVFilter<T> {
     private final Function<T, String> function;
@@ -33,14 +30,10 @@ public class ContainsFilter<T> extends KVFilter<T> {
         function = Accessor.getFunction(fieldName, tClass);
     }
 
-    @Override
-    public Bson toBson() {
-        return Filters.regex(getFieldName(), valueRegex());
-    }
-
     private String valueRegex() {
         return ".*" + getValue() + ".*";
     }
+
     @Override
     public String toString() {
         return "regex(\"" + getFieldName() + "\",\"" + valueRegex() + "\",\"i\")";

@@ -54,7 +54,9 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
 
     @Override
     public Stream<T> find(Filter<T> filter) {
-        return StreamSupport.stream(collection.find(filter.toBson()).spliterator(), false)
+        final MongoFilterMapper<T> mapper = new MongoFilterMapper<>();
+        filter.accept(mapper);
+        return StreamSupport.stream(collection.find(mapper.toBson()).spliterator(), false)
                 .map(d -> fromJson(d.toJson(), tClass));
     }
 

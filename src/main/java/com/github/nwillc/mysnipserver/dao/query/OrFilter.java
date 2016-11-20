@@ -17,12 +17,8 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class OrFilter<T> implements Filter<T> {
@@ -36,11 +32,6 @@ public class OrFilter<T> implements Filter<T> {
     public void accept(FilterMapper<T> tFilterMapper) {
         filters.forEach(tFilter -> tFilter.accept(tFilterMapper));
         tFilterMapper.accept(this);
-    }
-
-    @Override
-    public Bson toBson() {
-        return Filters.or(filters.stream().map(Filter::toBson).collect(Collectors.toList()));
     }
 
     @Override

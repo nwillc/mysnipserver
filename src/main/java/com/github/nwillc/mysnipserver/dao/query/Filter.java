@@ -17,14 +17,9 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import org.bson.conversions.Bson;
-
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public interface Filter<T> extends Consumer<FilterMapper<T>> {
-    Bson toBson();
-
     @Override
     default void accept(FilterMapper<T> tFilterMapper) {
         tFilterMapper.accept(this);

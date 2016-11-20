@@ -17,11 +17,6 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.mongodb.client.model.Filters;
-import org.bson.conversions.Bson;
-
-import java.util.function.Predicate;
-
 public class NotFilter<T> implements Filter<T> {
     private final Filter<T> filter;
 
@@ -33,11 +28,6 @@ public class NotFilter<T> implements Filter<T> {
     public void accept(FilterMapper<T> tFilterMapper) {
         filter.accept(tFilterMapper);
         tFilterMapper.accept(this);
-    }
-
-    @Override
-    public Bson toBson() {
-        return Filters.not(filter.toBson());
     }
 
     @Override
