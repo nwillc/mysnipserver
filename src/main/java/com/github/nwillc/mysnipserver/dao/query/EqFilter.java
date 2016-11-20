@@ -18,16 +18,10 @@
 package com.github.nwillc.mysnipserver.dao.query;
 
 
-import com.github.nwillc.mysnipserver.util.Accessor;
-
-import java.util.function.Function;
-
 public class EqFilter<T> extends KVFilter<T> {
-    private final Function<T, String> function;
 
     public EqFilter(final Class<T> tClass, String fieldName, String value) throws NoSuchFieldException {
         super(tClass, fieldName, value);
-        function = Accessor.getFunction(fieldName, tClass);
     }
 
     @Override
