@@ -83,7 +83,7 @@ apply plugin: "jacoco"
 apply plugin: "pmd"
 
 group = "com.github.nwillc"
-version = "2.5.5"
+version = "2.5.6"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 mainClassName = "com.github.nwillc.mysnipserver.MySnipServer"
