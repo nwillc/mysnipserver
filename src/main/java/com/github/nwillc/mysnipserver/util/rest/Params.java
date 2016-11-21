@@ -25,7 +25,7 @@ public enum Params {
     TOKEN;
 
     public String getLabel() {
-        return ":" + name().toLowerCase();
+        return ':' + name().toLowerCase();
     }
 
     public String from(Request request) {

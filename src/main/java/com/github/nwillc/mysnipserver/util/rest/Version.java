@@ -24,7 +24,7 @@ public final class Version {
     }
 
     public static String versionedPath(final String version, final String path) {
-        return "/" + version + "/" + path;
+        return '/' + version + '/' + path;
     }
 
     public static String versionedPath(final String path) {

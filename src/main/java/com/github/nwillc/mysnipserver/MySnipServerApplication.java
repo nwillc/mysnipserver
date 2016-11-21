@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import static spark.Spark.*;
 
 public class MySnipServerApplication implements SparkApplication {
-    private final static String ADMIN = "nwillc@gmail.com";
+    private static final String ADMIN = "nwillc@gmail.com";
     private final Dao<String, Category> categoriesDao;
     private final Dao<String, Snippet> snippetDao;
     private final Dao<String, User> userDao;

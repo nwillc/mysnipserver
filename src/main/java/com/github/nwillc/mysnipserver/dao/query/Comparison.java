@@ -44,6 +44,6 @@ public class Comparison<T> extends Query<T> {
 
     @Override
     public String toString() {
-        return getOperator().name().toLowerCase() + "(\"" + getFieldName() + "\",\"" + getValue() + "\")";
+        return getOperator().name().toLowerCase() + "(\"" + fieldName + "\",\"" + value + "\")";
     }
 }

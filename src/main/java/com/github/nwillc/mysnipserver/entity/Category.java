@@ -45,7 +45,7 @@ public class Category extends Entity {
     @Override
     public String toString() {
         return "Category{" +
-                "key='" + getKey() + "'" +
+                "key='" + getKey() + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

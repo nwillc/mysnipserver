@@ -31,9 +31,9 @@ import spark.Response;
 import spark.Session;
 import spark.Spark;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.github.nwillc.mysnipserver.util.rest.Params.*;
 import static com.github.nwillc.mysnipserver.util.rest.Version.versionedPath;
@@ -54,7 +54,7 @@ public class Authentication implements JsonMapper {
             versionedPath(AUTH_PATH)
     };
     private final Dao<String, User> dao;
-    private final Set<String> noAuth = new HashSet<>();
+    private final Collection<String> noAuth = new HashSet<>();
 
     @Inject
     public Authentication(Dao<String, User> dao) {
@@ -63,9 +63,9 @@ public class Authentication implements JsonMapper {
         for (String path : NO_AUTH) {
             noAuth(path);
         }
-        Spark.get(versionedPath(AUTH_PATH + "/" + USERNAME.getLabel() + "/" + PASSWORD.getLabel()), this::login);
-        Spark.get(versionedPath(AUTH_PATH + "/" + TOKEN.getLabel()), this::googleAuth);
-        Spark.delete(versionedPath(AUTH_PATH), this::logout);
+        Spark.get(versionedPath(AUTH_PATH + '/' + USERNAME.getLabel() + '/' + PASSWORD.getLabel()), this::login);
+        Spark.get(versionedPath(AUTH_PATH + '/' + TOKEN.getLabel()), this::googleAuth);
+        Spark.delete(versionedPath(AUTH_PATH), Authentication::logout);
     }
 
     private void check(Request request, Response response) {
@@ -83,7 +83,7 @@ public class Authentication implements JsonMapper {
         }
     }
 
-    private Boolean logout(Request request, Response response) {
+    private static Boolean logout(Request request, Response response) {
         request.session(true).attribute(IS_LOGGED_IN, Boolean.FALSE);
         return Boolean.TRUE;
     }

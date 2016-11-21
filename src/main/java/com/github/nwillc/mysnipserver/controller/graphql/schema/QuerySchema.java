@@ -53,41 +53,35 @@ public final class QuerySchema extends DaoConsumer {
     public static List<Snippet> snippets(final DataFetchingEnvironment env,
                                          @GraphQLName(CATEGORY) final String category,
                                          @GraphQLName(MATCH) final String match) {
-        try {
-            QueryGenerator<Snippet> queryGenerator = new QueryGenerator<>(Snippet.class);
+        QueryGenerator<Snippet> queryGenerator = new QueryGenerator<>(Snippet.class);
 
-            if (match != null) {
-                try {
-                    queryGenerator.contains(Field.title.name(), match)
-                            .contains(Field.body.name(), match)
-                            .or();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
+        if (match != null) {
+            try {
+                queryGenerator.contains(Field.title.name(), match)
+                        .contains(Field.body.name(), match)
+                        .or();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
             }
-
-            if (category != null) {
-                try {
-                    queryGenerator.eq(Field.category.name(), category);
-                    if (match != null) {
-                        queryGenerator.and();
-                    }
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-            }
-            Logger.info("Query: " + queryGenerator);
-            Query<Snippet> query = queryGenerator.getFilter();
-
-            Stream<Snippet> snippetStream = query != null ?
-                    getSnippetDao(env).find(query) :
-                    getSnippetDao(env).findAll();
-            return snippetStream.collect(Collectors.toList());
-        } catch (Exception e) {
-            Logger.error("failure: ", e);
-            e.printStackTrace();
-            throw e;
         }
+
+        if (category != null) {
+            try {
+                queryGenerator.eq(Field.category.name(), category);
+                if (match != null) {
+                    queryGenerator.and();
+                }
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+        Logger.info("Query: " + queryGenerator);
+        Query<Snippet> query = queryGenerator.getFilter();
+
+        Stream<Snippet> snippetStream = query != null ?
+                getSnippetDao(env).find(query) :
+                getSnippetDao(env).findAll();
+        return snippetStream.collect(Collectors.toList());
     }
 
     @GraphQLField

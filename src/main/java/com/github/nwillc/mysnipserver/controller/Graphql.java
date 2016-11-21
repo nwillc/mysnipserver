@@ -76,7 +76,7 @@ public class Graphql implements JsonMapper, DaoProvider {
         Logger.info(QUERY + ": " + payload.get(QUERY));
         ExecutionResult executionResult = graphql.execute(payload.get(QUERY).toString(), null, this, variables);
         Map<String, Object> result = new LinkedHashMap<>();
-        if (executionResult.getErrors().size() > 0) {
+        if (!executionResult.getErrors().isEmpty()) {
             result.put(ERRORS, executionResult.getErrors());
             Logger.error("Errors: {}", executionResult.getErrors());
         }

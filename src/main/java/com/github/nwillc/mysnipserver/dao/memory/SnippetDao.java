@@ -29,7 +29,7 @@ public class SnippetDao extends MemoryBackedDao<String, Snippet> {
 
     public SnippetDao(Dao<String, Category> categoryDao) {
         this.categoryDao = categoryDao;
-        Optional<Category> java = categoryDao.findAll().filter(c -> c.getName().equals("Java")).findFirst();
+        Optional<Category> java = categoryDao.findAll().filter(c -> "Java".equals(c.getName())).findFirst();
         Logger.info("Found java category: " + java.isPresent());
         java.ifPresent(c -> {
             save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));

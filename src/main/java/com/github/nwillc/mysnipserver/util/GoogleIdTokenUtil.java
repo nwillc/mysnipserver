@@ -37,7 +37,7 @@ public final class GoogleIdTokenUtil {
     private GoogleIdTokenUtil() {
     }
 
-    static public Optional<Payload> verify(final String googleTokenId) throws GeneralSecurityException, IOException {
+    public static Optional<Payload> verify(final String googleTokenId) throws GeneralSecurityException, IOException {
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(httpTransport, jsonFactory)
