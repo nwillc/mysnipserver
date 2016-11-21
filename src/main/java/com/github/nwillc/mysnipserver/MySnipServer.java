@@ -27,7 +27,7 @@ import static com.github.nwillc.mysnipserver.CommandLineInterface.CLI;
 import static spark.Spark.ipAddress;
 import static spark.Spark.port;
 
-public class MySnipServer {
+public final class MySnipServer {
 
     public static void main(String[] args) {
         Logger.info("Starting");

@@ -24,6 +24,7 @@ import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.HttpException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.inject.Inject;
 import org.pmw.tinylog.Logger;
 import spark.Request;
@@ -105,7 +106,7 @@ public class Authentication implements JsonMapper {
     }
 
     private Boolean googleAuth(Request request, Response response) {
-        Optional<GoogleIdToken.Payload> payload;
+        Optional<Payload> payload;
         try {
             payload = GoogleIdTokenUtil.verify(TOKEN.from(request));
         } catch (Exception e) {
