@@ -17,8 +17,8 @@
 
 package com.github.nwillc.mysnipserver.dao.memory;
 
-import com.github.nwillc.mysnipserver.dao.query.Filter;
-import com.github.nwillc.mysnipserver.dao.query.FilterMapper;
+import com.github.nwillc.mysnipserver.dao.query.Query;
+import com.github.nwillc.mysnipserver.dao.query.QueryMapper;
 import com.github.nwillc.mysnipserver.dao.query.Comparison;
 
 import java.util.ArrayDeque;
@@ -26,25 +26,25 @@ import java.util.Deque;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class MemoryFilterMapper<T> implements FilterMapper<T> {
+public class MemoryQueryMapper<T> implements QueryMapper<T> {
     final Deque<Predicate<T>> predicates = new ArrayDeque<>();
 
     @Override
     @SuppressWarnings("unchecked")
-    public void accept(Filter<T> tFilter) {
+    public void accept(Query<T> tQuery) {
         Predicate<T> one, two;
         Function<T, String> accessor;
         String value;
 
-        switch (tFilter.getOperator()) {
+        switch (tQuery.getOperator()) {
             case EQ:
-                accessor = ((Comparison) tFilter).getAccessor();
-                value = ((Comparison) tFilter).getValue();
+                accessor = ((Comparison) tQuery).getAccessor();
+                value = ((Comparison) tQuery).getValue();
                 predicates.addLast(t -> accessor.apply(t).equals(value));
                 break;
             case CONTAINS:
-                accessor = ((Comparison) tFilter).getAccessor();
-                value = ((Comparison) tFilter).getValue();
+                accessor = ((Comparison) tQuery).getAccessor();
+                value = ((Comparison) tQuery).getValue();
                 predicates.addLast(t -> accessor.apply(t).contains(value));
                 break;
             case NOT:

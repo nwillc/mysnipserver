@@ -17,14 +17,12 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import org.antlr.v4.runtime.atn.SemanticContext;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.stream.Collectors;
 
 public class QueryGenerator<T> {
-    private Deque<Filter<T>> filters = new ArrayDeque<>();
+    private Deque<Query<T>> queries = new ArrayDeque<>();
     private final Class<T> tClass;
 
     public QueryGenerator(Class<T> tClass) {
@@ -32,49 +30,49 @@ public class QueryGenerator<T> {
     }
 
     public QueryGenerator<T> contains(String key, String value) throws NoSuchFieldException {
-        filters.addLast(new Comparison<>(tClass, key, value, Operator.CONTAINS));
+        queries.addLast(new Comparison<>(tClass, key, value, Operator.CONTAINS));
         return this;
     }
 
     public QueryGenerator<T> eq(String key, String value) throws NoSuchFieldException {
-        filters.addLast(new Comparison<>(tClass, key, value, Operator.EQ));
+        queries.addLast(new Comparison<>(tClass, key, value, Operator.EQ));
         return this;
     }
 
     public QueryGenerator<T> not() {
-        filters.addFirst(new OpFilter<>(Operator.NOT, filters.removeFirst()));
+        queries.addFirst(new Logical<>(Operator.NOT, queries.removeFirst()));
         return this;
     }
 
     public QueryGenerator<T> and() {
-        Filter<T> and = new OpFilter<>(Operator.AND, filters);
-        filters = new ArrayDeque<>();
-        filters.addFirst(and);
+        Query<T> and = new Logical<>(Operator.AND, queries);
+        queries = new ArrayDeque<>();
+        queries.addFirst(and);
         return this;
     }
 
     public QueryGenerator<T> or() {
-        Filter<T> and = new OpFilter<>(Operator.OR, filters);
-        filters = new ArrayDeque<>();
-        filters.addFirst(and);
+        Query<T> and = new Logical<>(Operator.OR, queries);
+        queries = new ArrayDeque<>();
+        queries.addFirst(and);
         return this;
     }
 
-    public Filter<T> getFilter() {
-        if (filters.isEmpty()) {
+    public Query<T> getFilter() {
+        if (queries.isEmpty()) {
             return null;
         }
 
-        if (filters.size() == 1) {
-            return filters.getFirst();
+        if (queries.size() == 1) {
+            return queries.getFirst();
         }
 
-        return new OpFilter<>(Operator.OR,filters);
+        return new Logical<>(Operator.OR, queries);
     }
 
     @Override
     public String toString() {
-        return filters.stream().map(Filter::toString).collect(Collectors.joining(", "));
+        return queries.stream().map(Query::toString).collect(Collectors.joining(", "));
     }
 
 }

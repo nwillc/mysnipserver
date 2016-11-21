@@ -18,31 +18,31 @@
 package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.nwillc.mysnipserver.dao.query.Comparison;
-import com.github.nwillc.mysnipserver.dao.query.Filter;
-import com.github.nwillc.mysnipserver.dao.query.FilterMapper;
+import com.github.nwillc.mysnipserver.dao.query.Query;
+import com.github.nwillc.mysnipserver.dao.query.QueryMapper;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class MongoFilterMapper<T> implements FilterMapper<T> {
+public class MongoQueryMapper<T> implements QueryMapper<T> {
     private Deque<Bson> bsons = new ArrayDeque<>();
 
     @Override
-    public void accept(Filter<T> tFilter) {
+    public void accept(Query<T> tQuery) {
         String fieldName, value;
         Bson bson;
 
-        switch (tFilter.getOperator()) {
+        switch (tQuery.getOperator()) {
             case EQ:
-                fieldName = ((Comparison<T>) tFilter).getFieldName();
-                value = ((Comparison<T>) tFilter).getValue();
+                fieldName = ((Comparison<T>) tQuery).getFieldName();
+                value = ((Comparison<T>) tQuery).getValue();
                 bsons.addLast(Filters.eq(fieldName, value));
                 break;
             case CONTAINS:
-                fieldName = ((Comparison<T>) tFilter).getFieldName();
-                value = ((Comparison<T>) tFilter).getValue();
+                fieldName = ((Comparison<T>) tQuery).getFieldName();
+                value = ((Comparison<T>) tQuery).getValue();
                 bsons.addLast(Filters.regex(fieldName, ".*" + value + ".*", "i"));
                 break;
             case NOT:

@@ -19,7 +19,7 @@ package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.HasKey;
-import com.github.nwillc.mysnipserver.dao.query.Filter;
+import com.github.nwillc.mysnipserver.dao.query.Query;
 import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -55,9 +55,9 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
     }
 
     @Override
-    public Stream<T> find(Filter<T> filter) {
-        final MongoFilterMapper<T> mapper = new MongoFilterMapper<>();
-        filter.accept(mapper);
+    public Stream<T> find(Query<T> query) {
+        final MongoQueryMapper<T> mapper = new MongoQueryMapper<>();
+        query.accept(mapper);
         return StreamSupport.stream(collection.find(mapper.toBson()).spliterator(), false)
                 .map(d -> fromJson(d.toJson(), tClass));
     }

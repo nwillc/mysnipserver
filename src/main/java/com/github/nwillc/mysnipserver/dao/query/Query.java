@@ -19,16 +19,16 @@ package com.github.nwillc.mysnipserver.dao.query;
 
 import java.util.function.Consumer;
 
-public class Filter<T> implements Consumer<FilterMapper<T>> {
+public class Query<T> implements Consumer<QueryMapper<T>> {
     private final Operator operator;
 
-    public Filter(Operator operator) {
+    public Query(Operator operator) {
         this.operator = operator;
     }
 
     @Override
-    public void accept(FilterMapper<T> tFilterMapper) {
-        tFilterMapper.accept(this);
+    public void accept(QueryMapper<T> tQueryMapper) {
+        tQueryMapper.accept(this);
     }
 
     public Operator getOperator() {

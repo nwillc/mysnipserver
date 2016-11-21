@@ -24,12 +24,12 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class MemoryFilterMapperTest {
+public class MemoryQueryMapperTest {
     @Test
     public void testEquals() throws Exception {
         QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1");
 
-        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        MemoryQueryMapper<Bean> b = new MemoryQueryMapper<>();
         generator.getFilter().accept(b);
         Predicate<Bean> predicate = b.getPredicate();
         Bean bean = new Bean();
@@ -43,7 +43,7 @@ public class MemoryFilterMapperTest {
     public void testNot() throws Exception {
         QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1").not();
 
-        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        MemoryQueryMapper<Bean> b = new MemoryQueryMapper<>();
         generator.getFilter().accept(b);
         Predicate<Bean> predicate = b.getPredicate();
         Bean bean = new Bean();
@@ -57,7 +57,7 @@ public class MemoryFilterMapperTest {
     public void testAnd() throws Exception {
         QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1").eq("value2","2").and();
 
-        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        MemoryQueryMapper<Bean> b = new MemoryQueryMapper<>();
         generator.getFilter().accept(b);
         Predicate<Bean> predicate = b.getPredicate();
         Bean bean = new Bean();
@@ -72,7 +72,7 @@ public class MemoryFilterMapperTest {
     public void testOr() throws Exception {
         QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class).eq("value", "1").eq("value","2").or();
 
-        MemoryFilterMapper<Bean> b = new MemoryFilterMapper<>();
+        MemoryQueryMapper<Bean> b = new MemoryQueryMapper<>();
         generator.getFilter().accept(b);
         Predicate<Bean> predicate = b.getPredicate();
         Bean bean = new Bean();

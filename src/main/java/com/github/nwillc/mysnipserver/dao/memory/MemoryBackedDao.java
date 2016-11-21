@@ -19,7 +19,7 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.dao.HasKey;
-import com.github.nwillc.mysnipserver.dao.query.Filter;
+import com.github.nwillc.mysnipserver.dao.query.Query;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,9 +45,9 @@ public class MemoryBackedDao<K, T extends HasKey<K>> implements Dao<K,T> {
     }
 
     @Override
-    public Stream<T> find(Filter<T> filter) {
-        MemoryFilterMapper<T> mapper = new MemoryFilterMapper<>();
-        filter.accept(mapper);
+    public Stream<T> find(Query<T> query) {
+        MemoryQueryMapper<T> mapper = new MemoryQueryMapper<>();
+        query.accept(mapper);
         return findAll().filter(mapper.getPredicate());
     }
 

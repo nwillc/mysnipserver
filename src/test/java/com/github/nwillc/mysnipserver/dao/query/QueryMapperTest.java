@@ -17,31 +17,18 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import org.junit.Test;
 
-public class OpFilter<T> extends Filter<T> {
-    private final Collection<Filter<T>> filters;
+public class QueryMapperTest {
 
-    public OpFilter(Operator operator, Filter<T> filter) {
-        this(operator, Collections.singletonList(filter));
+    @Test
+    public void testVisitor() throws Exception {
+        QueryGenerator<Bean> generator = new QueryGenerator<>(Bean.class);
+        generator.eq("foo","bar").eq("foo","baz").or();
+        generator.getFilter().accept(System.out::println);
     }
 
-    public OpFilter(Operator operator, Collection<Filter<T>> filters) {
-        super(operator);
-        this.filters = filters;
-    }
-
-    @Override
-    public void accept(FilterMapper<T> tFilterMapper) {
-        filters.forEach(tFilter -> tFilter.accept(tFilterMapper));
-        tFilterMapper.accept(this);
-    }
-
-    @Override
-    public String toString() {
-        return getOperator().name().toLowerCase() +
-                '(' + filters.stream().map(Filter::toString).collect(Collectors.joining(",")) + ')';
+    class Bean {
+        String foo;
     }
 }

@@ -20,6 +20,6 @@ package com.github.nwillc.mysnipserver.dao.query;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface FilterMapper<T> extends Consumer<Filter<T>> {
+public interface QueryMapper<T> extends Consumer<Query<T>> {
 
 }

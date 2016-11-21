@@ -17,7 +17,7 @@
 
 package com.github.nwillc.mysnipserver.controller.graphql.schema;
 
-import com.github.nwillc.mysnipserver.dao.query.Filter;
+import com.github.nwillc.mysnipserver.dao.query.Query;
 import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.DataStore;
@@ -77,10 +77,10 @@ public final class QuerySchema extends DaoConsumer {
                 }
             }
             Logger.info("Query: " + queryGenerator);
-            Filter<Snippet> filter = queryGenerator.getFilter();
+            Query<Snippet> query = queryGenerator.getFilter();
 
-            Stream<Snippet> snippetStream = filter != null ?
-                    getSnippetDao(env).find(filter) :
+            Stream<Snippet> snippetStream = query != null ?
+                    getSnippetDao(env).find(query) :
                     getSnippetDao(env).findAll();
             return snippetStream.collect(Collectors.toList());
         } catch (Exception e) {

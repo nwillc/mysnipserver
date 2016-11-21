@@ -17,7 +17,7 @@
 
 package com.github.nwillc.mysnipserver.dao;
 
-import com.github.nwillc.mysnipserver.dao.query.Filter;
+import com.github.nwillc.mysnipserver.dao.query.Query;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,7 +27,7 @@ public interface Dao<K,T extends HasKey<K>> {
 
     Stream<T> findAll();
 
-    Stream<T> find(Filter<T> filter);
+    Stream<T> find(Query<T> query);
 
     void save(final T entity);
 

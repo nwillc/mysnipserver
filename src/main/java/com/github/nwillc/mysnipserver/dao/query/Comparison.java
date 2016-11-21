@@ -21,7 +21,7 @@ import com.github.nwillc.mysnipserver.util.Accessor;
 
 import java.util.function.Function;
 
-public class Comparison<T> extends Filter<T> {
+public class Comparison<T> extends Query<T> {
     private final String value;
     private final String fieldName;
     private final Function<T, String> accessor;
