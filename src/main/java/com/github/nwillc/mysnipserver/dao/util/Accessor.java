@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.util;
+package com.github.nwillc.mysnipserver.dao.util;
 
 
 import org.pmw.tinylog.Logger;

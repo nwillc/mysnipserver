@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.nwillc.mysnipserver.util.http.error;
+package com.github.nwillc.mysnipserver.util.http;
 
 
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;

@@ -17,6 +17,7 @@
 
 package com.github.nwillc.mysnipserver.util.http.error;
 
+import com.github.nwillc.mysnipserver.util.http.HttpException;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import org.junit.Test;
 

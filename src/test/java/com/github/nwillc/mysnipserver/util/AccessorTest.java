@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.util;
 
 import com.github.nwillc.contracts.UtilityClassContract;
+import com.github.nwillc.mysnipserver.dao.util.Accessor;
 import com.github.nwillc.mysnipserver.entity.Entity;
 import org.junit.Test;
 

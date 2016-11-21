@@ -23,7 +23,7 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
-import com.github.nwillc.mysnipserver.util.http.error.HttpException;
+import com.github.nwillc.mysnipserver.util.http.HttpException;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.pmw.tinylog.Logger;

@@ -17,7 +17,7 @@
 
 package com.github.nwillc.mysnipserver.dao.query;
 
-import com.github.nwillc.mysnipserver.util.Accessor;
+import com.github.nwillc.mysnipserver.dao.util.Accessor;
 
 import java.util.function.Function;
 
