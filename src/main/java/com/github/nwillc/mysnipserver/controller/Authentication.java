@@ -17,13 +17,12 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
-import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.mysnipserver.util.GoogleIdTokenUtil;
 import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.HttpException;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.github.nwillc.opa.Dao;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.inject.Inject;
 import org.pmw.tinylog.Logger;

@@ -18,6 +18,7 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.opa.memory.MemoryBackedDao;
 
 public class CategoryDao extends MemoryBackedDao<String,Category> {
 

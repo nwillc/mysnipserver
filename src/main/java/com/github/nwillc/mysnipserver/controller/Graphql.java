@@ -18,12 +18,12 @@
 package com.github.nwillc.mysnipserver.controller;
 
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema;
-import com.github.nwillc.mysnipserver.dao.Dao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.mysnipserver.util.http.HttpException;
+import com.github.nwillc.opa.Dao;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.pmw.tinylog.Logger;

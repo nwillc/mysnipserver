@@ -17,7 +17,7 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-import com.github.nwillc.mysnipserver.dao.HasKey;
+import com.github.nwillc.opa.HasKey;
 import com.groupon.uuid.UUID;
 import graphql.annotations.GraphQLDescription;
 import graphql.annotations.GraphQLField;

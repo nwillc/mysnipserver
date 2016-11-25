@@ -18,8 +18,8 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 
-import com.github.nwillc.mysnipserver.dao.query.QueryGenerator;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.query.QueryGenerator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

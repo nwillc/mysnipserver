@@ -17,9 +17,9 @@
 
 package com.github.nwillc.mysnipserver.dao.mongodb;
 
-import com.github.nwillc.mysnipserver.dao.query.Comparison;
-import com.github.nwillc.mysnipserver.dao.query.Query;
-import com.github.nwillc.mysnipserver.dao.query.QueryMapper;
+import com.github.nwillc.opa.query.Comparison;
+import com.github.nwillc.opa.query.Query;
+import com.github.nwillc.opa.query.QueryMapper;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 

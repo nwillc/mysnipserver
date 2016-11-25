@@ -17,10 +17,11 @@
 
 package com.github.nwillc.mysnipserver.dao.mongodb;
 
-import com.github.nwillc.mysnipserver.dao.Dao;
-import com.github.nwillc.mysnipserver.dao.HasKey;
-import com.github.nwillc.mysnipserver.dao.query.Query;
+
 import com.github.nwillc.mysnipserver.util.JsonMapper;
+import com.github.nwillc.opa.Dao;
+import com.github.nwillc.opa.HasKey;
+import com.github.nwillc.opa.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;

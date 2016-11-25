@@ -19,8 +19,8 @@ package com.github.nwillc.mysnipserver.util.guice;
 
 import com.github.nwillc.mysnipserver.MySnipServerApplication;
 import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
-import com.github.nwillc.mysnipserver.dao.memory.MemoryBackedDao;
 import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
+import com.github.nwillc.opa.memory.MemoryBackedDao;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import org.pmw.tinylog.Logger;

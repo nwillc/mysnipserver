@@ -17,9 +17,11 @@
 
 package com.github.nwillc.mysnipserver.dao.memory;
 
-import com.github.nwillc.mysnipserver.dao.Dao;
+
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.Dao;
+import com.github.nwillc.opa.memory.MemoryBackedDao;
 import org.pmw.tinylog.Logger;
 
 import java.util.Optional;
