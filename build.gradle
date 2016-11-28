@@ -67,7 +67,8 @@ dependencies {
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.8.1',
             'org.mockito:mockito-core:2.2.9',
-            'org.assertj:assertj-core:3.6.0'
+            'org.assertj:assertj-core:3.6.1',
+            'com.github.fakemongo:fongo:2.0.6'
 }
 
 configurations {
