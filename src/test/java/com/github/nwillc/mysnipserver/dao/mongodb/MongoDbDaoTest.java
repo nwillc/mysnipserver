@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -57,8 +56,15 @@ public class MongoDbDaoTest {
         assertThat(valueOptional.isPresent()).isTrue();
         assertThat(valueOptional.get()).isEqualTo(keyValue);
 
+        assertThat(valueOptional.get().getValue()).isEqualTo("value");
+
+        keyValue.setValue("foo");
+        dao.save(keyValue);
+        valueOptional = dao.findOne("key");
+        assertThat(valueOptional.get().getValue()).isEqualTo("foo");
+
         QueryGenerator<KeyValue> generator = new QueryGenerator<>(KeyValue.class);
-        Query<KeyValue> query = generator.eq("value", "value")
+        Query<KeyValue> query = generator.eq("value", "foo")
                 .eq("key", "key")
                 .and()
                 .getFilter();
