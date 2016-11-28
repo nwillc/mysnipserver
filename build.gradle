@@ -44,6 +44,9 @@ repositories {
     mavenLocal()
     jcenter()
     maven { url 'http://jcenter.bintray.com'}
+    maven {
+        url  "http://dl.bintray.com/nwillc/maven"
+    }
     mavenCentral()
 }
 
