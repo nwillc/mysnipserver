@@ -15,8 +15,6 @@
  *
  */
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Copy
-
 buildscript {
     repositories {
         mavenLocal()
@@ -43,9 +41,9 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
     jcenter()
     maven { url 'http://jcenter.bintray.com'}
-    mavenLocal()
     mavenCentral()
 }
 
@@ -68,6 +66,7 @@ dependencies {
             'com.github.nwillc:jdk_contract_tests:1.8.1',
             'org.mockito:mockito-core:2.2.9',
             'org.assertj:assertj-core:3.6.1',
+            'com.github.nwillc:opa-impl-tests:0.1.2',
             'com.github.fakemongo:fongo:2.0.6'
 }
 
@@ -76,6 +75,7 @@ configurations {
 }
 
 apply plugin: 'application'
+apply plugin: 'maven'
 apply plugin: 'release'
 apply plugin: 'gradle-one-jar'
 apply plugin: "jacoco"
