@@ -133,8 +133,11 @@ jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
+        csv.enabled false
     }
 }
+
+jacocoTestReport.dependsOn test
 
 pmd {
     toolVersion = '4.3'
