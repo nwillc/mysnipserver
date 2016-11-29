@@ -17,22 +17,18 @@
 
 package com.github.nwillc.mysnipserver.dao.mongodb;
 
-import com.github.fakemongo.Fongo;
+import com.github.fakemongo.junit.FongoRule;
 import com.github.nwillc.opa.Dao;
 import com.github.nwillc.opa_impl_tests.OpaImplTest;
-import com.mongodb.MockMongoClient;
-import com.mongodb.MongoClient;
+import org.junit.Rule;
 
 
 public class MongoDbDaoTest extends OpaImplTest {
-    private Fongo fongo;
-    private MongoClient client;
+    @Rule
+    public FongoRule fongoRule = new FongoRule();
 
     @Override
     protected Dao<String, TestEntity> getDao() {
-        Fongo fongo = new Fongo("mongo server 1");
-        MongoClient client = MockMongoClient.create(fongo);
-
-        return new MongoDbDao<>(client, TestEntity.class);
+        return new MongoDbDao<>(fongoRule.getMongoClient(), TestEntity.class);
     }
 }

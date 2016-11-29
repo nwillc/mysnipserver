@@ -97,6 +97,7 @@ gradle.projectsEvaluated {
 }
 
 test {
+    maxParallelForks 4
 
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
@@ -125,19 +126,19 @@ release {
 }
 
 task oneJar(type: OneJar) {
+    dependsOn build
     mainClass = 'com.github.nwillc.mysnipserver.MySnipServer'
     additionalDir = file('build/resources/main')
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
         csv.enabled false
     }
 }
-
-jacocoTestReport.dependsOn test
 
 pmd {
     toolVersion = '4.3'
