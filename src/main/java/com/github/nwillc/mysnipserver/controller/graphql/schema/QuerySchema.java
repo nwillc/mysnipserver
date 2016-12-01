@@ -76,7 +76,7 @@ public final class QuerySchema extends DaoConsumer {
             }
         }
         Logger.info("Query: " + queryGenerator);
-        Query<Snippet> query = queryGenerator.getFilter();
+        Query<Snippet> query = queryGenerator.getQuery();
 
         Stream<Snippet> snippetStream = query != null ?
                 getSnippetDao(env).find(query) :

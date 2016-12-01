@@ -20,7 +20,7 @@ package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa_impl_tests.OpaImplTest;
+import com.github.nwillc.opa_impl_tests.DaoTest;
 import com.github.nwillc.opa_impl_tests.QueryMapperTest;
 import org.junit.Rule;
 
@@ -29,7 +29,7 @@ public class MongoQueryMapperTest extends QueryMapperTest {
     public FongoRule fongoRule = new FongoRule();
 
     @Override
-    protected Dao<String, OpaImplTest.TestEntity> getDao() {
-        return new MongoDbDao<>(fongoRule.getMongoClient(), OpaImplTest.TestEntity.class);
+    public Dao<String, DaoTest.TestEntity> get() {
+        return new MongoDbDao<>(fongoRule.getMongoClient(), DaoTest.TestEntity.class);
     }
 }

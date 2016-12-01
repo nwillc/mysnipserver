@@ -63,13 +63,13 @@ dependencies {
             'com.graphql-java:graphql-java-annotations:0.13.1',
             'org.mongodb:mongo-java-driver:3.4.0-rc1',
             'com.groupon:locality-uuid:1.1.1',
-            'com.github.nwillc:opa:0.1.2'
+            "com.github.nwillc:opa:$opa_version"
     runtime 'org.tinylog:slf4j-binding:1.2-beta-1'
     testCompile 'junit:junit:4.12',
             'com.github.nwillc:jdk_contract_tests:1.8.1',
             'org.mockito:mockito-core:2.2.9',
             'org.assertj:assertj-core:3.6.1',
-            'com.github.nwillc:opa-impl-tests:0.1.2',
+            "com.github.nwillc:opa-impl-tests:$opa_impl_tests_version",
             'com.github.fakemongo:fongo:2.0.6'
 }
 

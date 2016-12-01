@@ -31,6 +31,6 @@ public class CategoryDaoTest {
         final CategoryDao dao = new CategoryDao();
         QueryGenerator<Category> generator = new QueryGenerator<>(Category.class);
         generator.eq("name", "Java");
-        assertThat(dao.find(generator.getFilter()).count()).isEqualTo(1);
+        assertThat(dao.find(generator.getQuery()).count()).isEqualTo(1);
     }
 }
