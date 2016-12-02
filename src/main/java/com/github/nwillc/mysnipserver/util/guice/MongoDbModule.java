@@ -22,6 +22,7 @@ import com.github.nwillc.mysnipserver.dao.mongodb.MongoDbDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.opa.caching.CachingDao;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.mongodb.MongoClient;
@@ -56,7 +57,7 @@ public class MongoDbModule extends AbstractModule {
         bind(new TypeLiteral<MySnipServerApplication>() {
         }).toInstance(new MySnipServerApplication(
                 new MongoDbDao<>(client, Category.class),
-                new MongoDbDao<>(client, Snippet.class),
+                new CachingDao<>(new MongoDbDao<>(client, Snippet.class)),
                 userDao));
     }
 }

@@ -30,6 +30,6 @@ public class SnippetDaoTest {
         final SnippetDao dao = new SnippetDao(new CategoryDao());
         QueryGenerator<Snippet> generator = new QueryGenerator<>(Snippet.class);
         generator.eq("title", "import");
-        assertThat(dao.find(generator.getFilter()).count()).isEqualTo(1);
+        assertThat(dao.find(generator.getQuery()).count()).isEqualTo(1);
     }
 }

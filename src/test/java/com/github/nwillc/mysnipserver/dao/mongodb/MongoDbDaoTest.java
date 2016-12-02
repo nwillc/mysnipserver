@@ -19,16 +19,16 @@ package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa_impl_tests.OpaImplTest;
+import com.github.nwillc.opa_impl_tests.DaoTest;
 import org.junit.Rule;
 
 
-public class MongoDbDaoTest extends OpaImplTest {
+public class MongoDbDaoTest extends DaoTest {
     @Rule
     public FongoRule fongoRule = new FongoRule();
 
     @Override
-    protected Dao<String, TestEntity> getDao() {
+    public Dao<String, TestEntity> get() {
         return new MongoDbDao<>(fongoRule.getMongoClient(), TestEntity.class);
     }
 }
