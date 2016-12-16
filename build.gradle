@@ -17,8 +17,6 @@
 
 buildscript {
     repositories {
-        mavenLocal()
-        jcenter()
         maven { url 'http://jcenter.bintray.com'}
         maven {
             url "https://maven.eveoh.nl/content/repositories/releases"
@@ -38,39 +36,43 @@ plugins {
     id "java"
     id "com.github.nwillc.vplugin" version "1.3.4"
     id "com.github.nwillc.buildinfo" version "0.1.2"
+    id 'nebula.lint' version '6.1.4'
 }
 
 repositories {
     mavenLocal()
-    jcenter()
     maven { url 'http://jcenter.bintray.com'}
-//    maven {
-//        url  "http://dl.bintray.com/nwillc/maven"
-//    }
-    mavenCentral()
 }
 
 dependencies {
-    compile 'com.sparkjava:spark-core:2.3',
-            'commons-cli:commons-cli:1.3',
-            'com.google.inject:guice:4.1.0',
-            'org.apache.httpcomponents:httpclient:4.5.2',
+    compile "com.github.nwillc:opa:$opa_version",
+            'com.fasterxml.jackson.core:jackson-core:2.8.5',
+            'com.fasterxml.jackson.core:jackson-databind:2.8.5',
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.5',
             'com.google.api-client:google-api-client:1.22.0',
+            'com.google.http-client:google-http-client-jackson2:1.22.0',
             'com.google.http-client:google-http-client:1.22.0',
-            'org.tinylog:tinylog:1.2-beta-1',
-            'com.graphql-java:graphql-java:2.2.0',
+            'com.google.inject:guice:4.1.0',
             'com.graphql-java:graphql-java-annotations:0.13.1',
-            'org.mongodb:mongo-java-driver:3.4.0-rc1',
+            'com.graphql-java:graphql-java:2.2.0',
             'com.groupon:locality-uuid:1.1.1',
-            "com.github.nwillc:opa:$opa_version"
+            'com.sparkjava:spark-core:2.3',
+            'commons-cli:commons-cli:1.3',
+            'javax.validation:validation-api:1.1.0.Final',
+            'org.apache.httpcomponents:httpclient:4.5.2',
+            'org.mongodb:mongo-java-driver:3.4.0-rc1',
+            'org.tinylog:tinylog:1.2-beta-1'
+
     runtime 'org.tinylog:slf4j-binding:1.2-beta-1'
-    testCompile 'junit:junit:4.12',
-            "com.github.nwillc:jdk_contract_tests:$jdk_contract_tests_version",
-            "org.mockito:mockito-core:$mockito_core_version",
-            'org.assertj:assertj-core:3.6.1',
+
+    testCompile "com.github.nwillc:jdk_contract_tests:$jdk_contract_tests_version",
             "com.github.nwillc:opa-impl-tests:$opa_impl_tests_version",
-            'com.github.fakemongo:fongo:2.0.6'
+            "org.mockito:mockito-core:$mockito_core_version",
+            'com.fasterxml.jackson.core:jackson-core:2.8.5',
+            'com.fasterxml.jackson.core:jackson-databind:2.8.5',
+            'com.github.fakemongo:fongo:2.0.6',
+            'junit:junit:4.12',
+            'org.assertj:assertj-core:3.6.1'
 }
 
 configurations {
@@ -85,10 +87,12 @@ apply plugin: "jacoco"
 apply plugin: "pmd"
 
 group = "com.github.nwillc"
-version = "2.6.1"
+version = "2.6.2"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 mainClassName = "com.github.nwillc.mysnipserver.MySnipServer"
+
+gradleLint.rules = ['archaic-wrapper','all-dependency','overridden-dependency-version']
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
