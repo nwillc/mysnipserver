@@ -22,15 +22,15 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandLineInterfaceTest extends UtilityClassContract {
+public class CliOptionsTest extends UtilityClassContract {
 	@Override
 	public Class<?> getClassToTest() {
-		return CommandLineInterface.class;
+		return CliOptions.class;
 	}
 
 	@Test
 	public void testAllOptionsSupported() throws Exception {
-		assertThat(CommandLineInterface.getOptions()).isNotNull();
-		assertThat(CommandLineInterface.getOptions().getOptions()).hasSize(CommandLineInterface.CLI.values().length);
+		assertThat(CliOptions.getOptions()).isNotNull();
+		assertThat(CliOptions.getOptions().recognizedOptions()).hasSize(CliOptions.CLI.values().length + 1);
 	}
 }

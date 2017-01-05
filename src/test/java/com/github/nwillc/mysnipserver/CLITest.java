@@ -26,13 +26,13 @@ public class CLITest {
 
 	@Test
 	public void testOptionCount() throws Exception {
-		assertThat(CommandLineInterface.CLI.values()).hasSameSizeAs(expected);
+		assertThat(CliOptions.CLI.values()).hasSameSizeAs(expected);
 	}
 
 	@Test
 	public void testExpectedOptions() throws Exception {
 		for (String value : expected) {
-			assertThat(CommandLineInterface.CLI.valueOf(value)).isNotNull();
+			assertThat(CliOptions.CLI.valueOf(value)).isNotNull();
 		}
 	}
 }
