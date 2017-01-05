@@ -20,59 +20,55 @@ package com.github.nwillc.mysnipserver;
 import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
 import com.google.inject.Guice;
 import com.google.inject.Module;
-import org.apache.commons.cli.*;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import org.pmw.tinylog.Logger;
 
-import static com.github.nwillc.mysnipserver.CommandLineInterface.CLI;
+import java.io.IOException;
+
 import static spark.Spark.ipAddress;
 import static spark.Spark.port;
 
 public final class MySnipServer {
 
-    public static void main(String[] args) {
-        Logger.info("Starting");
-
-        Options options = CommandLineInterface.getOptions();
-        CommandLineParser commandLineParser = new DefaultParser();
+    public static void main(String[] args) throws IOException {
 
         Module module = null;
         boolean auth = true;
 
-        try {
-            CommandLine commandLine = commandLineParser.parse(options, args);
+        final OptionParser parser = CliOptions.getOptions();
 
-            if (commandLine.hasOption(CLI.help.name())) {
-                CommandLineInterface.help(options, 0);
-            }
+        final OptionSet options = parser.parse(args);
 
-            if (commandLine.hasOption(CLI.noauth.name())) {
-                auth = false;
-            }
-
-            if (commandLine.hasOption(CLI.port.name())) {
-                Logger.info("Configuring port: " + commandLine.getOptionValue(CLI.port.name()));
-                port(Integer.parseInt(commandLine.getOptionValue(CLI.port.name())));
-            }
-
-            if (commandLine.hasOption(CLI.address.name())) {
-                Logger.info("Configuring address: " + commandLine.getOptionValue(CLI.address.name()));
-                ipAddress(commandLine.getOptionValue(CLI.address.name()));
-            }
-
-            if (commandLine.hasOption(CLI.store.name())) {
-                module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName() + '.' +
-                        commandLine.getOptionValue(CLI.store.name()) + "Module").newInstance();
-            } else {
-                module = new MemoryBackedModule();
-            }
-
-        } catch (ParseException e) {
-            Logger.error("Failed to parse command line: " + e);
-            CommandLineInterface.help(options, 1);
-        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
-            Logger.error("Failed instantiating DAO class: " + e);
-            CommandLineInterface.help(options, 1);
+        if (options.has(CliOptions.CLI.help.name())) {
+            parser.printHelpOn(System.out);
+            System.exit(0);
         }
+
+        if (options.has(CliOptions.CLI.noauth.name())) {
+            Logger.warn("Disabling authentication.");
+            auth = false;
+        }
+
+        Integer port = (Integer) options.valueOf(CliOptions.CLI.port.name());
+        Logger.info("Configuring port: " + port);
+        port(port);
+
+        String address = (String) options.valueOf(CliOptions.CLI.address.name());
+        Logger.info("Configuring address: " + address);
+        ipAddress(address);
+
+        String store = (String) options.valueOf(CliOptions.CLI.store.name());
+        Logger.info("Configuring store: " + store);
+        try {
+            module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName()
+                    + '.' +  store + "Module").newInstance();
+        } catch (Exception e) {
+            Logger.error("Failed loading store: " + store);
+            System.exit(1);
+        }
+
+        Logger.info("Starting");
 
         MySnipServerApplication application = Guice.createInjector(module).getInstance(MySnipServerApplication.class);
         application.setAuth(auth);

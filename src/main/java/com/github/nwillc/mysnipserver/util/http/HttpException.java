@@ -18,8 +18,6 @@
 package com.github.nwillc.mysnipserver.util.http;
 
 
-import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
-
 public class HttpException extends RuntimeException {
     private final HttpStatusCode code;
 
