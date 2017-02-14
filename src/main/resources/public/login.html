@@ -23,7 +23,7 @@
     <meta name="google-signin-client_id"
           content="728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com">
     <title>Snippets</title>
-    <script data-main="scripts/main" src="scripts/require.js"></script>
+    <script data-main="js/app" src="js/lib/require.js"></script>
     <style>
         .center-box {
             width: 300px;
@@ -55,7 +55,7 @@
 <script>
         var onSignIn;
 
-        require(['login'],function(login) {
+        require(['app/login'],function(login) {
             var auth = new login.Login();
             onSignIn = auth.onSignIn;
         });

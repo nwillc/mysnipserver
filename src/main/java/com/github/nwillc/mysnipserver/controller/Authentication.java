@@ -44,10 +44,10 @@ public class Authentication implements JsonMapper {
     private static final String LOGIN_HTML = "/login.html";
     private static final String[] NO_AUTH = {
             LOGIN_HTML,
-            "/scripts/login.js",
-            "/scripts/cookies.js",
-            "/scripts/main.js",
-            "/scripts/require.js",
+            "/js/app/login.js",
+            "/js/app/cookies.js",
+            "/js/app.js",
+            "/js/lib/require.js",
             "/favicon.ico",
             "/properties",
             versionedPath(AUTH_PATH)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2017,  nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-define(["gapi", "jquery-ui", "jquery", "graphql"], function (gapi, ui, $, graphql) {
+define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, graphql) {
     return {
         App: function () {
             "use strict";

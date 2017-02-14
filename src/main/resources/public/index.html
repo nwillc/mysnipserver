@@ -20,8 +20,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Snippets</title>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" type="text/css"/>
-    <script data-main="scripts/main" src="scripts/require.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" type="text/css"/>
+    <script data-main="js/app" src="js/lib/require.js"></script>
     <style>
         label {
             display: block;
@@ -34,12 +34,6 @@
 </head>
 
 <body>
-<script>
-    // Instantiate the app
-    require(['app'],function(app) {
-        var application = new app.App();
-    });
-</script>
 <div id="loading">Loading application...</div>
 <div id="page" style="display:none;">
     <div class="ui-widget-header ui-corner-all" align="left">

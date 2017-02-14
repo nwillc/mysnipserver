@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016,  nwillc@gmail.com
+ * Copyright (c) 2017,  nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,28 +16,25 @@
 
 requirejs.config({
     waitSeconds: 20,
-    shim: {
-        "jquery": {
-            exports: "$"
-        },
-        "jquery-ui": {
-            deps: ["jquery"]
-        },
-        "gapi": {
-            exports: "gapi"
-        }
+    "baseUrl": "js/lib",
+    "paths": {
+        "app": "../app",
+        "jquery": "//code.jquery.com/jquery-3.1.1.min",
+        "jquery-ui": "//code.jquery.com/ui/1.12.1/jquery-ui.min",
+        "gapi": "//apis.google.com/js/platform"
     },
-    paths: {
-        "jquery": "http://code.jquery.com/jquery-3.1.1.min",
-        "jquery-ui": "http://code.jquery.com/ui/1.12.1/jquery-ui.min",
-        "gapi": "https://apis.google.com/js/platform"
+    "shim": {
+            "gapi": {
+                exports: "gapi"
+             }
     }
 });
 
-define(["gapi"], function (gapi) {
+requirejs(["gapi", "app/main"], function(gapi, main) {
     gapi.load("auth2", function () {
         gapi.auth2.init({
             client_id: "728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com"
         });
     });
+    var application = new main.App();
 });
