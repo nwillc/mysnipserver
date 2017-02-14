@@ -18,7 +18,6 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 
-
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.opa.query.QueryGenerator;
 import org.junit.Test;

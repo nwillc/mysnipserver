@@ -39,20 +39,20 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
 
     public MongoDbDao(final MongoClient client, final Class<T> tClass) {
         this.tClass = tClass;
-        collection =  client.getDatabase("snippets").getCollection(tClass.getSimpleName());
-        collection.createIndex(new BasicDBObject("key",1));
+        collection = client.getDatabase("snippets").getCollection(tClass.getSimpleName());
+        collection.createIndex(new BasicDBObject("key", 1));
     }
 
     @Override
     public Optional<T> findOne(K key) {
-        Document document = collection.find(eq("key",key)).first();
+        Document document = collection.find(eq("key", key)).first();
         return document == null ? Optional.empty() : Optional.of(fromJson(document.toJson(), tClass));
     }
 
     @Override
     public Stream<T> findAll() {
         return StreamSupport.stream(collection.find().spliterator(), false)
-                .map(d -> fromJson(d.toJson(),tClass));
+                .map(d -> fromJson(d.toJson(), tClass));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
         Document document = Document.parse(toJson(entity));
         if (one.isPresent()) {
             document = new Document("$set", document);
-            collection.updateMany(eq("key",entity.getKey()), document);
+            collection.updateMany(eq("key", entity.getKey()), document);
         } else {
             collection.insertOne(document);
         }
@@ -77,6 +77,6 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
 
     @Override
     public void delete(K key) {
-        collection.deleteMany(eq("key",key));
+        collection.deleteMany(eq("key", key));
     }
 }

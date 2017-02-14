@@ -28,7 +28,7 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpStatusCodeTest {
-    private final List<String> labels = asList("OK","CREATED","UNAUTHORIZED","NOT_FOUND","INTERNAL_SERVER_ERROR","BAD_REQUEST");
+    private final List<String> labels = asList("OK", "CREATED", "UNAUTHORIZED", "NOT_FOUND", "INTERNAL_SERVER_ERROR", "BAD_REQUEST");
 
     @Test
     public void testValues() throws Exception {

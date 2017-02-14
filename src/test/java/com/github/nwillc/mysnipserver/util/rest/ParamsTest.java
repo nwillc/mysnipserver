@@ -30,29 +30,29 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ParamsTest {
-	private List<String> values = asList("PASSWORD", "USERNAME", "TOKEN");
-	private List<String> labels = values.stream().map(s -> ":" + s.toLowerCase()).collect(Collectors.toList());
+    private List<String> values = asList("PASSWORD", "USERNAME", "TOKEN");
+    private List<String> labels = values.stream().map(s -> ":" + s.toLowerCase()).collect(Collectors.toList());
 
-	@Test
-	public void testValueOf() throws Exception {
-		for (String value : values) {
-			assertThat(Params.valueOf(value)).isNotNull();
-		}
-	}
+    @Test
+    public void testValueOf() throws Exception {
+        for (String value : values) {
+            assertThat(Params.valueOf(value)).isNotNull();
+        }
+    }
 
-	@Test
-	public void testGetLabel() throws Exception {
-		for (Params param : Params.values()) {
-			assertThat(labels).contains(param.getLabel());
-		}
-	}
+    @Test
+    public void testGetLabel() throws Exception {
+        for (Params param : Params.values()) {
+            assertThat(labels).contains(param.getLabel());
+        }
+    }
 
-	@Test
-	public void testFrom() throws Exception {
-		final Request request = mock(Request.class);
-		when(request.params(":password")).thenReturn("foo");
+    @Test
+    public void testFrom() throws Exception {
+        final Request request = mock(Request.class);
+        when(request.params(":password")).thenReturn("foo");
 
-		assertThat(Params.PASSWORD.from(request)).isEqualTo("foo");
-		assertThat(Params.TOKEN.from(request)).isNull();
-	}
+        assertThat(Params.PASSWORD.from(request)).isEqualTo("foo");
+        assertThat(Params.TOKEN.from(request)).isNull();
+    }
 }

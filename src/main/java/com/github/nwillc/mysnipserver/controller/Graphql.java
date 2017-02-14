@@ -46,7 +46,7 @@ public class Graphql implements JsonMapper, DaoProvider {
     private final Dao<String, Category> categoryDao;
     private final Dao<String, Snippet> snippetDao;
 
-    public Graphql(Dao<String,Category> categoryDao,
+    public Graphql(Dao<String, Category> categoryDao,
                    Dao<String, Snippet> snippetDao) throws IllegalAccessException, NoSuchMethodException, InstantiationException {
         this.categoryDao = categoryDao;
         this.snippetDao = snippetDao;

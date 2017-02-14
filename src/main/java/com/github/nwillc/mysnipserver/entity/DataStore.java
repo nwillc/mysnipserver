@@ -29,6 +29,7 @@ import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSc
 public interface DataStore {
     @GraphQLField
     List<Category> getCategories();
+
     @GraphQLField
     List<Snippet> getSnippets();
 }

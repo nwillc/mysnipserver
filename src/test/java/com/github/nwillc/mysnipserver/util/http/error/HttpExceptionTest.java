@@ -24,33 +24,33 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpExceptionTest {
-	private final HttpException exception = new HttpException(HttpStatusCode.CREATED, "out of nothing");
+    private final HttpException exception = new HttpException(HttpStatusCode.CREATED, "out of nothing");
 
-	@Test
-	public void testCodeConstrucctor() throws Exception {
-		final HttpException exception = new HttpException(HttpStatusCode.OK);
-		assertThat(exception).isNotNull();
-		assertThat(exception.getCode()).isEqualTo(HttpStatusCode.OK);
-	}
+    @Test
+    public void testCodeConstrucctor() throws Exception {
+        final HttpException exception = new HttpException(HttpStatusCode.OK);
+        assertThat(exception).isNotNull();
+        assertThat(exception.getCode()).isEqualTo(HttpStatusCode.OK);
+    }
 
-	@Test
-	public void testFullConstrucctor() throws Exception {
-		final RuntimeException runtimeException = new RuntimeException();
-		final HttpException exception = new HttpException(HttpStatusCode.OK, "foo", runtimeException);
-		assertThat(exception).isNotNull();
-		assertThat(exception.getCode()).isEqualTo(HttpStatusCode.OK);
-		assertThat(exception.getMessage()).isEqualTo("foo");
-		assertThat(exception.getCause()).isEqualTo(runtimeException);
-	}
+    @Test
+    public void testFullConstrucctor() throws Exception {
+        final RuntimeException runtimeException = new RuntimeException();
+        final HttpException exception = new HttpException(HttpStatusCode.OK, "foo", runtimeException);
+        assertThat(exception).isNotNull();
+        assertThat(exception.getCode()).isEqualTo(HttpStatusCode.OK);
+        assertThat(exception.getMessage()).isEqualTo("foo");
+        assertThat(exception.getCause()).isEqualTo(runtimeException);
+    }
 
-	@Test
-	public void testGetCode() throws Exception {
-		assertThat(exception.getCode()).isEqualTo(HttpStatusCode.CREATED);
-	}
+    @Test
+    public void testGetCode() throws Exception {
+        assertThat(exception.getCode()).isEqualTo(HttpStatusCode.CREATED);
+    }
 
-	@Test
-	public void testToString() throws Exception {
-		assertThat(exception.toString()).isEqualTo("HttpException{code=CREATED (201), message= 'out of nothing'}");
-	}
+    @Test
+    public void testToString() throws Exception {
+        assertThat(exception.toString()).isEqualTo("HttpException{code=CREATED (201), message= 'out of nothing'}");
+    }
 
 }

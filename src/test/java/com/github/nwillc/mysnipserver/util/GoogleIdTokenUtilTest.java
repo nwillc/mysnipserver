@@ -21,8 +21,8 @@ import com.github.nwillc.contracts.UtilityClassContract;
 
 
 public class GoogleIdTokenUtilTest extends UtilityClassContract {
-	@Override
-	public Class<?> getClassToTest() {
-		return GoogleIdTokenUtil.class;
-	}
+    @Override
+    public Class<?> getClassToTest() {
+        return GoogleIdTokenUtil.class;
+    }
 }

@@ -17,7 +17,7 @@
 
 buildscript {
     repositories {
-        maven { url 'http://jcenter.bintray.com'}
+        maven { url 'http://jcenter.bintray.com' }
         maven {
             url 'https://maven.eveoh.nl/content/repositories/releases'
         }
@@ -39,7 +39,7 @@ plugins {
 }
 
 repositories {
-    maven { url 'http://jcenter.bintray.com'}
+    maven { url 'http://jcenter.bintray.com' }
 }
 
 dependencies {
@@ -71,10 +71,6 @@ dependencies {
             'org.assertj:assertj-core:' + assertj_version
 }
 
-configurations {
-    compile.exclude group: 'org.slf4j', module: 'slf4j-simple'
-}
-
 apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'release'
@@ -84,12 +80,12 @@ apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 
 group = 'com.github.nwillc'
-version = '2.6.7'
+version = '2.6.8'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.MySnipServer'
 
-gradleLint.rules = ['archaic-wrapper','all-dependency','overridden-dependency-version']
+gradleLint.rules = ['archaic-wrapper', 'all-dependency', 'overridden-dependency-version']
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {

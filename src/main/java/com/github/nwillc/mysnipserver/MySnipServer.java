@@ -62,7 +62,7 @@ public final class MySnipServer {
         Logger.info("Configuring store: " + store);
         try {
             module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName()
-                    + '.' +  store + "Module").newInstance();
+                    + '.' + store + "Module").newInstance();
         } catch (Exception e) {
             Logger.error("Failed loading store: " + store);
             System.exit(1);

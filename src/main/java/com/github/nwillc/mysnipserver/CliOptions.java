@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) 2017, nwillc@gmail.com
  *
