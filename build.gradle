@@ -56,18 +56,16 @@ dependencies {
             'com.graphql-java:graphql-java:2.2.0',
             'com.groupon:locality-uuid:1.1.1',
             'com.sparkjava:spark-core:' + spark_version,
-            'javax.validation:validation-api:1.1.0.Final',
+            'javax.validation:validation-api:' + javax_validation_version,
             'org.apache.httpcomponents:httpclient:' + apache_http,
             'org.mongodb:mongo-java-driver:' + mongo_driver_version,
             'org.tinylog:tinylog:' + tiny_log_version
 
-    runtime 'org.tinylog:slf4j-binding:1.2-beta-1'
+    runtime 'org.tinylog:slf4j-binding:' + slf4j_version
 
     testCompile 'com.github.nwillc:jdk_contract_tests:' + jdk_contract_tests_version,
             'com.github.nwillc:opa-impl-tests:' + opa_impl_tests_version,
             'org.mockito:mockito-core:' + mockito_core_version,
-            'com.fasterxml.jackson.core:jackson-core:2.8.5',
-            'com.fasterxml.jackson.core:jackson-databind:2.8.5',
             'com.github.fakemongo:fongo:2.0.6',
             'junit:junit:4.12',
             'org.assertj:assertj-core:' + assertj_version
@@ -91,7 +89,7 @@ targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.MySnipServer'
 
-// gradleLint.rules = ['archaic-wrapper','all-dependency','overridden-dependency-version']
+gradleLint.rules = ['archaic-wrapper','all-dependency','overridden-dependency-version']
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
