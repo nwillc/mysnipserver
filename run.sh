@@ -12,5 +12,5 @@ echo Rebuild server...
 JAVA_OPTS="-Djava.awt.headless=true -Xmx50m"
 
 echo Start server...
-java ${JAVA_OPTS} -jar build/libs/*-standalone.jar $*
+java ${JAVA_OPTS[@]} -jar build/libs/*-standalone.jar $*
 
