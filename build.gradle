@@ -48,6 +48,7 @@ dependencies {
             'com.fasterxml.jackson.core:jackson-core:' + jackson_fasterxml_version,
             'com.fasterxml.jackson.core:jackson-databind:' + jackson_fasterxml_version,
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:' + jackson_fasterxml_version,
+            'com.fasterxml.jackson.core:jackson-annotations:' + jackson_fasterxml_version,
             'com.google.api-client:google-api-client:1.22.0',
             'com.google.http-client:google-http-client-jackson2:1.22.0',
             'com.google.http-client:google-http-client:1.22.0',
@@ -70,6 +71,13 @@ dependencies {
             'junit:junit:4.12',
             'org.assertj:assertj-core:' + assertj_version
 }
+
+configurations {
+    compile.exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-servlet'
+    compile.exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    compile.exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-client'
+}
+
 
 apply plugin: 'application'
 apply plugin: 'maven'
@@ -124,7 +132,7 @@ release {
 
 task oneJar(type: OneJar) {
     dependsOn build
-    mainClass = 'com.github.nwillc.mysnipserver.MySnipServer'
+    mainClass = project.mainClassName
     additionalDir = file('build/resources/main')
 }
 
