@@ -7,3 +7,5 @@ env.sh
 src/main/resources/build.json
 notes
 *~
+logs
+tinylog.properties

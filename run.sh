@@ -20,14 +20,12 @@ EOU
     exit ${code}
 }
 
-# A POSIX variable
-OPTIND=1         # Reset in case getopts has been used previously in the shell.
-
-
+OPTIND=1
+OPTERR=0
 
 while getopts "h?vr" OPT; do
     case "$OPT" in
-    h|\?)
+    h)
         help_text 0
         ;;
     v)
@@ -36,6 +34,8 @@ while getopts "h?vr" OPT; do
     r)
         REBUILD='true'
         ;;
+    \?)
+        help_text 1
     esac
 done
 
@@ -53,9 +53,10 @@ if [ -n "${REBUILD}" ]; then
     [ $? != 0 ] && exit 1
 fi
 
-JAVA_OPTS="-Djava.awt.headless=true -Xmx100m"
+JAVA_OPTS="-Dtinylog.configuration=./tinylog.properties -Djava.awt.headless=true -Xmx100m"
 JAR=$(ls -1t $(find . -name ${JAR_NAME}) | head -1)
 
 echo Start server...
-[ -n "${VERBOSE}" ] && echo java ${JAVA_OPTS[@]} -jar ${JAR} ${@}
-java ${JAVA_OPTS[@]} -jar ${JAR} ${@}
+CMD="java ${JAVA_OPTS[@]} -jar ${JAR} ${@}"
+[ -n "${VERBOSE}" ] && echo ${CMD}
+${CMD}
