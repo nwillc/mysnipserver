@@ -9,7 +9,7 @@ cd ${SCRIPT_DIR}
 echo Rebuild server...
 ./gradlew -q clean oneJar -x test
 [ $? != 0 ] && exit 1
-JAVA_OPTS="-Djava.awt.headless=true -Xmx50m"
+JAVA_OPTS="-Djava.awt.headless=true -Xmx100m"
 
 echo Start server...
 java ${JAVA_OPTS[@]} -jar build/libs/*-standalone.jar $*
