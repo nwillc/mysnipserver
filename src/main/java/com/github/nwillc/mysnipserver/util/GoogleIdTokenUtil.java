@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 public final class GoogleIdTokenUtil {
-    private static final String CLIENT_ID = System.getenv("CLIENT_ID");
+    private static final String CLIENT_ID = System.getenv("GAPI_CLIENT_ID");
     private static final String ISSUER = "accounts.google.com";
 
     private GoogleIdTokenUtil() {
