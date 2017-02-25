@@ -10,7 +10,14 @@ This is a simple snippets app. It is a GraphQL server based on:
 
 It gets deployed, when tests pass, by Travis-ci to OpenShift.
 
-Som posts about this service:
+## Runtime Configuration
+
+There is a 'env.sh.example' file that exports variables used by the provided 'run.sh'. Look at this for explanations of
+the runtime configuration.
+
+## See Also
+
+Posts on this service:
  - [Dropbox to Orchestrate](https://nwillc.wordpress.com/2015/10/30/from-dropbox-to-orchestrate/)
  - [GraphQL](https://nwillc.wordpress.com/2016/10/13/graphql-java-server-javascript-client/)
  - [Orchestrate to Mongo](https://nwillc.wordpress.com/2016/11/19/orchestrate-to-mongodb/)

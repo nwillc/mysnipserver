@@ -17,11 +17,13 @@
 package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
+import com.github.nwillc.reloader.Reloader;
 import com.google.inject.Guice;
 import com.google.inject.Module;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.pmw.tinylog.Logger;
+import spark.Spark;
 
 import java.io.IOException;
 
@@ -66,6 +68,8 @@ public final class MySnipServer {
             Logger.error("Failed loading store: " + store);
             System.exit(1);
         }
+
+        Reloader.onSignal("USR2");
 
         Logger.info("Starting");
 

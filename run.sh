@@ -53,7 +53,7 @@ if [ -n "${REBUILD}" ]; then
     [ $? != 0 ] && exit 1
 fi
 
-JAVA_OPTS="-Dtinylog.configuration=./tinylog.properties -Djava.awt.headless=true -Xmx100m"
+JAVA_OPTS="-XX:+UseAltSigs -Dtinylog.configuration=./tinylog.properties -Djava.awt.headless=true -Xmx100m"
 JAR=$(ls -1t $(find . -name ${JAR_NAME}) | head -1)
 
 echo Start server...

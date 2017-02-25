@@ -60,7 +60,8 @@ dependencies {
             'javax.validation:validation-api:' + javax_validation_version,
             'org.apache.httpcomponents:httpclient:' + apache_http,
             'org.mongodb:mongo-java-driver:' + mongo_driver_version,
-            'org.tinylog:tinylog:' + tiny_log_version
+            'org.tinylog:tinylog:' + tiny_log_version,
+            'com.github.nwillc:reloader:' + reloader_version
 
     runtime 'org.tinylog:slf4j-binding:' + slf4j_version
 
@@ -88,7 +89,7 @@ apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 
 group = 'com.github.nwillc'
-version = '2.6.8'
+version = '2.7.0'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.MySnipServer'
@@ -97,7 +98,7 @@ gradleLint.rules = ['archaic-wrapper', 'all-dependency', 'overridden-dependency-
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
-        options.compilerArgs << '-Xlint:unchecked'
+        options.compilerArgs += ['-Xlint:unchecked']
     }
 }
 
