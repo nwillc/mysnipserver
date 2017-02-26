@@ -5,17 +5,18 @@ env:
   - TERM=dumb
 before_script:
   - chmod +x gradlew
-  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in ./key/mysnip.enc -out mysnip
 after_success:
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
-deploy:
-  provider: openshift
-  user: nwillc@gmail.com
-  password:
-    secure: "lqeLt3EYcBM15xTitu5vNgofzvIMTVaKQ+5q3xsXh+hzDHTDBvbCXUSOe1hAHk8NWFXwyro+dxuEUjc3r/+Ldy+9UQBNRAmRqr3bNgDGj16yli2FUOzdkOB4wyMKvnkvMH0N3oS5xgCGnehazkUbcG7zZepvynwf7M04RqqJgxQQad6iBMjIaY4hJqaF+2+3LuMasZOdH+HWLd8uH9lfKAyZo1fdwR+HIPAC+G4cy7bp0+lhQteQi3jOUSIxhI8Yhbpqx18NjY+4Rjxt+uoYdcwNKF5YP0FrZzmbEIDNbkN91Z48HMvkRxHeVqlPchUU0Tevqhq+s8pNqiJtvEOFyFv6/5hmBjHmpjv0pRuT5rXxsnHbs3VcxSmJl/VKGRDHXgiyL0vivTJ1bT8o+CpGRhqyox7rVihLG+wWPEzphoe+ASn4XHoWuTYk01x2VRANWoANXw29Fe2Kb7/i6lFan2YKyoUoTZS8Cyj58jyBQx8bpmEfQo/9Ysu/FhsoR2ziQ2pbCTUgHXNIYJaVs6s5WA5zy9z0N/na42pGyWs6Gdg3nHuleXDLxlQVhcgzjgZByTaLVdjWtz4HLjA5DuskglkEta803bpH35C8nRtw3a63ror17FDfV/waE+8KLAsq8tEWqDp0R0RqVJSVZPLqvE0odQhihdE8LhCNOBNIzl8="
-  app: snippets
-  domain: nwillc
-  on:
-    repo: nwillc/mysnipserver
-    branch: master
+before_deploy:
+  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out mysnip
+#deploy:
+#  provider: openshift
+#  user: nwillc@gmail.com
+#  password:
+#    secure: "lqeLt3EYcBM15xTitu5vNgofzvIMTVaKQ+5q3xsXh+hzDHTDBvbCXUSOe1hAHk8NWFXwyro+dxuEUjc3r/+Ldy+9UQBNRAmRqr3bNgDGj16yli2FUOzdkOB4wyMKvnkvMH0N3oS5xgCGnehazkUbcG7zZepvynwf7M04RqqJgxQQad6iBMjIaY4hJqaF+2+3LuMasZOdH+HWLd8uH9lfKAyZo1fdwR+HIPAC+G4cy7bp0+lhQteQi3jOUSIxhI8Yhbpqx18NjY+4Rjxt+uoYdcwNKF5YP0FrZzmbEIDNbkN91Z48HMvkRxHeVqlPchUU0Tevqhq+s8pNqiJtvEOFyFv6/5hmBjHmpjv0pRuT5rXxsnHbs3VcxSmJl/VKGRDHXgiyL0vivTJ1bT8o+CpGRhqyox7rVihLG+wWPEzphoe+ASn4XHoWuTYk01x2VRANWoANXw29Fe2Kb7/i6lFan2YKyoUoTZS8Cyj58jyBQx8bpmEfQo/9Ysu/FhsoR2ziQ2pbCTUgHXNIYJaVs6s5WA5zy9z0N/na42pGyWs6Gdg3nHuleXDLxlQVhcgzjgZByTaLVdjWtz4HLjA5DuskglkEta803bpH35C8nRtw3a63ror17FDfV/waE+8KLAsq8tEWqDp0R0RqVJSVZPLqvE0odQhihdE8LhCNOBNIzl8="
+#  app: snippets
+#  domain: nwillc
+#  on:
+#    repo: nwillc/mysnipserver
+#    branch: master
