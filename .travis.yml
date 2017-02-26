@@ -11,10 +11,7 @@ before_script:
 script:
   - ./gradlew oneJar -x test --no-daemon
 after_success:
-  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out mysnip
-  - chmod 0400 mysnip
-  - scp -o StrictHostKeyChecking=false -i mysnip build/libs/*-standalone.jar mysnip@192.168.1.12:~/
-  - ssh -o StrictHostKeyChecking=false -i mysnip mysnip@192.168.1.12 "~/bounce.sh"
+  - ./deploy.sh
 after_script:
   - rm -f mysnip
 
