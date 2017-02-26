@@ -1,6 +1,9 @@
 language: java
 jdk:
   - oraclejdk8
+branches:
+  only:
+    - master
 env:
   - TERM=dumb
 before_script:
