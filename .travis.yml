@@ -8,15 +8,14 @@ env:
   - TERM=dumb
 before_script:
   - chmod +x gradlew
-  - rm -f mysnip
-  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out mysnip
-  - chmod 0400 mysnip
-  - sum mysnip
 script:
   - ./gradlew oneJar -x test --no-daemon
 after_success:
-  - scp -v -o StrictHostKeyChecking=false -i mysnip build/libs/*-standalone.jar mysnip@192.168.1.12:~/
-
+  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out mysnip
+  - chmod 0400 mysnip
+  - scp -o StrictHostKeyChecking=false -i mysnip build/libs/*-standalone.jar mysnip@192.168.1.12:~/
+after_script:
+  - rm -f mysnip
 
 #after_success:
 #  - ./gradlew jacocoTestReport
