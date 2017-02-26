@@ -7,13 +7,11 @@ branches:
 env:
   - TERM=dumb
 before_script:
-  - chmod +x gradlew
+  - chmod +x gradlew deploy.sh
 script:
-  - ./gradlew oneJar -x test --no-daemon
+  - ./gradlew oneJar --no-daemon
 after_success:
   - ./deploy.sh
-after_script:
-  - rm -f mysnip
 
 #after_success:
 #  - ./gradlew jacocoTestReport
