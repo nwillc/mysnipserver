@@ -5,11 +5,13 @@ env:
   - TERM=dumb
 before_script:
   - chmod +x gradlew
+  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out mysnip
+script:
+  - ./gradlew build
 after_success:
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
-before_deploy:
-  - openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out mysnip
+
 #deploy:
 #  provider: openshift
 #  user: nwillc@gmail.com
