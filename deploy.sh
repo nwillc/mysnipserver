@@ -43,4 +43,4 @@ trap "rm -rf ${KEYFILE}" EXIT
 openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out ${KEYFILE}
 chmod 0400 ${KEYFILE}
 scp -o StrictHostKeyChecking=false -i ${KEYFILE} build/libs/*-standalone.jar ${USER}@${SERVER}:/home/mysnip/libs
-ssh -o StrictHostKeyChecking=false -i ${KEYFILE} ${USER}@${SERVER} "~/bounce.sh"
+ssh -o StrictHostKeyChecking=false -i ${KEYFILE} ${USER}@${SERVER} 'kill -USR2 $(cat ~/reloader.pid)'
