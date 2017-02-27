@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 SCRIPT_NAME=$(basename "${BASH_SOURCE[0]}")
 SERVER="nwillc.freeddns.com"
 USER=mysnip
