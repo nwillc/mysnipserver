@@ -35,7 +35,7 @@ plugins {
     id 'java'
     id 'com.github.nwillc.vplugin' version '2.0.1'
     id 'com.github.nwillc.buildinfo' version '0.1.2'
-    id 'nebula.lint' version '6.8.0'
+    id 'nebula.lint' version '7.2.6'
 }
 
 repositories {
@@ -49,7 +49,6 @@ dependencies {
             'com.fasterxml.jackson.core:jackson-databind:' + jackson_fasterxml_version,
             'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:' + jackson_fasterxml_version,
             'com.fasterxml.jackson.core:jackson-annotations:' + jackson_fasterxml_version,
-            'com.google.api-client:google-api-client:1.22.0',
             'com.google.http-client:google-http-client-jackson2:1.22.0',
             'com.google.http-client:google-http-client:1.22.0',
             'com.google.inject:guice:4.1.0',
@@ -62,6 +61,10 @@ dependencies {
             'org.mongodb:mongo-java-driver:' + mongo_driver_version,
             'org.tinylog:tinylog:' + tiny_log_version,
             'com.github.nwillc:reloader:' + reloader_version
+
+    compile ('com.google.api-client:google-api-client:1.22.0') {
+        exclude group: 'com.google.guava' , module: 'guava-jdk5'
+    }
 
     runtime 'org.tinylog:slf4j-binding:' + slf4j_version
 
@@ -77,6 +80,7 @@ configurations {
     compile.exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-servlet'
     compile.exclude group: 'com.google.code.findbugs', module: 'jsr305'
     compile.exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-client'
+    all*.exclude group: 'org.antlr', module: 'antlr4-runtime'
 }
 
 
