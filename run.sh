@@ -49,7 +49,7 @@ shift $((OPTIND-1))
 
 if [ -n "${REBUILD}" ]; then
     echo Rebuild server...
-    ./gradlew -q clean oneJar -x test
+    ./gradlew -q clean shadowJar -x test
     [ $? != 0 ] && exit 1
 fi
 
