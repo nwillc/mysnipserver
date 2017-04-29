@@ -21,6 +21,8 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
 import com.github.nwillc.opa.memory.MemoryBackedDao;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.pmw.tinylog.Logger;
 
 import java.util.Optional;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class SnippetDao extends MemoryBackedDao<String, Snippet> {
     final Dao<String, Category> categoryDao;
 
+    @Inject
     public SnippetDao(Dao<String, Category> categoryDao) {
         this.categoryDao = categoryDao;
         Optional<Category> java = categoryDao.findAll().filter(c -> "Java".equals(c.getName())).findFirst();

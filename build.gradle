@@ -26,7 +26,8 @@ buildscript {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
                 'au.com.ish.gradle:release:2.2.2',
                 'org.tmatesoft.sqljet:sqljet:1.1.9',
-                'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
+                'io.ratpack:ratpack-gradle:' + ratpack_version,
+                'org.junit.platform:junit-platform-gradle-plugin:' + junit_plugin_version
     }
 }
 
@@ -34,7 +35,7 @@ plugins {
     id 'java'
     id 'com.github.nwillc.vplugin' version '2.0.1'
     id 'com.github.nwillc.buildinfo' version '0.1.2'
-    id 'nebula.lint' version '7.2.6'
+    id 'nebula.lint' version '7.3.5'
     id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
@@ -44,6 +45,7 @@ repositories {
 
 dependencies {
     compile 'com.github.nwillc:opa:' + opa_version,
+            'io.ratpack:ratpack-exec:' + ratpack_version,
             'net.sf.jopt-simple:jopt-simple:6.0-alpha-1',
             'com.fasterxml.jackson.core:jackson-core:' + jackson_fasterxml_version,
             'com.fasterxml.jackson.core:jackson-databind:' + jackson_fasterxml_version,
@@ -83,7 +85,8 @@ configurations {
     all*.exclude group: 'org.antlr', module: 'antlr4-runtime'
 }
 
-
+apply plugin: 'io.ratpack.ratpack-java'
+apply plugin: 'idea'
 apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'release'
@@ -95,7 +98,8 @@ group = 'com.github.nwillc'
 version = '2.7.1'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
-mainClassName = 'com.github.nwillc.mysnipserver.MySnipServer'
+//mainClassName = 'com.github.nwillc.mysnipserver.MySnipServer'
+mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
 gradleLint.rules = ['archaic-wrapper', 'all-dependency', 'overridden-dependency-version']
 
@@ -174,4 +178,10 @@ pmd {
             'typeresolution',
             'unusedcode'
     ]
+}
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
 }

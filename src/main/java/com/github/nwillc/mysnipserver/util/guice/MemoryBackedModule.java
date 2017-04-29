@@ -16,23 +16,23 @@
 
 package com.github.nwillc.mysnipserver.util.guice;
 
-import com.github.nwillc.mysnipserver.MySnipServerApplication;
 import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
 import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
-import com.github.nwillc.opa.memory.MemoryBackedDao;
-import com.google.inject.AbstractModule;
+import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.Dao;
+import com.google.inject.Binder;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import org.pmw.tinylog.Logger;
 
 
-public class MemoryBackedModule extends AbstractModule {
+public class MemoryBackedModule implements Module {
 
     @Override
-    protected void configure() {
-        Logger.info("Configuring Memory Backed module.");
-        final CategoryDao categoryDao = new CategoryDao();
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        })
-                .toInstance(new MySnipServerApplication(categoryDao, new SnippetDao(categoryDao), new MemoryBackedDao<>()));
+    public void configure(Binder binder) {
+        Logger.info("DI Module: Memory Backed");
+        binder.bind(new TypeLiteral<Dao<String, Category>>(){}).to(CategoryDao.class);
+        binder.bind(new TypeLiteral<Dao<String, Snippet>>(){}).to(SnippetDao.class);
     }
 }

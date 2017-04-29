@@ -86,8 +86,8 @@ public class MySnipServerApplication implements SparkApplication {
         get("/properties", (request, response) -> properties);
 
         exception(HttpException.class, (e, request, response) -> {
-            response.status(((HttpException) e).getCode().code);
-            response.body(((HttpException) e).getCode() + ": " + e.getMessage());
+            response.status(e.getCode().code);
+            response.body(e.getCode() + ": " + e.getMessage());
             Logger.info("Returning: " + e);
         });
         Logger.info("Completed");

@@ -16,6 +16,7 @@
 
 package com.github.nwillc.mysnipserver.controller;
 
+import com.github.nwillc.mysnipserver.DaoProvider;
 import com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;

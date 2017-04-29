@@ -16,6 +16,11 @@
 
 package com.github.nwillc.mysnipserver;
 
+import com.github.nwillc.mysnipserver.handlers.GraphQL;
+import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.pmw.tinylog.Logger;
@@ -32,12 +37,18 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class TestApp {
+public class RatPackApp {
+    private final Module module;
+    private final Integer port;
+    private final InetAddress address;
+    private final GraphQL graphQL;
+
+
     public static void main(String... args) throws Exception {
         String properties = "";
 
         try (
-                final InputStreamReader isr = new InputStreamReader(TestApp.class.getResourceAsStream("/build.json"));
+                final InputStreamReader isr = new InputStreamReader(RatPackApp.class.getResourceAsStream("/build.json"));
                 final BufferedReader bufferedReader = new BufferedReader(isr)
         ) {
             properties = bufferedReader.lines().collect(Collectors.joining("\n"));
@@ -47,33 +58,45 @@ public class TestApp {
 
         final String props = properties;
 
+        final RatPackApp app = new RatPackApp(args);
+
         final RatpackServer server = RatpackServer.of(s -> s
-                .serverConfig(config(args))
+                .serverConfig(config(app))
                 .handlers(chain -> chain
                         .get("ping", ctx -> ctx.render("PONG"))
                         .get("properties", ctx -> ctx.render(props))
+                        .get("foo", app.graphQL)
                         .files(f -> f.dir("public").indexFiles("index.html"))
                 )
         );
         server.start();
     }
 
-    private static Action<ServerConfigBuilder> config(String... args) throws UnknownHostException {
-        final OptionParser parser = CliOptions.getOptions();
-
-        Logger.info("Args: " + Arrays.toString(args));
-        final OptionSet options = parser.parse(args);
-
-        Integer port = (Integer) options.valueOf(CliOptions.CLI.port.name());
-        Logger.info("Using port: " + port);
-        InetAddress address = InetAddress.getByName((String) options.valueOf(CliOptions.CLI.address.name()));
-        Logger.info("Using address: " + address.toString());
+    private static Action<ServerConfigBuilder> config(RatPackApp app) throws UnknownHostException {
         final Path baseDir = BaseDir.find("public");
 
         return Action.from(c -> c
-                .port(port)
-                .address(address)
+                .port(app.port)
+                .address(app.address)
                 .baseDir(baseDir)
         );
+    }
+
+    public RatPackApp(String... args) throws Exception {
+        final OptionParser parser = CliOptions.getOptions();
+
+        Logger.info("Processing Args: " + Arrays.toString(args));
+        final OptionSet options = parser.parse(args);
+
+        port = (Integer) options.valueOf(CliOptions.CLI.port.name());
+        Logger.info("Using port: " + port);
+        address = InetAddress.getByName((String) options.valueOf(CliOptions.CLI.address.name()));
+        Logger.info("Using address: " + address.toString());
+        String store = (String) options.valueOf(CliOptions.CLI.store.name());
+        Logger.info("Configuring store: " + store);
+        module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName()
+                + '.' + store + "Module").newInstance();
+
+        graphQL = Guice.createInjector(module).getInstance(GraphQL.class);
     }
 }

@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller;
+package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
@@ -22,6 +22,5 @@ import com.github.nwillc.opa.Dao;
 
 public interface DaoProvider {
     Dao<String, Category> getCategoryDao();
-
     Dao<String, Snippet> getSnippetDao();
 }

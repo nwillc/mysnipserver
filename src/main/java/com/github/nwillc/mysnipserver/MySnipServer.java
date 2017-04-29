@@ -23,7 +23,6 @@ import com.google.inject.Module;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.pmw.tinylog.Logger;
-import spark.Spark;
 
 import java.io.IOException;
 
