@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.graphql.schema;
+package com.github.nwillc.mysnipserver.graphql.schema;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
@@ -24,7 +24,7 @@ import graphql.schema.DataFetchingEnvironment;
 
 import javax.validation.constraints.NotNull;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
+import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
 
 @GraphQLName(MUTATION)
 public final class MutationSchema extends DaoConsumer {

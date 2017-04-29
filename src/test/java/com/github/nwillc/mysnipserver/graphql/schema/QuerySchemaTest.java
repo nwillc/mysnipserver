@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.graphql.schema;
+package com.github.nwillc.mysnipserver.graphql.schema;
 
 import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLFieldDefinition;
@@ -22,7 +22,7 @@ import graphql.schema.GraphQLObjectType;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
+import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class QuerySchemaTest {

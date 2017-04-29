@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.graphql.schema;
+package com.github.nwillc.mysnipserver.graphql.schema;
 
 import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLSchema;

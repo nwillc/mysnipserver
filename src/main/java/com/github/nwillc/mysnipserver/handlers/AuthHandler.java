@@ -14,17 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao.memory;
+package com.github.nwillc.mysnipserver.handlers;
 
-import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.opa.memory.MemoryBackedDao;
-import com.google.inject.Singleton;
+import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.opa.Dao;
+import com.google.inject.Inject;
+import ratpack.handling.Context;
+import ratpack.handling.Handler;
 
-public class CategoryDao extends MemoryBackedDao<String, Category> {
+public class AuthHandler implements Handler {
+    public final static String PATH = "v1/auth";
+    private final Dao<String, User> dao;
 
-    public CategoryDao() {
-        save(new Category("Java"));
-        save(new Category("Shell Script"));
+    @Inject
+    public AuthHandler(Dao<String, User> dao) {
+        this.dao = dao;
     }
 
+    @Override
+    public void handle(Context ctx) throws Exception {
+
+    }
 }

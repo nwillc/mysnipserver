@@ -22,6 +22,7 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
 import com.github.nwillc.opa.memory.MemoryBackedDao;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import org.pmw.tinylog.Logger;
 
@@ -34,7 +35,6 @@ public class SnippetDao extends MemoryBackedDao<String, Snippet> {
     public SnippetDao(Dao<String, Category> categoryDao) {
         this.categoryDao = categoryDao;
         Optional<Category> java = categoryDao.findAll().filter(c -> "Java".equals(c.getName())).findFirst();
-        Logger.info("Found java category: " + java.isPresent());
         java.ifPresent(c -> {
             save(new Snippet(c.getKey(), "import", "import java.io.Reader;\n"));
             save(new Snippet(c.getKey(), "final", "modifier final type name;\n"));

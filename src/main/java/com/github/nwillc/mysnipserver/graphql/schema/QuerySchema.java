@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.graphql.schema;
+package com.github.nwillc.mysnipserver.graphql.schema;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.DataStore;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
+import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
 
 @GraphQLName(QUERY)
 public final class QuerySchema extends DaoConsumer {

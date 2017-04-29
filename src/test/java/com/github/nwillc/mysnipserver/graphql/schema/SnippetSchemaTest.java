@@ -14,17 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao.memory;
+package com.github.nwillc.mysnipserver.graphql.schema;
 
-import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.opa.memory.MemoryBackedDao;
-import com.google.inject.Singleton;
+import org.junit.Test;
 
-public class CategoryDao extends MemoryBackedDao<String, Category> {
+public class SnippetSchemaTest {
 
-    public CategoryDao() {
-        save(new Category("Java"));
-        save(new Category("Shell Script"));
+    @Test
+    public void shouldGetSchema() throws Exception {
+        SnippetSchema snippetSchema = new SnippetSchema();
     }
 
 }

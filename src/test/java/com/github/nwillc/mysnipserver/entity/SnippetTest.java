@@ -20,7 +20,7 @@ import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLObjectType;
 import org.junit.Test;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.*;
+import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SnippetTest {

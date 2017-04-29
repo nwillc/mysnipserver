@@ -14,15 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.graphql.schema;
+package com.github.nwillc.mysnipserver.graphql.schema;
 
-import org.junit.Test;
+import com.github.nwillc.mysnipserver.DaoProvider;
+import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.Dao;
+import graphql.schema.DataFetchingEnvironment;
 
-public class SnippetSchemaTest {
-
-    @Test
-    public void shouldGetSchema() throws Exception {
-        SnippetSchema snippetSchema = new SnippetSchema();
+public class DaoConsumer {
+    public static Dao<String, Category> getCategoryDao(DataFetchingEnvironment env) {
+        return ((DaoProvider) env.getSource()).getCategoryDao();
     }
 
+    public static Dao<String, Snippet> getSnippetDao(DataFetchingEnvironment env) {
+        return ((DaoProvider) env.getSource()).getSnippetDao();
+    }
 }

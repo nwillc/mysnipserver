@@ -21,7 +21,7 @@ import graphql.annotations.GraphQLName;
 
 import java.util.List;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.DATASTORE;
+import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.DATASTORE;
 
 
 @GraphQLName(DATASTORE)

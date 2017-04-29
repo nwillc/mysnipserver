@@ -16,7 +16,8 @@
 
 package com.github.nwillc.mysnipserver;
 
-import com.github.nwillc.mysnipserver.handlers.GraphQL;
+import com.github.nwillc.mysnipserver.handlers.AuthHandler;
+import com.github.nwillc.mysnipserver.handlers.GraphQLHandler;
 import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -41,7 +42,8 @@ public class RatPackApp {
     private final Module module;
     private final Integer port;
     private final InetAddress address;
-    private final GraphQL graphQL;
+    private final GraphQLHandler graphQLHandler;
+    private final AuthHandler authHandler;
 
 
     public static void main(String... args) throws Exception {
@@ -65,7 +67,8 @@ public class RatPackApp {
                 .handlers(chain -> chain
                         .get("ping", ctx -> ctx.render("PONG"))
                         .get("properties", ctx -> ctx.render(props))
-                        .get("foo", app.graphQL)
+                        .get(AuthHandler.PATH, app.authHandler)
+                        .post(GraphQLHandler.PATH, app.graphQLHandler)
                         .files(f -> f.dir("public").indexFiles("index.html"))
                 )
         );
@@ -97,6 +100,8 @@ public class RatPackApp {
         module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName()
                 + '.' + store + "Module").newInstance();
 
-        graphQL = Guice.createInjector(module).getInstance(GraphQL.class);
+        final Injector injector = Guice.createInjector(module);
+        graphQLHandler = injector.getInstance(GraphQLHandler.class);
+        authHandler = injector.getInstance(AuthHandler.class);
     }
 }

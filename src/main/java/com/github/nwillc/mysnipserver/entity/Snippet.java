@@ -19,7 +19,7 @@ package com.github.nwillc.mysnipserver.entity;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 
-import static com.github.nwillc.mysnipserver.controller.graphql.schema.SnippetSchema.SNIPPET;
+import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.SNIPPET;
 
 @GraphQLName(SNIPPET)
 public class Snippet extends Entity {

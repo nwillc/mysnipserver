@@ -14,20 +14,16 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.controller.graphql.schema;
+package com.github.nwillc.mysnipserver.dao.memory;
 
-import com.github.nwillc.mysnipserver.DaoProvider;
-import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.opa.Dao;
-import graphql.schema.DataFetchingEnvironment;
+import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.opa.memory.MemoryBackedDao;
 
-public class DaoConsumer {
-    public static Dao<String, Category> getCategoryDao(DataFetchingEnvironment env) {
-        return ((DaoProvider) env.getSource()).getCategoryDao();
-    }
 
-    public static Dao<String, Snippet> getSnippetDao(DataFetchingEnvironment env) {
-        return ((DaoProvider) env.getSource()).getSnippetDao();
+public class UserDao extends MemoryBackedDao<String,User> {
+    private static final String ADMIN = "nwillc@gmail.com";
+
+    public UserDao() {
+        save(new User(ADMIN, ADMIN));
     }
 }
