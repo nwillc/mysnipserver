@@ -17,13 +17,21 @@
 package com.github.nwillc.mysnipserver.handlers;
 
 import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.mysnipserver.util.http.HttpException;
+import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.opa.Dao;
 import com.google.inject.Inject;
+import org.pmw.tinylog.Logger;
 import ratpack.handling.Context;
-import ratpack.handling.Handler;
+import ratpack.session.Session;
 
-public class AuthHandler implements Handler {
+import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
+import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
+
+public class AuthHandler {
     public final static String PATH = "v1/auth";
+    public static final String IS_LOGGED_IN = "loggedIn.true";
+    private static final String OK = "ok";
     private final Dao<String, User> dao;
 
     @Inject
@@ -31,8 +39,29 @@ public class AuthHandler implements Handler {
         this.dao = dao;
     }
 
-    @Override
-    public void handle(Context ctx) throws Exception {
+    public void login(Context context) throws Exception {
+        Logger.info("Login attempt: " + USERNAME.from(context));
+
+        final User user = dao.findOne(USERNAME.from(context))
+                .orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED));
+
+        if (PASSWORD.from(context).equals(user.getPassword())) {
+            Logger.info("Login passed.");
+            context.get(Session.class).getData().then(sessionData -> {
+                sessionData.set(IS_LOGGED_IN, Boolean.TRUE);
+                context.render(OK);
+            });
+        }
+    }
+
+    public void logout(Context context) {
+        context.get(Session.class).getData().then(sessionData -> {
+            sessionData.remove(IS_LOGGED_IN);
+            context.render(OK);
+        });
+    }
+
+    public void googleAuth(Context context) throws Exception {
 
     }
 }

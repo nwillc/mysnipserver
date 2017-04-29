@@ -47,6 +47,12 @@ public class ParamsTest {
     }
 
     @Test
+    public void testOf() throws Exception {
+        final String newPath = Params.PASSWORD.of("path");
+        assertThat(newPath).isEqualTo("path/:password");
+    }
+
+    @Test
     public void testFrom() throws Exception {
         final Request request = mock(Request.class);
         when(request.params(":password")).thenReturn("foo");

@@ -29,6 +29,7 @@ import ratpack.func.Action;
 import ratpack.server.BaseDir;
 import ratpack.server.RatpackServer;
 import ratpack.server.ServerConfigBuilder;
+import ratpack.session.SessionModule;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -37,6 +38,10 @@ import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
+import static com.github.nwillc.mysnipserver.util.rest.Params.TOKEN;
+import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
 
 public class RatPackApp {
     private final Module module;
@@ -47,45 +52,10 @@ public class RatPackApp {
 
 
     public static void main(String... args) throws Exception {
-        String properties = "";
-
-        try (
-                final InputStreamReader isr = new InputStreamReader(RatPackApp.class.getResourceAsStream("/build.json"));
-                final BufferedReader bufferedReader = new BufferedReader(isr)
-        ) {
-            properties = bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (Exception e) {
-            Logger.warn("Could not load build info", e);
-        }
-
-        final String props = properties;
-
-        final RatPackApp app = new RatPackApp(args);
-
-        final RatpackServer server = RatpackServer.of(s -> s
-                .serverConfig(config(app))
-                .handlers(chain -> chain
-                        .get("ping", ctx -> ctx.render("PONG"))
-                        .get("properties", ctx -> ctx.render(props))
-                        .get(AuthHandler.PATH, app.authHandler)
-                        .post(GraphQLHandler.PATH, app.graphQLHandler)
-                        .files(f -> f.dir("public").indexFiles("index.html"))
-                )
-        );
-        server.start();
+        new RatPackApp(args).start();
     }
 
-    private static Action<ServerConfigBuilder> config(RatPackApp app) throws UnknownHostException {
-        final Path baseDir = BaseDir.find("public");
-
-        return Action.from(c -> c
-                .port(app.port)
-                .address(app.address)
-                .baseDir(baseDir)
-        );
-    }
-
-    public RatPackApp(String... args) throws Exception {
+    private RatPackApp(String... args) throws Exception {
         final OptionParser parser = CliOptions.getOptions();
 
         Logger.info("Processing Args: " + Arrays.toString(args));
@@ -104,4 +74,46 @@ public class RatPackApp {
         graphQLHandler = injector.getInstance(GraphQLHandler.class);
         authHandler = injector.getInstance(AuthHandler.class);
     }
+
+    private void start() throws Exception {
+        String properties = "";
+
+        try (
+                final InputStreamReader isr = new InputStreamReader(RatPackApp.class.getResourceAsStream("/build.json"));
+                final BufferedReader bufferedReader = new BufferedReader(isr)
+        ) {
+            properties = bufferedReader.lines().collect(Collectors.joining("\n"));
+        } catch (Exception e) {
+            Logger.warn("Could not load build info", e);
+        }
+
+        final String props = properties;
+
+        final RatpackServer server = RatpackServer.of(s -> s
+                .registry(ratpack.guice.Guice.registry(b -> b.module(SessionModule.class)))
+                .serverConfig(config())
+                .handlers(chain -> chain
+                        .get("ping", ctx -> ctx.render("PONG"))
+                        .get("properties", ctx -> ctx.render(props))
+                        .get(TOKEN.of(AuthHandler.PATH), authHandler::googleAuth)
+                        .get(PASSWORD.of(USERNAME.of(AuthHandler.PATH)), authHandler::login)
+                        .delete(AuthHandler.PATH, authHandler::logout)
+                        .post(GraphQLHandler.PATH, graphQLHandler)
+                        .files(f -> f.dir("public").indexFiles("index.html"))
+                )
+        );
+        server.start();
+    }
+
+    private Action<ServerConfigBuilder> config() throws UnknownHostException {
+        final Path baseDir = BaseDir.find("public");
+
+        return Action.from(c -> c
+                .port(port)
+                .address(address)
+                .baseDir(baseDir)
+        );
+    }
+
+
 }

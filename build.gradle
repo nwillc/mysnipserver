@@ -46,6 +46,8 @@ repositories {
 dependencies {
     compile 'com.github.nwillc:opa:' + opa_version,
             'io.ratpack:ratpack-exec:' + ratpack_version,
+            'io.ratpack:ratpack-session:' + ratpack_version,
+            'io.ratpack:ratpack-guice:' + ratpack_version,
             'net.sf.jopt-simple:jopt-simple:6.0-alpha-1',
             'com.fasterxml.jackson.core:jackson-core:' + jackson_fasterxml_version,
             'com.fasterxml.jackson.core:jackson-databind:' + jackson_fasterxml_version,
@@ -70,12 +72,15 @@ dependencies {
 
     runtime 'org.tinylog:slf4j-binding:' + slf4j_version
 
-    testCompile 'com.github.nwillc:jdk_contract_tests:' + jdk_contract_tests_version,
-            'com.github.nwillc:opa-impl-tests:' + opa_impl_tests_version,
+    testCompile 'com.github.nwillc:opa-impl-tests:' + opa_impl_tests_version,
             'org.mockito:mockito-core:' + mockito_core_version,
             'com.github.fakemongo:fongo:2.0.6',
             'junit:junit:4.12',
             'org.assertj:assertj-core:' + assertj_version
+    testCompile('com.github.nwillc:jdk_contract_tests:' + jdk_contract_tests_version) {
+        exclude group: 'org.junit.jupiter', module:'junit-jupiter-api'
+    }
+    
 }
 
 configurations {
