@@ -45,7 +45,7 @@ import static com.github.nwillc.mysnipserver.util.rest.Params.TOKEN;
 import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
 
 public class RatPackApp {
-    private final Module module;
+    private static final String PUBLIC = "public";
     private final Integer port;
     private final InetAddress address;
     private final GraphQLHandler graphQLHandler;
@@ -68,7 +68,7 @@ public class RatPackApp {
         Logger.info("Using address: " + address.toString());
         String store = (String) options.valueOf(CliOptions.CLI.store.name());
         Logger.info("Configuring store: " + store);
-        module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName()
+        Module module = (Module) Class.forName(MemoryBackedModule.class.getPackage().getName()
                 + '.' + store + "Module").newInstance();
 
         final Injector injector = Guice.createInjector(module);
@@ -102,14 +102,14 @@ public class RatPackApp {
                         .get(PASSWORD.of(USERNAME.of(AuthHandler.PATH)), authHandler::login)
                         .delete(AuthHandler.PATH, authHandler::logout)
                         .post(GraphQLHandler.PATH, graphQLHandler)
-                        .files(f -> f.dir("public").indexFiles("index.html"))
+                        .files(f -> f.dir(PUBLIC).indexFiles("index.html"))
                 )
         );
         server.start();
     }
 
     private Action<ServerConfigBuilder> config() throws UnknownHostException {
-        final Path baseDir = BaseDir.find("public");
+        final Path baseDir = BaseDir.find(PUBLIC);
 
         return Action.from(c -> c
                 .port(port)

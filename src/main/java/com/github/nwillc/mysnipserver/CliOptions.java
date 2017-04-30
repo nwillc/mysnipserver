@@ -22,7 +22,6 @@ final public class CliOptions {
     public enum CLI {
         address,
         help,
-        noauth,
         port,
         store
     }
@@ -37,7 +36,6 @@ final public class CliOptions {
                 .withRequiredArg().describedAs("ip_address").defaultsTo("0.0.0.0");
         parser.accepts(CLI.port.name(), "Port number to listen on.")
                 .withRequiredArg().ofType(Integer.class).describedAs("port_no").defaultsTo(4567);
-        parser.accepts(CLI.noauth.name(), "Make server not require authentication.");
         parser.accepts(CLI.store.name(), "Storage mechanism, MemoryBacked, or MongoDb.")
                 .withRequiredArg().describedAs("store_name").defaultsTo("MemoryBacked");
         return parser;

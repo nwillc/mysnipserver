@@ -112,11 +112,19 @@ public class AuthHandler {
 
     public void googleAuth(Context context) throws Exception {
         final Optional<GoogleIdToken.Payload> payload = GoogleIdTokenUtil.verify(TOKEN.from(context));
-
-//        payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED, "Rejected"));
-//        Logger.info("Google auth: " + payload.get().getEmail());
-//        dao.findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED, "Not registered user"));
-//        Session session = request.session(true);
-//        session.attribute(IS_LOGGED_IN, Boolean.TRUE);
+        if (!payload.isPresent()) {
+            context.error(new HttpException(HttpStatusCode.UNAUTHORIZED, "Rejected"));
+        } else {
+            Logger.info("Google auth: " + payload.get().getEmail());
+            final Optional<User> user = dao.findOne(payload.get().getEmail());
+            if (!user.isPresent()) {
+                context.error(new HttpException(HttpStatusCode.UNAUTHORIZED, "Not registered user"));
+            } else {
+                context.get(Session.class).getData().then(sessionData -> {
+                    sessionData.set(IS_LOGGED_IN, Boolean.TRUE);
+                    context.render(OK);
+                });
+            }
+        }
     }
 }
