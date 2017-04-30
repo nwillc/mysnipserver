@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver;
 import com.github.nwillc.mysnipserver.handlers.AuthHandler;
 import com.github.nwillc.mysnipserver.handlers.GraphQLHandler;
 import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
+import com.github.nwillc.reloader.Reloader;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -73,6 +74,7 @@ public class RatPackApp {
         final Injector injector = Guice.createInjector(module);
         graphQLHandler = injector.getInstance(GraphQLHandler.class);
         authHandler = injector.getInstance(AuthHandler.class);
+        Reloader.onSignal("USR2");
     }
 
     private void start() throws Exception {
@@ -93,6 +95,7 @@ public class RatPackApp {
                 .registry(ratpack.guice.Guice.registry(b -> b.module(SessionModule.class)))
                 .serverConfig(config())
                 .handlers(chain -> chain
+                        .all(authHandler::authRequired)
                         .get("ping", ctx -> ctx.render("PONG"))
                         .get("properties", ctx -> ctx.render(props))
                         .get(TOKEN.of(AuthHandler.PATH), authHandler::googleAuth)

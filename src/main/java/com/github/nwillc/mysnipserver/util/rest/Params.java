@@ -17,7 +17,6 @@
 package com.github.nwillc.mysnipserver.util.rest;
 
 import ratpack.handling.Context;
-import spark.Request;
 
 public enum Params {
     USERNAME,
@@ -28,16 +27,15 @@ public enum Params {
         return path + '/' + getLabel();
     }
 
-    public String token() { return name().toLowerCase(); }
+    public String token() {
+        return name().toLowerCase();
+    }
+
     public String getLabel() {
         return ':' + token();
     }
 
     public String from(Context context) {
         return context.getPathTokens().get(token());
-    }
-
-    public String from(Request request) {
-        return request.params(getLabel());
     }
 }

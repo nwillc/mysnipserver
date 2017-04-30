@@ -18,15 +18,12 @@ package com.github.nwillc.mysnipserver.util.rest;
 
 
 import org.junit.Test;
-import spark.Request;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ParamsTest {
     private List<String> values = asList("PASSWORD", "USERNAME", "TOKEN");
@@ -52,12 +49,4 @@ public class ParamsTest {
         assertThat(newPath).isEqualTo("path/:password");
     }
 
-    @Test
-    public void testFrom() throws Exception {
-        final Request request = mock(Request.class);
-        when(request.params(":password")).thenReturn("foo");
-
-        assertThat(Params.PASSWORD.from(request)).isEqualTo("foo");
-        assertThat(Params.TOKEN.from(request)).isNull();
-    }
 }

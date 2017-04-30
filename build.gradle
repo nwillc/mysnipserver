@@ -59,9 +59,7 @@ dependencies {
             'com.graphql-java:graphql-java-annotations:0.13.1',
             'com.graphql-java:graphql-java:2.2.0',
             'com.groupon:locality-uuid:1.1.1',
-            'com.sparkjava:spark-core:' + spark_version,
             'javax.validation:validation-api:' + javax_validation_version,
-            'org.apache.httpcomponents:httpclient:' + apache_http,
             'org.mongodb:mongo-java-driver:' + mongo_driver_version,
             'org.tinylog:tinylog:' + tiny_log_version,
             'com.github.nwillc:reloader:' + reloader_version
@@ -84,9 +82,7 @@ dependencies {
 }
 
 configurations {
-    compile.exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-servlet'
     compile.exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    compile.exclude group: 'org.eclipse.jetty.websocket', module: 'websocket-client'
     all*.exclude group: 'org.antlr', module: 'antlr4-runtime'
 }
 
@@ -103,7 +99,6 @@ group = 'com.github.nwillc'
 version = '2.7.1'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
-//mainClassName = 'com.github.nwillc.mysnipserver.MySnipServer'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
 gradleLint.rules = ['archaic-wrapper', 'all-dependency', 'overridden-dependency-version']

@@ -17,26 +17,67 @@
 package com.github.nwillc.mysnipserver.handlers;
 
 import com.github.nwillc.mysnipserver.entity.User;
+import com.github.nwillc.mysnipserver.util.GoogleIdTokenUtil;
 import com.github.nwillc.mysnipserver.util.http.HttpException;
 import com.github.nwillc.mysnipserver.util.http.HttpStatusCode;
 import com.github.nwillc.opa.Dao;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.inject.Inject;
 import org.pmw.tinylog.Logger;
 import ratpack.handling.Context;
 import ratpack.session.Session;
 
-import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
-import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.github.nwillc.mysnipserver.util.rest.Params.*;
 
 public class AuthHandler {
     public final static String PATH = "v1/auth";
     public static final String IS_LOGGED_IN = "loggedIn.true";
+    private static final String LOGIN_HTML = "login.html";
+    private static final String[] NO_AUTH = {
+            LOGIN_HTML,
+            "js/app/login.js",
+            "js/app/cookies.js",
+            "js/app/main.js",
+            "js/app/graphql.js",
+            "js/app.js",
+            "js/lib/require.js",
+            "favicon.ico",
+            "properties",
+            PATH
+    };
     private static final String OK = "ok";
     private final Dao<String, User> dao;
+
 
     @Inject
     public AuthHandler(Dao<String, User> dao) {
         this.dao = dao;
+    }
+
+    public void authRequired(Context context) {
+        final String path = context.getRequest().getPath();
+        Logger.debug("Auth check: " + path);
+
+        context.get(Session.class).getData().then(sessionData -> {
+            final Optional<?> o = sessionData.<Boolean>get(IS_LOGGED_IN);
+
+            if (o.isPresent()) {
+                Logger.debug("Logged in");
+                context.next();
+            } else {
+                if (Arrays.stream(NO_AUTH).anyMatch(path::startsWith)) {
+                    Logger.debug("No auth required");
+                    context.next();
+                } else {
+                    Logger.info("Auth required on " + path);
+                    context.redirect("/" + LOGIN_HTML);
+                }
+            }
+        });
     }
 
     public void login(Context context) throws Exception {
@@ -62,6 +103,12 @@ public class AuthHandler {
     }
 
     public void googleAuth(Context context) throws Exception {
+        final Optional<GoogleIdToken.Payload> payload = GoogleIdTokenUtil.verify(TOKEN.from(context));
 
+//        payload.orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED, "Rejected"));
+//        Logger.info("Google auth: " + payload.get().getEmail());
+//        dao.findOne(payload.get().getEmail()).orElseThrow(() -> new HttpException(HttpStatusCode.UNAUTHORIZED, "Not registered user"));
+//        Session session = request.session(true);
+//        session.attribute(IS_LOGGED_IN, Boolean.TRUE);
     }
 }

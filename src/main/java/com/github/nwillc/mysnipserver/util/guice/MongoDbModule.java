@@ -16,13 +16,14 @@
 
 package com.github.nwillc.mysnipserver.util.guice;
 
-import com.github.nwillc.mysnipserver.MySnipServerApplication;
 import com.github.nwillc.mysnipserver.dao.mongodb.MongoDbDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.opa.CachingDao;
-import com.google.inject.AbstractModule;
+import com.github.nwillc.opa.Dao;
+import com.google.inject.Binder;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -32,14 +33,14 @@ import org.pmw.tinylog.Logger;
 import java.util.Collections;
 import java.util.List;
 
-public class MongoDbModule extends AbstractModule {
+public class MongoDbModule implements Module {
     private static final String MONGO_DB_SERVER = System.getenv("MONGO_DB_SERVER");
     private static final String MONGO_DB_PORT = System.getenv("MONGO_DB_PORT");
     private static final String MONGO_DB_USER = System.getenv("MONGO_DB_USER");
     private static final String MONGO_DB_PASSWORD = System.getenv("MONGO_DB_PASSWORD");
 
     @Override
-    protected void configure() {
+    public void configure(Binder binder) {
         Logger.info("Configuring MongoDb Module");
         ServerAddress serverAddress = new ServerAddress(MONGO_DB_SERVER, Integer.parseInt(MONGO_DB_PORT));
         MongoCredential credential = MongoCredential.createCredential(MONGO_DB_USER,
@@ -47,16 +48,11 @@ public class MongoDbModule extends AbstractModule {
                 MONGO_DB_PASSWORD.toCharArray());
         List<MongoCredential> auths = Collections.singletonList(credential);
         MongoClient client = new MongoClient(serverAddress, auths);
-        MongoDbDao<String, User> userDao = new MongoDbDao<>(client, User.class);
-        User user = new User("foo", "nwillc");
-        userDao.save(user);
-        Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));
-        userDao.delete(user.getKey());
-        Logger.info("Find: " + userDao.findOne(user.getKey()).orElse(null));
-        bind(new TypeLiteral<MySnipServerApplication>() {
-        }).toInstance(new MySnipServerApplication(
-                new MongoDbDao<>(client, Category.class),
-                new CachingDao<>(new MongoDbDao<>(client, Snippet.class)),
-                userDao));
+        Dao<String, Category> categoryDao = new MongoDbDao<>(client, Category.class);
+        Dao<String, Snippet> snippetDao = new CachingDao<>(new MongoDbDao<>(client, Snippet.class));
+        Dao<String, User> userDao = new MongoDbDao<>(client, User.class);
+        binder.bind(new TypeLiteral<Dao<String, Category>>(){}).toInstance(categoryDao);
+        binder.bind(new TypeLiteral<Dao<String, Snippet>>(){}).toInstance(snippetDao);
+        binder.bind(new TypeLiteral<Dao<String, User>>(){}).toInstance(userDao);
     }
 }
