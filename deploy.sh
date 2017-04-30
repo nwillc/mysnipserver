@@ -24,7 +24,7 @@ while getopts "h?s:u:" OPT; do
         ;;
     s)
         SERVER="${OPTARG}"
-        ;;
+        ;;                                                                                                      
      u)
         USER="${OPTARG}"
         ;;
