@@ -118,6 +118,7 @@ public class AuthHandler {
             Logger.info("Google auth: " + payload.get().getEmail());
             final Optional<User> user = dao.findOne(payload.get().getEmail());
             if (!user.isPresent()) {
+                Logger.warn("Unknown user: " + payload.get().getEmail());
                 context.error(new HttpException(HttpStatusCode.UNAUTHORIZED, "Not registered user"));
             } else {
                 context.get(Session.class).getData().then(sessionData -> {

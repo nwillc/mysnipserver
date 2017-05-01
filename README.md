@@ -3,7 +3,7 @@
 This is a simple snippets app. It is a GraphQL server based on:
 
 - Java 8
-- [Java Spark](http://sparkjava.com/) servlet providing [GraphQL API](http://graphql.org/)
+- [Ratpack](https://ratpack.io/) servlet providing [GraphQL API](http://graphql.org/)
 - MongoDB for persistence ([mlab](https://mlab.com))
 - Google authentication
 - jQuery UI
