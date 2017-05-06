@@ -22,7 +22,6 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
                 'au.com.ish.gradle:release:2.2.2',
-                'org.tmatesoft.sqljet:sqljet:1.1.9',
                 'io.ratpack:ratpack-gradle:' + ratpack_version,
                 'org.junit.platform:junit-platform-gradle-plugin:' + junit_plugin_version
     }
