@@ -17,10 +17,7 @@
 
 buildscript {
     repositories {
-        maven { url 'http://jcenter.bintray.com' }
-        maven {
-            url 'https://maven.eveoh.nl/content/repositories/releases'
-        }
+        jcenter()
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
@@ -40,7 +37,7 @@ plugins {
 }
 
 repositories {
-    maven { url 'http://jcenter.bintray.com' }
+   jcenter()
 }
 
 dependencies {
@@ -154,7 +151,7 @@ shadowJar {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
+        xml.enabled = true 
         html.enabled = true
         csv.enabled false
     }
