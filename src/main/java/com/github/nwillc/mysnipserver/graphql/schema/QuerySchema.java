@@ -60,7 +60,7 @@ public final class QuerySchema extends DaoConsumer {
                         .contains(Field.body.name(), match)
                         .or();
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+                Logger.info(e.getMessage(),e);
             }
         }
 
@@ -71,7 +71,7 @@ public final class QuerySchema extends DaoConsumer {
                     queryGenerator.and();
                 }
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+                Logger.info(e.getMessage(),e);
             }
         }
         Logger.info("Query: " + queryGenerator);

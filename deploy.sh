@@ -37,6 +37,13 @@ shift $((OPTIND-1))
 
 [ "$1" = "--" ] && shift
 
+JAR_FILE=$(ls -1rt build/libs/*-standalone.jar | grep -v SNAPSHOT | tail -1)
+
+if [ -z "${JAR_FILE}" ]; then
+    echo No applicable jar file.
+    exit 0
+fi
+
 KEYFILE=$(mktemp /tmp/key.XXXXXX)
 trap "rm -rf ${KEYFILE}" EXIT
 
