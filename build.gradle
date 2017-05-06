@@ -70,13 +70,19 @@ dependencies {
 
     runtime 'org.tinylog:slf4j-binding:' + slf4j_version
 
-    testCompile 'com.github.nwillc:opa-impl-tests:' + opa_impl_tests_version,
-            'org.mockito:mockito-core:' + mockito_core_version,
+    testCompile 'org.jmockit:jmockit:1.31',
             'com.github.fakemongo:fongo:2.0.6',
             'junit:junit:4.12',
             'org.assertj:assertj-core:' + assertj_version
+    testCompile('com.github.nwillc:opa-impl-tests:' + opa_impl_tests_version) {
+        exclude group: 'com.github.nwillc', module: 'opa'
+        exclude group: 'junit'
+        exclude group: 'org.assertj'
+    }
     testCompile('com.github.nwillc:jdk_contract_tests:' + jdk_contract_tests_version) {
-        exclude group: 'org.junit.jupiter', module:'junit-jupiter-api'
+        exclude group: 'junit'
+        exclude group: 'org.assertj'
+        exclude group: 'org.junit.jupiter'
     }
     
 }
