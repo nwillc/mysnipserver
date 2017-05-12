@@ -8,7 +8,7 @@ This is a simple snippets app. It is a GraphQL server based on:
 - Google authentication
 - jQuery UI
 
-It gets deployed, when tests pass, by Travis-ci to OpenShift.
+I use [Travis-CI](https://travis-ci.org/) for my Continous Integration and Deployment.
 
 ## Runtime Configuration
 
@@ -18,9 +18,11 @@ the runtime configuration.
 ## See Also
 
 Posts on this service:
- - [Dropbox to Orchestrate](https://nwillc.wordpress.com/2015/10/30/from-dropbox-to-orchestrate/)
- - [GraphQL](https://nwillc.wordpress.com/2016/10/13/graphql-java-server-javascript-client/)
- - [Orchestrate to Mongo](https://nwillc.wordpress.com/2016/11/19/orchestrate-to-mongodb/)
+
+- [First Project wih RatPack](https://nwillc.wordpress.com/2017/04/30/first-project-with-ratpack/)
+- [Dropbox to Orchestrate](https://nwillc.wordpress.com/2015/10/30/from-dropbox-to-orchestrate/)
+- [GraphQL](https://nwillc.wordpress.com/2016/10/13/graphql-java-server-javascript-client/)
+- [Orchestrate to Mongo](https://nwillc.wordpress.com/2016/11/19/orchestrate-to-mongodb/)
 
 -----
 [![ISC License](http://shields-nwillc.rhcloud.com/shield/tldrlegal?package=ISC)](http://shields-nwillc.rhcloud.com/homepage/tldrlegal?package=ISC)
