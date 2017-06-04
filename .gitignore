@@ -8,6 +8,6 @@ src/main/resources/build.json
 notes
 *~
 logs
-tinylog.properties
+/tinylog.properties
 reloader.pid
-*.i??
+mysnipserver.i??
