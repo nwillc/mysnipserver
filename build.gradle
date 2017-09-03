@@ -127,7 +127,6 @@ release {
 }
 
 shadowJar {
-    dependsOn build
     baseName = "mysnipserver-$project.version-standalone"
     classifier = null
     version = null
