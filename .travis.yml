@@ -9,8 +9,8 @@ env:
 before_script:
   - chmod +x gradlew deploy.sh
 script:
-  - ./gradlew shadowJar --no-daemon
+  - ./gradlew shadowJar --no-daemon -x autoLintGradle
 after_success:
   - ./deploy.sh
-  - ./gradlew jacocoTestReport
+  - ./gradlew jacocoTestReport -x autoLintGradle
   - bash <(curl -s https://codecov.io/bash)

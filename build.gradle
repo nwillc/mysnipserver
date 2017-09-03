@@ -76,7 +76,6 @@ dependencies {
 
 configurations {
     compile.exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    all*.exclude group: 'org.antlr', module: 'antlr4-runtime'
 }
 
 apply plugin: 'io.ratpack.ratpack-java'
