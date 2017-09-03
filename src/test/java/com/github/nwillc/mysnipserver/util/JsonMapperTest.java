@@ -16,11 +16,12 @@
 
 package com.github.nwillc.mysnipserver.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -34,9 +35,10 @@ public class JsonMapperTest implements JsonMapper {
     }
 
     @Test
-    public void testToJsonException(@Mocked Sample sample, @Mocked JsonProcessingException expr) throws Exception {
+    public void testToJsonException(@Mocked Sample sample) throws Exception {
         new Expectations() {{
-            sample.getNumber(); result = expr;
+            sample.getNumber();
+            result = new IOException("JSON Generation");
         }};
         assertThatThrownBy(() -> toJson(sample)).isInstanceOf(RuntimeException.class).hasMessageContaining("JSON generation");
     }

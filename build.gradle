@@ -21,8 +21,7 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
                 'au.com.ish.gradle:release:2.2.2',
-                'io.ratpack:ratpack-gradle:' + ratpack_version,
-                'org.junit.platform:junit-platform-gradle-plugin:' + junit_plugin_version
+                "io.ratpack:ratpack-gradle:$ratpack_version"
     }
 }
 
@@ -30,8 +29,8 @@ plugins {
     id 'java'
     id 'com.github.nwillc.vplugin' version '2.1.1'
     id 'com.github.nwillc.buildinfo' version '0.1.2'
-    id 'nebula.lint' version '7.4.0'
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'nebula.lint' version '8.3.1'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 repositories {
@@ -39,47 +38,40 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nwillc:opa:' + opa_version,
-            'io.ratpack:ratpack-exec:' + ratpack_version,
-            'io.ratpack:ratpack-session:' + ratpack_version,
-            'io.ratpack:ratpack-guice:' + ratpack_version,
-            'net.sf.jopt-simple:jopt-simple:6.0-alpha-1',
-            'com.fasterxml.jackson.core:jackson-core:' + jackson_fasterxml_version,
-            'com.fasterxml.jackson.core:jackson-databind:' + jackson_fasterxml_version,
-            'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:' + jackson_fasterxml_version,
-            'com.fasterxml.jackson.core:jackson-annotations:' + jackson_fasterxml_version,
+    compile "com.github.nwillc:opa:$opa_version",
+            "io.ratpack:ratpack-exec:$ratpack_version",
+            "io.ratpack:ratpack-session:$ratpack_version",
+            "io.ratpack:ratpack-guice:$ratpack_version",
+            "net.sf.jopt-simple:jopt-simple:$jopt_simple_version",
+            "com.fasterxml.jackson.core:jackson-core:$jackson_fasterxml_version",
+            "com.fasterxml.jackson.core:jackson-databind:$jackson_fasterxml_version",
+            "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jackson_fasterxml_version",
+            "com.fasterxml.jackson.core:jackson-annotations:$jackson_fasterxml_version",
             'com.google.http-client:google-http-client-jackson2:1.22.0',
             'com.google.http-client:google-http-client:1.22.0',
             'com.google.inject:guice:4.1.0',
-            'com.graphql-java:graphql-java-annotations:' + graphql_annotations_version,
-            'com.graphql-java:graphql-java:2.2.0',
             'com.groupon:locality-uuid:1.1.1',
-            'javax.validation:validation-api:' + javax_validation_version,
-            'org.mongodb:mongo-java-driver:' + mongo_driver_version,
-            'org.tinylog:tinylog:' + tiny_log_version,
-            'com.github.nwillc:reloader:' + reloader_version
-
+            "javax.validation:validation-api:$javax_validation_version",
+            "org.mongodb:mongo-java-driver:$mongo_driver_version",
+            "org.tinylog:tinylog:$tiny_log_version",
+            'com.github.nwillc:reloader:' + reloader_version,
+            'com.graphql-java:graphql-java:3.0.0',
+            'com.graphql-java:graphql-java-annotations:3.0.3'
+    
     compile ('com.google.api-client:google-api-client:1.22.0') {
         exclude group: 'com.google.guava' , module: 'guava-jdk5'
     }
 
-    runtime 'org.tinylog:slf4j-binding:' + slf4j_version
+    runtime "org.tinylog:slf4j-binding:$slf4j_version"
 
-    testCompile 'org.jmockit:jmockit:' + jmockit_version,
-            'com.github.fakemongo:fongo:' + fakemongo_version,
+    testCompile "org.jmockit:jmockit:$jmockit_version",
+            "com.github.fakemongo:fongo:$fakemongo_version",
+            "org.assertj:assertj-core:$assertj_version",
             'junit:junit:4.12',
-            'org.assertj:assertj-core:' + assertj_version
-    testCompile('com.github.nwillc:opa-impl-tests:' + opa_impl_tests_version) {
-        exclude group: 'com.github.nwillc', module: 'opa'
-        exclude group: 'junit'
-        exclude group: 'org.assertj'
-    }
-    testCompile('com.github.nwillc:jdk_contract_tests:' + jdk_contract_tests_version) {
-        exclude group: 'junit'
-        exclude group: 'org.assertj'
-        exclude group: 'org.junit.jupiter'
-    }
-    
+            "com.github.nwillc:opa-impl-tests:$opa_impl_tests_version",
+            "com.github.nwillc:jdk_contract_tests:$jdk_contract_tests_version",
+            "junit:junit:4.12"
+
 }
 
 configurations {
@@ -102,31 +94,26 @@ targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
+compileTestJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.compilerArgs += '-parameters'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+        csv.enabled false
+    }
+}
+
 gradleLint.rules = ['archaic-wrapper', 'all-dependency', 'overridden-dependency-version']
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
         options.compilerArgs += ['-Xlint:unchecked']
-    }
-}
-
-test {
-    maxParallelForks 4
-
-    beforeTest { descriptor ->
-        logger.lifecycle('\tRunning ' + descriptor.className + '.' + descriptor.name)
-    }
-
-    afterSuite { descriptor, result ->
-        if (descriptor.parent == null) {
-            logger.lifecycle('\tTests run: ' + result.testCount
-                    + ', Failures: ' + result.failedTestCount
-                    + ', Skipped: ' + result.skippedTestCount)
-        }
-    }
-
-    testLogging {
-        exceptionFormat 'full'
     }
 }
 
@@ -141,18 +128,9 @@ release {
 
 shadowJar {
     dependsOn build
-    baseName = 'mysnipserver-' + project.version + '-standalone'
+    baseName = "mysnipserver-$project.version-standalone"
     classifier = null
     version = null
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.enabled = true 
-        html.enabled = true
-        csv.enabled false
-    }
 }
 
 pmd {
@@ -179,6 +157,23 @@ pmd {
             'typeresolution',
             'unusedcode'
     ]
+}
+
+test {
+    beforeTest { descriptor ->
+        logger.lifecycle("\tRunning $descriptor.className.$descriptor.name")
+    }
+
+    afterSuite { descriptor, result ->
+        if (descriptor.parent == null) {
+            logger.lifecycle("\tTests run: $result.testCount, Failures: $result.failedTestCount, Skipped: $result.skippedTestCount")
+        }
+    }
+
+    testLogging {
+        showStandardStreams true
+        exceptionFormat "full"
+    }
 }
 
 run {
