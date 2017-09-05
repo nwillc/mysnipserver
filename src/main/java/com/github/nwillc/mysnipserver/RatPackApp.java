@@ -62,6 +62,11 @@ public class RatPackApp {
         Logger.info("Processing Args: " + Arrays.toString(args));
         final OptionSet options = parser.parse(args);
 
+        if (options.has(CliOptions.CLI.help.name())) {
+            parser.printHelpOn(System.out);
+            System.exit(0);
+        }
+
         port = (Integer) options.valueOf(CliOptions.CLI.port.name());
         Logger.info("Using port: " + port);
         address = InetAddress.getByName((String) options.valueOf(CliOptions.CLI.address.name()));

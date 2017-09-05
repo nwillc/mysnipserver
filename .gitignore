@@ -12,3 +12,6 @@ logs
 reloader.pid
 mysnipserver.i??
 out
+.classpath
+.project
+.settings

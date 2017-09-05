@@ -9,7 +9,9 @@ help_text() {
     code=${1}
     cat << EOU
      Usage: ${SCRIPT_NAME}
+        -h                    Show help.
         -s server             Target server.
+        -u user               Deploy user
 EOU
     exit ${code}
 }
@@ -19,13 +21,10 @@ while getopts "h?s:u:" OPT; do
     h)
         help_text 0
         ;;
-    v)
-        VERBOSE=1
-        ;;
     s)
         SERVER="${OPTARG}"
         ;;                                                                                                      
-     u)
+    u)
         USER="${OPTARG}"
         ;;
     \?)
@@ -47,7 +46,7 @@ fi
 KEYFILE=$(mktemp /tmp/key.XXXXXX)
 trap "rm -rf ${KEYFILE}" EXIT
 
-openssl enc -aes-256-cbc -salt -S $OSSL_SALT -K $OSSL_KEY -iv $OSSL_IV -d -in .key/mysnip.enc -out ${KEYFILE}
+openssl enc -aes256 -base64 -k ${OSSL_KEY} -d -in .key/mysnip.enc -out ${KEYFILE}
 chmod 0400 ${KEYFILE}
 scp -o StrictHostKeyChecking=false -i ${KEYFILE} build/libs/*-standalone.jar ${USER}@${SERVER}:/home/mysnip/libs
 ssh -o StrictHostKeyChecking=false -i ${KEYFILE} ${USER}@${SERVER} 'kill -USR2 $(cat ~/reloader.pid)'
