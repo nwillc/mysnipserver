@@ -48,7 +48,7 @@ public class GraphQLHandler implements Handler, DaoProvider {
                           Dao<String, Snippet> snippetDao) throws Exception {
         this.categoriesDao = categoriesDao;
         this.snippetDao = snippetDao;
-        graphql = new GraphQL(new SnippetSchema().getSchema());
+        graphql = GraphQL.newGraphQL(new SnippetSchema().getSchema()).build();
     }
 
     @Override

@@ -20,8 +20,7 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
-                'au.com.ish.gradle:release:2.2.2',
-                "io.ratpack:ratpack-gradle:$ratpack_version"
+                'au.com.ish.gradle:release:2.2.2'
     }
 }
 
@@ -39,6 +38,7 @@ repositories {
 
 dependencies {
     compile "com.github.nwillc:opa:$opa_version",
+            "io.ratpack:ratpack-core:$ratpack_version",
             "io.ratpack:ratpack-exec:$ratpack_version",
             "io.ratpack:ratpack-session:$ratpack_version",
             "io.ratpack:ratpack-guice:$ratpack_version",
@@ -54,9 +54,9 @@ dependencies {
             "javax.validation:validation-api:$javax_validation_version",
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
             "org.tinylog:tinylog:$tiny_log_version",
-            'com.github.nwillc:reloader:' + reloader_version,
-            'com.graphql-java:graphql-java:3.0.0',
-            'com.graphql-java:graphql-java-annotations:3.0.3'
+            "com.github.nwillc:reloader:$reloader_version",
+            "com.graphql-java:graphql-java:$graphql_version",
+            "com.graphql-java:graphql-java-annotations:$graphql_annotations_version"
     
     compile ('com.google.api-client:google-api-client:1.22.0') {
         exclude group: 'com.google.guava' , module: 'guava-jdk5'
@@ -78,7 +78,6 @@ configurations {
     compile.exclude group: 'com.google.code.findbugs', module: 'jsr305'
 }
 
-apply plugin: 'io.ratpack.ratpack-java'
 apply plugin: 'idea'
 apply plugin: 'application'
 apply plugin: 'maven'
@@ -88,7 +87,7 @@ apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 
 group = 'com.github.nwillc'
-version = '2.8.4'
+version = '2.8.5'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
