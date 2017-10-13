@@ -29,7 +29,7 @@ public class MongoQueryMapper<T> implements QueryMapper<T> {
     private Deque<Bson> bsons = new ArrayDeque<>();
 
     @Override
-    public void accept(Query<T> tQuery) {
+    public Object apply(Query<T> tQuery) {
         String fieldName, value;
         Bson bson;
 
@@ -59,9 +59,7 @@ public class MongoQueryMapper<T> implements QueryMapper<T> {
                 bsons.addLast(bson);
                 break;
         }
-    }
 
-    public Bson toBson() {
         return bsons.getFirst();
     }
 }

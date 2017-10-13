@@ -21,7 +21,7 @@ import com.github.nwillc.mysnipserver.entity.DataStore;
 import com.github.nwillc.mysnipserver.entity.Field;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.query.Query;
-import com.github.nwillc.opa.query.QueryGenerator;
+import com.github.nwillc.opa.query.QueryBuilder;
 import graphql.annotations.GraphQLField;
 import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;
@@ -52,7 +52,7 @@ public final class QuerySchema extends DaoConsumer {
     public static List<Snippet> snippets(final DataFetchingEnvironment env,
                                          @GraphQLName(CATEGORY) final String category,
                                          @GraphQLName(MATCH) final String match) {
-        QueryGenerator<Snippet> queryGenerator = new QueryGenerator<>(Snippet.class);
+        QueryBuilder<Snippet> queryGenerator = new QueryBuilder<>(Snippet.class);
 
         if (match != null) {
             try {
@@ -75,7 +75,7 @@ public final class QuerySchema extends DaoConsumer {
             }
         }
         Logger.info("Query: " + queryGenerator);
-        Query<Snippet> query = queryGenerator.getQuery();
+        Query<Snippet> query = queryGenerator.build();
 
         Stream<Snippet> snippetStream = query != null ?
                 getSnippetDao(env).find(query) :

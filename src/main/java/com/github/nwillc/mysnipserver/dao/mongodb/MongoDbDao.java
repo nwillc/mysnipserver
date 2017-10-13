@@ -25,6 +25,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -57,8 +58,8 @@ public class MongoDbDao<K, T extends HasKey<K>> implements Dao<K, T>, JsonMapper
     @Override
     public Stream<T> find(Query<T> query) {
         final MongoQueryMapper<T> mapper = new MongoQueryMapper<>();
-        query.accept(mapper);
-        return StreamSupport.stream(collection.find(mapper.toBson()).spliterator(), false)
+        final Bson bson = (Bson) query.apply(mapper);
+        return StreamSupport.stream(collection.find(bson).spliterator(), false)
                 .map(d -> fromJson(d.toJson(), tClass));
     }
 

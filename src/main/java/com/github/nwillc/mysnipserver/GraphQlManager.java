@@ -14,21 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao.mongodb;
+package com.github.nwillc.mysnipserver;
 
-
-import com.github.fakemongo.junit.FongoRule;
-import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa.test.DaoTest.TestEntity;
-import com.github.nwillc.opa.test.QueryMapperTest;
-import org.junit.Rule;
-
-public class MongoQueryMapperTest extends QueryMapperTest {
-    @Rule
-    public FongoRule fongoRule = new FongoRule();
-
-    @Override
-    public Dao<String, TestEntity> get() {
-        return new MongoDbDao<>(fongoRule.getMongoClient(), TestEntity.class);
-    }
+/**
+ *
+ */
+public class GraphQlManager {
 }

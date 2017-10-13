@@ -33,6 +33,7 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
    jcenter()
 }
 
@@ -55,7 +56,6 @@ dependencies {
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
             "org.tinylog:tinylog:$tiny_log_version",
             "com.github.nwillc:reloader:$reloader_version",
-            "com.graphql-java:graphql-java:$graphql_version",
             "com.graphql-java:graphql-java-annotations:$graphql_annotations_version"
     
     compile ('com.google.api-client:google-api-client:1.22.0') {
@@ -67,8 +67,6 @@ dependencies {
     testCompile "org.jmockit:jmockit:$jmockit_version",
             "com.github.fakemongo:fongo:$fakemongo_version",
             "org.assertj:assertj-core:$assertj_version",
-            'junit:junit:4.12',
-            "com.github.nwillc:opa-impl-tests:$opa_impl_tests_version",
             "com.github.nwillc:jdk_contract_tests:$jdk_contract_tests_version",
             "junit:junit:4.12"
 
@@ -87,7 +85,7 @@ apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 
 group = 'com.github.nwillc'
-version = '2.8.5'
+version = '2.8.6-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'

@@ -18,7 +18,7 @@ package com.github.nwillc.mysnipserver.dao.memory;
 
 
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.opa.query.QueryGenerator;
+import com.github.nwillc.opa.query.QueryBuilder;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,8 +27,8 @@ public class SnippetDaoTest {
     @Test
     public void testConstructor() throws Exception {
         final SnippetDao dao = new SnippetDao(new CategoryDao());
-        QueryGenerator<Snippet> generator = new QueryGenerator<>(Snippet.class);
+        QueryBuilder<Snippet> generator = new QueryBuilder<>(Snippet.class);
         generator.eq("title", "import");
-        assertThat(dao.find(generator.getQuery()).count()).isEqualTo(1);
+        assertThat(dao.find(generator.build()).count()).isEqualTo(1);
     }
 }

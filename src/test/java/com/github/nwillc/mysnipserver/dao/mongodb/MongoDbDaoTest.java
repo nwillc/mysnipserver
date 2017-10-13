@@ -18,7 +18,7 @@ package com.github.nwillc.mysnipserver.dao.mongodb;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa_impl_tests.DaoTest;
+import com.github.nwillc.opa.test.DaoTest;
 import org.junit.Rule;
 
 

@@ -14,21 +14,26 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao.mongodb;
+package com.github.nwillc.mysnipserver;
 
+import graphql.schema.idl.SchemaGenerator;
+import graphql.schema.idl.SchemaParser;
+import org.junit.Test;
 
-import com.github.fakemongo.junit.FongoRule;
-import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa.test.DaoTest.TestEntity;
-import com.github.nwillc.opa.test.QueryMapperTest;
-import org.junit.Rule;
+import java.io.File;
 
-public class MongoQueryMapperTest extends QueryMapperTest {
-    @Rule
-    public FongoRule fongoRule = new FongoRule();
+import static org.junit.Assert.*;
 
-    @Override
-    public Dao<String, TestEntity> get() {
-        return new MongoDbDao<>(fongoRule.getMongoClient(), TestEntity.class);
+/**
+ *
+ */
+public class GraphQlManagerTest {
+    @Test
+    public void testSchema() throws Exception {
+        SchemaParser schemaParser = new SchemaParser();
+        SchemaGenerator schemaGenerator = new SchemaGenerator();
+
+        File file = new File("src/main/resources/snippetsSchema.graphql");
+        schemaParser.parse(file);
     }
 }
