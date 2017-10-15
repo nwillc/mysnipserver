@@ -101,7 +101,7 @@ jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
-        csv.enabled false
+        csv.enabled = false
     }
 }
 
