@@ -20,7 +20,8 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
-                'au.com.ish.gradle:release:2.2.2'
+                'au.com.ish.gradle:release:2.2.2',
+                'com.bmuschko:gradle-docker-plugin:3.2.0'
     }
 }
 
@@ -32,9 +33,26 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
+apply plugin: 'application'
+apply plugin: 'maven'
+apply plugin: 'release'
+apply plugin: 'jacoco'
+apply plugin: 'pmd'
+apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+
+group = 'com.github.nwillc'
+version = '2.8.6-SNAPSHOT'
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
+
 repositories {
     mavenLocal()
-   jcenter()
+    jcenter()
 }
 
 dependencies {
@@ -57,9 +75,9 @@ dependencies {
             "org.tinylog:tinylog:$tiny_log_version",
             "com.github.nwillc:reloader:$reloader_version",
             "com.graphql-java:graphql-java-annotations:$graphql_annotations_version"
-    
-    compile ('com.google.api-client:google-api-client:1.22.0') {
-        exclude group: 'com.google.guava' , module: 'guava-jdk5'
+
+    compile('com.google.api-client:google-api-client:1.22.0') {
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
     }
 
     runtime "org.tinylog:slf4j-binding:$slf4j_version"
@@ -75,20 +93,6 @@ dependencies {
 configurations {
     compile.exclude group: 'com.google.code.findbugs', module: 'jsr305'
 }
-
-apply plugin: 'idea'
-apply plugin: 'application'
-apply plugin: 'maven'
-apply plugin: 'release'
-apply plugin: 'jacoco'
-apply plugin: 'pmd'
-apply plugin: 'com.github.nwillc.vplugin'
-
-group = 'com.github.nwillc'
-version = '2.8.6-SNAPSHOT'
-targetCompatibility = '1.8'
-sourceCompatibility = '1.8'
-mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
 compileTestJava {
     sourceCompatibility = 1.8
@@ -175,4 +179,25 @@ run {
     if (project.hasProperty("appArgs")) {
         args Eval.me(appArgs)
     }
+}
+
+task createDockerfile(type: Dockerfile) {
+    destFile = project.file('build/docker/linux.dockerfile')
+    from 'anapsix/alpine-java:8_server-jre_unlimited'
+    def labels = [maintainer: 'nwillc@gmail.com']
+    label labels
+    runCommand 'mkdir -p /opt/service'
+    copyFile 'libs/mysnipserver-2.8.6-SNAPSHOT-standalone.jar', '/opt/service'
+    workingDir '/opt/service'
+    defaultCommand '--port', '8080', '--store', 'MemoryBacked'
+    entryPoint 'java', '-jar', 'mysnipserver-2.8.6-SNAPSHOT-standalone.jar'
+}
+
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn assemble
+    dependsOn createDockerfile
+    inputDir = project.file("build")
+    dockerFile = createDockerfile.destFile
+    tag = "nwillc/mysnipserver:${project.version}"
 }
