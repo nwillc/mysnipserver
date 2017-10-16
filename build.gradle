@@ -127,7 +127,7 @@ release {
 }
 
 shadowJar {
-    baseName = "mysnipserver-$project.version-standalone"
+    baseName = "$project.name-$project.version-standalone"
     classifier = null
     version = null
 }
@@ -187,10 +187,10 @@ task createDockerfile(type: Dockerfile) {
     def labels = [maintainer: 'nwillc@gmail.com']
     label labels
     runCommand 'mkdir -p /opt/service'
-    copyFile 'libs/mysnipserver-2.8.6-SNAPSHOT-standalone.jar', '/opt/service'
+    copyFile "libs/$project.name-$project.version-standalone.jar", '/opt/service'
     workingDir '/opt/service'
     defaultCommand '--port', '8080', '--store', 'MemoryBacked'
-    entryPoint 'java', '-jar', 'mysnipserver-2.8.6-SNAPSHOT-standalone.jar'
+    entryPoint 'java', '-jar', "$project.name-$project.version-standalone.jar"
 }
 
 
@@ -199,5 +199,5 @@ task buildImage(type: DockerBuildImage) {
     dependsOn createDockerfile
     inputDir = project.file("build")
     dockerFile = createDockerfile.destFile
-    tag = "nwillc/mysnipserver:${project.version}"
+    tag = "nwillc/$project.name:$project.version"
 }
