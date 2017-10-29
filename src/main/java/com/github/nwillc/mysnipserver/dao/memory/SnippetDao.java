@@ -20,11 +20,8 @@ package com.github.nwillc.mysnipserver.dao.memory;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa.memory.MemoryBackedDao;
+import com.github.nwillc.opa.impl.memory.MemoryBackedDao;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import org.pmw.tinylog.Logger;
 
 import java.util.Optional;
 

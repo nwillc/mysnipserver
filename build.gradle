@@ -16,23 +16,23 @@
 
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
                 'au.com.ish.gradle:release:2.2.2',
-                'com.bmuschko:gradle-docker-plugin:3.2.0'
+                'com.bmuschko:gradle-docker-plugin:3.2.0',
+                'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
+                'com.github.jengelman.gradle.plugins:shadow:2.0.0'
     }
 }
 
 plugins {
-    id 'java'
-    id 'com.github.nwillc.vplugin' version '2.1.1'
-    id 'com.github.nwillc.buildinfo' version '0.1.2'
     id 'nebula.lint' version '8.3.1'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
+apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'release'
@@ -40,6 +40,9 @@ apply plugin: 'jacoco'
 apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 apply plugin: 'com.bmuschko.docker-remote-api'
+apply plugin: 'com.github.nwillc.buildinfo'
+apply plugin: "com.github.johnrengelman.plugin-shadow"
+
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
@@ -66,8 +69,8 @@ dependencies {
             "com.fasterxml.jackson.core:jackson-databind:$jackson_fasterxml_version",
             "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jackson_fasterxml_version",
             "com.fasterxml.jackson.core:jackson-annotations:$jackson_fasterxml_version",
-            'com.google.http-client:google-http-client-jackson2:1.22.0',
-            'com.google.http-client:google-http-client:1.22.0',
+            "com.google.http-client:google-http-client-jackson2:$google_http_client",
+            "com.google.http-client:google-http-client:$google_http_client",
             'com.google.inject:guice:4.1.0',
             'com.groupon:locality-uuid:1.1.1',
             "javax.validation:validation-api:$javax_validation_version",
@@ -76,7 +79,7 @@ dependencies {
             "com.github.nwillc:reloader:$reloader_version",
             "com.graphql-java:graphql-java-annotations:$graphql_annotations_version"
 
-    compile('com.google.api-client:google-api-client:1.22.0') {
+    compile("com.google.api-client:google-api-client:$google_http_client") {
         exclude group: 'com.google.guava', module: 'guava-jdk5'
     }
 
@@ -108,8 +111,6 @@ jacocoTestReport {
         csv.enabled = false
     }
 }
-
-gradleLint.rules = ['archaic-wrapper', 'all-dependency', 'overridden-dependency-version']
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {

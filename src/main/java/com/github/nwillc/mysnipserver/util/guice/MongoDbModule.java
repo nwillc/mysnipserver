@@ -21,7 +21,7 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.opa.CachingDao;
 import com.github.nwillc.opa.Dao;
-import com.github.nwillc.opa.mongo.MongoDbDao;
+import com.github.nwillc.opa.impl.mongo.MongoDbDao;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
@@ -52,8 +52,11 @@ public class MongoDbModule implements Module {
         Dao<String, Category> categoryDao = new MongoDbDao<>(client, DATABASE, Category.class);
         Dao<String, Snippet> snippetDao = new CachingDao<>(new MongoDbDao<>(client, DATABASE, Snippet.class));
         Dao<String, User> userDao = new MongoDbDao<>(client, DATABASE, User.class);
-        binder.bind(new TypeLiteral<Dao<String, Category>>(){}).toInstance(categoryDao);
-        binder.bind(new TypeLiteral<Dao<String, Snippet>>(){}).toInstance(snippetDao);
-        binder.bind(new TypeLiteral<Dao<String, User>>(){}).toInstance(userDao);
+        binder.bind(new TypeLiteral<Dao<String, Category>>() {
+        }).toInstance(categoryDao);
+        binder.bind(new TypeLiteral<Dao<String, Snippet>>() {
+        }).toInstance(snippetDao);
+        binder.bind(new TypeLiteral<Dao<String, User>>() {
+        }).toInstance(userDao);
     }
 }

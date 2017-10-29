@@ -40,9 +40,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static com.github.nwillc.mysnipserver.util.rest.Params.PASSWORD;
-import static com.github.nwillc.mysnipserver.util.rest.Params.TOKEN;
-import static com.github.nwillc.mysnipserver.util.rest.Params.USERNAME;
+import static com.github.nwillc.mysnipserver.util.rest.Params.*;
 
 public class RatPackApp {
     private static final String PUBLIC = "public";

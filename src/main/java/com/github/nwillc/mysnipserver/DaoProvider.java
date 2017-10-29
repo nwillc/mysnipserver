@@ -22,5 +22,6 @@ import com.github.nwillc.opa.Dao;
 
 public interface DaoProvider {
     Dao<String, Category> getCategoryDao();
+
     Dao<String, Snippet> getSnippetDao();
 }

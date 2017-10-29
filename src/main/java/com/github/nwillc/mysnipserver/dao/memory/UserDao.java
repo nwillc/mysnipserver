@@ -17,10 +17,10 @@
 package com.github.nwillc.mysnipserver.dao.memory;
 
 import com.github.nwillc.mysnipserver.entity.User;
-import com.github.nwillc.opa.memory.MemoryBackedDao;
+import com.github.nwillc.opa.impl.memory.MemoryBackedDao;
 
 
-public class UserDao extends MemoryBackedDao<String,User> {
+public class UserDao extends MemoryBackedDao<String, User> {
     private static final String ADMIN = "nwillc@gmail.com";
 
     public UserDao() {

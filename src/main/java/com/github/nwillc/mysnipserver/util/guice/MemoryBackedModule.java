@@ -35,8 +35,11 @@ public class MemoryBackedModule implements Module {
     @Override
     public void configure(Binder binder) {
         Logger.info("DI Module: Memory Backed");
-        binder.bind(new TypeLiteral<Dao<String, Category>>() {}).to(CategoryDao.class).in(Scopes.SINGLETON);
-        binder.bind(new TypeLiteral<Dao<String, Snippet>>() {}).to(SnippetDao.class).in(Scopes.SINGLETON);
-        binder.bind(new TypeLiteral<Dao<String, User>>() {}).to(UserDao.class).in(Scopes.SINGLETON);
+        binder.bind(new TypeLiteral<Dao<String, Category>>() {
+        }).to(CategoryDao.class).in(Scopes.SINGLETON);
+        binder.bind(new TypeLiteral<Dao<String, Snippet>>() {
+        }).to(SnippetDao.class).in(Scopes.SINGLETON);
+        binder.bind(new TypeLiteral<Dao<String, User>>() {
+        }).to(UserDao.class).in(Scopes.SINGLETON);
     }
 }
