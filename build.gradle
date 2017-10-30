@@ -16,15 +16,18 @@
 
 buildscript {
     repositories {
-        mavenLocal()
         jcenter()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+
     }
     dependencies {
-        classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.2',
+        classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.4',
                 'au.com.ish.gradle:release:2.2.2',
                 'com.bmuschko:gradle-docker-plugin:3.2.0',
                 'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
-                'com.github.jengelman.gradle.plugins:shadow:2.0.0'
+                'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }
 }
 
@@ -41,7 +44,7 @@ apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 apply plugin: 'com.bmuschko.docker-remote-api'
 apply plugin: 'com.github.nwillc.buildinfo'
-apply plugin: "com.github.johnrengelman.plugin-shadow"
+apply plugin: 'com.github.johnrengelman.shadow'
 
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
@@ -77,7 +80,9 @@ dependencies {
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
             "org.tinylog:tinylog:$tiny_log_version",
             "com.github.nwillc:reloader:$reloader_version",
-            "com.graphql-java:graphql-java-annotations:$graphql_annotations_version"
+            "com.graphql-java:graphql-java-annotations:$graphql_annotations_version",
+            "com.h2database:h2:$h2database_version",
+            'com.jolbox:bonecp:0.8.0.RELEASE'
 
     compile("com.google.api-client:google-api-client:$google_http_client") {
         exclude group: 'com.google.guava', module: 'guava-jdk5'
