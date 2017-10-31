@@ -21,13 +21,14 @@ import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.migrate.MigrationBase;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.impl.jdbc.JdbcDaoConfiguration;
 import com.github.nwillc.opa.impl.jdbc.SqlEntry;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SnippetConfiguration implements DaoConfiguration<String, Snippet> {
+public class SnippetConfiguration implements JdbcDaoConfiguration<String, Snippet> {
     private final ConnectionProvider delegate;
 
     public SnippetConfiguration(H2Database delegate) {

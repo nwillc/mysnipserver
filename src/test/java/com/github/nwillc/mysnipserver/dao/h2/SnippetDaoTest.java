@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver.dao.h2;
 
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
+import com.github.nwillc.opa.impl.jdbc.JdbcDao;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class SnippetDaoTest {
         folder.create();
         final File folderRoot = folder.getRoot();
         final H2Database h2Database = new H2Database(folderRoot.getPath() + File.separator + "snippets");
-        snippetDao = new H2Dao<>(new SnippetConfiguration(h2Database));
+        snippetDao = new JdbcDao<>(new SnippetConfiguration(h2Database));
     }
 
     @Test

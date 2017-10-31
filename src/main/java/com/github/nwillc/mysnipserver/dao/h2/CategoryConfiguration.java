@@ -19,12 +19,13 @@ package com.github.nwillc.mysnipserver.dao.h2;
 import com.github.nwillc.funjdbc.SqlStatement;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.opa.impl.jdbc.JdbcDaoConfiguration;
 import com.github.nwillc.opa.impl.jdbc.SqlEntry;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class CategoryConfiguration implements DaoConfiguration<String, Category> {
+public class CategoryConfiguration implements JdbcDaoConfiguration<String, Category> {
     @Override
     public Connection getConnection() throws SQLException {
         return null;

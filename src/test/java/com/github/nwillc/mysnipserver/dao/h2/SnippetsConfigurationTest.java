@@ -19,6 +19,7 @@ package com.github.nwillc.mysnipserver.dao.h2;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.impl.jdbc.JdbcDaoConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SnippetsConfigurationTest {
-    private DaoConfiguration<String, Snippet> instance;
+    private JdbcDaoConfiguration<String, Snippet> instance;
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
