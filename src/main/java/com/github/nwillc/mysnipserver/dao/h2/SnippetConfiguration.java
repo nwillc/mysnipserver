@@ -66,11 +66,6 @@ public class SnippetConfiguration implements JdbcDaoConfiguration<String, Snippe
     }
 
     @Override
-    public SqlEntry<String> getRetrieve() {
-        return key -> new SqlStatement("SELECT DISTINCT * FROM Snippet WHERE key = '%s'", key);
-    }
-
-    @Override
     public SqlEntry<Snippet> getUpdate() {
         return snippet -> new SqlStatement("UPDATE Snippet SET category = '%s', title = '%s', body = '%s' WHERE key = '%s'",
                 snippet.getCategory(), snippet.getTitle(), snippet.getBody(), snippet.getKey());
@@ -84,12 +79,12 @@ public class SnippetConfiguration implements JdbcDaoConfiguration<String, Snippe
     static class CreateMigration extends MigrationBase {
         @Override
         public String getDescription() {
-            return "Create Snippets Table";
+            return "Create Snippet Table";
         }
 
         @Override
         public String getIdentifier() {
-            return "snippets-1";
+            return "snippet-1";
         }
 
         @Override

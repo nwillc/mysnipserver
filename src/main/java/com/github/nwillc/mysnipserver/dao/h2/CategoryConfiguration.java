@@ -17,47 +17,78 @@
 package com.github.nwillc.mysnipserver.dao.h2;
 
 import com.github.nwillc.funjdbc.SqlStatement;
+import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import com.github.nwillc.funjdbc.functions.Extractor;
+import com.github.nwillc.funjdbc.migrate.MigrationBase;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.opa.impl.jdbc.JdbcDaoConfiguration;
 import com.github.nwillc.opa.impl.jdbc.SqlEntry;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class CategoryConfiguration implements JdbcDaoConfiguration<String, Category> {
+    private final ConnectionProvider delegate;
+
+    public CategoryConfiguration(H2Database delegate) {
+        this.delegate = delegate;
+        delegate.getManager().add(new CreateMigration());
+        delegate.getManager().doMigrations();
+    }
+
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+        return delegate.getConnection();
     }
 
     @Override
     public Extractor<Category> getExtractor() {
-        return null;
+        return rs -> {
+            final Category category = new Category();
+            category.setKey(rs.getString("key"));
+            category.setName(rs.getString("name"));
+            return category;
+        };
     }
 
     @Override
     public SqlStatement getQueryAll() {
-        return null;
+        return new SqlStatement("SELECT DISTINCT * FROM Category");
     }
 
     @Override
     public SqlEntry<Category> getCreate() {
-        return null;
-    }
-
-    @Override
-    public SqlEntry<String> getRetrieve() {
-        return null;
+        return category -> new SqlStatement("INSERT INTO Category (key, name) VALUES ('%s', '%s')", category.getKey(), category.getName());
     }
 
     @Override
     public SqlEntry<Category> getUpdate() {
-        return null;
+        return category -> new SqlStatement("UPDATE Category SET name = '%s' WHERE key = '%s'", category.getName(), category.getKey());
     }
 
     @Override
     public SqlEntry<String> getDelete() {
-        return null;
+        return key -> new SqlStatement("DELETE FROM Category WHERE key = '%s'", key);
+    }
+
+    private static class CreateMigration extends MigrationBase {
+        @Override
+        public String getDescription() {
+            return "Create Category Table";
+        }
+
+        @Override
+        public String getIdentifier() {
+            return "category-1";
+        }
+
+        @Override
+        public void perform() throws Exception {
+            try (Connection c = getConnection();
+                 Statement statement = c.createStatement()) {
+                statement.execute("CREATE TABLE Category ( key CHAR(40), name VARCHAR(200), PRIMARY KEY(key) )");
+            }
+        }
     }
 }
