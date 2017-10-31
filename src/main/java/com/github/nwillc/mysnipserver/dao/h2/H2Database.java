@@ -41,7 +41,9 @@ public final class H2Database implements ConnectionProvider {
         connectionPool = new BoneCP(config);
         manager = Manager.getInstance();
         manager.setConnectionProvider(this);
-        manager.enableMigrations();
+        if (!manager.migrationsEnabled()) {
+            manager.enableMigrations();
+        }
     }
 
     @Override

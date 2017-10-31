@@ -16,29 +16,25 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenLocal()
+        maven {
+            url mvn_repository
+        }
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
-
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.4',
-                'au.com.ish.gradle:release:2.2.2',
                 'com.bmuschko:gradle-docker-plugin:3.2.0',
                 'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
                 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }
 }
 
-plugins {
-    id 'nebula.lint' version '8.3.1'
-}
-
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'maven'
-apply plugin: 'release'
 apply plugin: 'jacoco'
 apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
@@ -46,19 +42,19 @@ apply plugin: 'com.bmuschko.docker-remote-api'
 apply plugin: 'com.github.nwillc.buildinfo'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+import com.bmuschko.gradle.docker.tasks.image.*
 
 group = 'com.github.nwillc'
-version = '2.8.6-SNAPSHOT'
+version = '2.9.0'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
 repositories {
     mavenLocal()
-    jcenter()
+    maven {
+        url mvn_repository
+    }
 }
 
 dependencies {
@@ -125,13 +121,6 @@ gradle.projectsEvaluated {
 
 processResources.dependsOn buildInfo
 
-release {
-    failOnSnapshotDependencies = true
-    allowLocalModifications = true
-    releaseDryRun = false
-    scm = 'git'
-}
-
 shadowJar {
     baseName = "$project.name-$project.version-standalone"
     classifier = null
@@ -188,21 +177,21 @@ run {
 }
 
 task createDockerfile(type: Dockerfile) {
+    def labels = [maintainer: 'nwillc@gmail.com']
+
     destFile = project.file('build/docker/linux.dockerfile')
     from 'anapsix/alpine-java:8_server-jre_unlimited'
-    def labels = [maintainer: 'nwillc@gmail.com']
     label labels
-    runCommand 'mkdir -p /opt/service'
+    exposePort 8080
+    runCommand 'mkdir -p /opt/service/db'
+    volume '/opt/service/db'
     copyFile "libs/$project.name-$project.version-standalone.jar", '/opt/service'
     workingDir '/opt/service'
-    defaultCommand '--port', '8080', '--store', 'MemoryBacked'
+    defaultCommand '--port', '8080', '--store', 'H2'
     entryPoint 'java', '-Djava.awt.headless=true', '-Xmx100m', '-jar', "$project.name-$project.version-standalone.jar"
 }
 
-
-task buildImage(type: DockerBuildImage) {
-    dependsOn assemble
-    dependsOn createDockerfile
+task buildImage(type: DockerBuildImage, dependsOn: [assemble, createDockerfile]) {
     inputDir = project.file("build")
     dockerFile = createDockerfile.destFile
     tag = "nwillc/$project.name:$project.version"

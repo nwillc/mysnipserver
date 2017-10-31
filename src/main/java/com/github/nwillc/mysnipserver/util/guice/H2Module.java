@@ -16,13 +16,15 @@
 
 package com.github.nwillc.mysnipserver.util.guice;
 
-import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
-import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
+import com.github.nwillc.mysnipserver.dao.h2.CategoryConfiguration;
+import com.github.nwillc.mysnipserver.dao.h2.H2Database;
+import com.github.nwillc.mysnipserver.dao.h2.SnippetConfiguration;
 import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
 import com.github.nwillc.opa.Dao;
+import com.github.nwillc.opa.impl.jdbc.JdbcDao;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -31,13 +33,27 @@ import org.pmw.tinylog.Logger;
 
 
 public class H2Module implements Module {
+    private static final String H2_DATABASE_NAME = "./db/mysnips";
+
     @Override
     public void configure(Binder binder) {
-        Logger.info("DI Module: H3 Backed");
+        Logger.info("DI Module: H2 Backed");
+
+        final H2Database h2Database;
+        try {
+            h2Database = new H2Database(H2_DATABASE_NAME);
+        } catch (Exception e) {
+            Logger.error("Failed creating h2 database " + H2_DATABASE_NAME, e);
+            throw new IllegalStateException("Database not available", e);
+        }
+
+        final JdbcDao<String, Category> categoryJdbcDao = new JdbcDao<>(new CategoryConfiguration(h2Database));
+        final JdbcDao<String, Snippet> snippetJdbcDao = new JdbcDao<>(new SnippetConfiguration(h2Database));
+
         binder.bind(new TypeLiteral<Dao<String, Category>>() {
-        }).to(CategoryDao.class).in(Scopes.SINGLETON);
+        }).toInstance(categoryJdbcDao);
         binder.bind(new TypeLiteral<Dao<String, Snippet>>() {
-        }).to(SnippetDao.class).in(Scopes.SINGLETON);
+        }).toInstance(snippetJdbcDao);
         binder.bind(new TypeLiteral<Dao<String, User>>() {
         }).to(UserDao.class).in(Scopes.SINGLETON);
     }
