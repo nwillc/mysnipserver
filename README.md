@@ -4,16 +4,17 @@ This is a simple snippets app. It is a GraphQL server based on:
 
 - Java 8
 - [Ratpack](https://ratpack.io/) servlet providing [GraphQL API](http://graphql.org/)
-- MongoDB for persistence ([mlab](https://mlab.com))
+- JDBBC, MongoDB or Memory for persistence
 - Google authentication
 - jQuery UI
 
-I use [Travis-CI](https://travis-ci.org/) for my Continous Integration and Deployment.
-
 ## Runtime Configuration
 
-There is a 'env.sh.example' file that exports variables used by the provided 'run.sh'. Look at this for explanations of
-the runtime configuration.
+There is a 'env.sh.example' file that exports variables used by the provided 'run.sh'. Look at this for explanations of the runtime configuration.
+
+## Docker Tasks
+
+Can create an image, or run in a container, right from the gradle build.
 
 ## See Also
 
@@ -25,5 +26,6 @@ Posts on this service:
 - [Orchestrate to Mongo](https://nwillc.wordpress.com/2016/11/19/orchestrate-to-mongodb/)
 
 -----
-[![ISC License](http://shields-nwillc.rhcloud.com/shield/tldrlegal?package=ISC)](http://shields-nwillc.rhcloud.com/homepage/tldrlegal?package=ISC)
-[![Build Status](http://shields-nwillc.rhcloud.com/shield/travis-ci?path=nwillc&package=mysnipserver)](http://shields-nwillc.rhcloud.com/homepage/travis-ci?path=nwillc&package=mysnipserver)
+[![Coverage](https://codecov.io/gh/nwillc/mysnipserver/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/nwillc/mysnipserver)
+[![license](https://img.shields.io/github/license/nwillc/mysnipserver.svg)](https://tldrlegal.com/license/-isc-license)
+[![Travis](https://img.shields.io/travis/nwillc/mysnipserver.svg)](https://travis-ci.org/nwillc/mysnipserver)
