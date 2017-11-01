@@ -76,7 +76,6 @@ dependencies {
             "javax.validation:validation-api:$javax_validation_version",
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
             "org.tinylog:tinylog:$tiny_log_version",
-            "com.github.nwillc:reloader:$reloader_version",
             "com.graphql-java:graphql-java-annotations:$graphql_annotations_version",
             "com.h2database:h2:$h2database_version",
             'com.jolbox:bonecp:0.8.0.RELEASE'
@@ -180,7 +179,7 @@ run {
 task createDockerfile(type: Dockerfile) {
     def labels = [maintainer: 'nwillc@gmail.com']
 
-    destFile = project.file('build/docker/linux.dockerfile')
+    destFile = project.file('build/docker/Dockerfile')
     from 'anapsix/alpine-java:8_server-jre_unlimited'
     label labels
     exposePort 8080
@@ -189,7 +188,7 @@ task createDockerfile(type: Dockerfile) {
     copyFile "libs/$project.name-$project.version-standalone.jar", '/opt/service'
     workingDir '/opt/service'
     defaultCommand '--port', '8080', '--store', 'H2'
-    entryPoint 'java', '-Djava.awt.headless=true', '-Xmx100m', '-jar', "$project.name-$project.version-standalone.jar"
+    entryPoint 'java', '-Djava.awt.headless=true', '-jar', "$project.name-$project.version-standalone.jar"
 }
 
 task buildImage(type: DockerBuildImage, dependsOn: [assemble, createDockerfile]) {
