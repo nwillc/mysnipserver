@@ -4,7 +4,7 @@ This is a simple snippets app. It is a GraphQL server based on:
 
 - Java 8
 - [Ratpack](https://ratpack.io/) servlet providing [GraphQL API](http://graphql.org/)
-- JDBBC, MongoDB or Memory for persistence
+- JDBC, MongoDB or Memory for persistence (Uses [OPA](https://github.com/nwillc/opa))
 - Google authentication
 - jQuery UI
 
