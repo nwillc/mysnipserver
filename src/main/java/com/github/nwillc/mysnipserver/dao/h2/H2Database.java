@@ -18,27 +18,27 @@ package com.github.nwillc.mysnipserver.dao.h2;
 
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import com.github.nwillc.funjdbc.migrate.Manager;
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
+import org.apache.commons.dbcp2.*;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.pmw.tinylog.Logger;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public final class H2Database implements ConnectionProvider {
     private final static String DRIVER = "org.h2.Driver";
     private final static String URL = "jdbc:h2:";
-    private final BoneCP connectionPool;
+    private final DataSource dataSource;
     private final Manager manager;
 
     public H2Database(String dbName) throws ClassNotFoundException, SQLException {
         Logger.info("H2 Database: " + dbName);
         Class.forName(DRIVER);
-        BoneCPConfig config = new BoneCPConfig();
-        config.setUsername("sa");
-        config.setPassword("sa");
-        config.setJdbcUrl(URL + dbName);
-        connectionPool = new BoneCP(config);
+
+        dataSource = setupDataSource(URL + dbName);
+
         manager = Manager.getInstance();
         manager.setConnectionProvider(this);
         if (!manager.migrationsEnabled()) {
@@ -46,9 +46,17 @@ public final class H2Database implements ConnectionProvider {
         }
     }
 
+    private static DataSource setupDataSource(String connectURI) {
+        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI, null);
+        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
+        ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+        poolableConnectionFactory.setPool(connectionPool);
+        return new PoolingDataSource<>(connectionPool);
+    }
+
     @Override
     public Connection getConnection() throws SQLException {
-        return connectionPool.getConnection();
+        return dataSource.getConnection();
     }
 
     public Manager getManager() {

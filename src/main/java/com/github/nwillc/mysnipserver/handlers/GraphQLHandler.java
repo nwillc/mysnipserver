@@ -67,7 +67,15 @@ public class GraphQLHandler implements Handler, DaoProvider {
             Logger.info(QUERY + ": " + payload.get(QUERY));
             @SuppressWarnings("unchecked")
             Map<String, Object> variables = (Map<String, Object>) payload.get("variables");
-            ExecutionResult executionResult = graphql.execute(payload.get(QUERY).toString(), null, this, variables);
+            ExecutionResult executionResult;
+            try {
+                executionResult = graphql.execute(payload.get(QUERY).toString(), null, this, variables);
+            } catch (Throwable e) {
+                Logger.warn("GraphQL failed", e);
+                context.render("{  }");
+                return;
+            }
+
             Map<String, Object> result = new LinkedHashMap<>();
             if (executionResult.getErrors().isEmpty()) {
                 result.put(DATA, executionResult.getData());
