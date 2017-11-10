@@ -184,14 +184,15 @@ task createDockerfile(type: Dockerfile) {
     def labels = [maintainer: 'nwillc@gmail.com']
 
     destFile = project.file('build/docker/Dockerfile')
-    from 'store/oracle/serverjre:8'
+//    from 'store/oracle/serverjre:8'
+    from 'anapsix/alpine-java:8_server-jre_unlimited'
     label labels
-    exposePort 8080
+    exposePort 4567
     runCommand 'mkdir -p /opt/service/db'
     volume '/opt/service/db'
     copyFile "libs/$project.name-$project.version-standalone.jar", '/opt/service'
     workingDir '/opt/service'
-    defaultCommand '--port', '8080', '--store', 'H2'
+    defaultCommand '--port', '4567', '--store', 'H2'
     entryPoint 'java', '-Djava.awt.headless=true', '-jar', "$project.name-$project.version-standalone.jar"
 }
 
