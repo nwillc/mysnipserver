@@ -11,4 +11,5 @@ env:
 after_success:
   - ./gradlew jacocoTestReport --no-daemon
   - bash <(curl -s https://codecov.io/bash)
+  - docker login -u nwillc -p ${DOCKER_PASSWD}
   - ./gradlew pushImage
