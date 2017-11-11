@@ -11,4 +11,4 @@ env:
 after_success:
   - ./gradlew jacocoTestReport --no-daemon
   - bash <(curl -s https://codecov.io/bash)
-  - ./gradlew buildImage
+  - ./gradlew pushImage
