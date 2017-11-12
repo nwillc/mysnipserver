@@ -19,7 +19,6 @@ package com.github.nwillc.mysnipserver.graphql;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.opa.Dao;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
@@ -45,7 +44,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 @RunWith(JMockit.class)
-public class GraphQLTest implements JsonMapper {
+public class GraphQLTest {
+    public static final String CATEGORY = "CATEGORY";
+    public static final String TITLE = "TITLE";
+    public static final String BODY = "BODY";
+    public static final String KEY = "KEY";
+    public static final String SNIPPET = "snippet";
     private GraphQLSchema schema;
     private GraphQL graphQL;
 
@@ -75,15 +79,18 @@ public class GraphQLTest implements JsonMapper {
 
     @Test
     public void testSnippetQuery() throws Exception {
-        Snippet snippet = new Snippet("CATEGORY", "TITLE", "BODY");
-        snippet.setKey("KEY");
-        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query("query { snippet( key: \"KEY\" ) { key, category, title, body } }")
+
+        Snippet snippet = new Snippet(CATEGORY, TITLE, BODY);
+        snippet.setKey(KEY);
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(
+                String.format("query { %s( %s: \"%s\" ) { %s, %s, %s, %s } }", SNIPPET.toLowerCase(), KEY.toLowerCase(), KEY,
+                        KEY.toLowerCase(), CATEGORY.toLowerCase(), TITLE.toLowerCase(), BODY.toLowerCase()))
                 .build();
 
         assertThat(executionInput).isNotNull();
 
         new Expectations() {{
-            snippetDao.findOne("KEY");
+            snippetDao.findOne(KEY);
             result = Optional.of(snippet);
         }};
 
@@ -92,8 +99,9 @@ public class GraphQLTest implements JsonMapper {
         assertThat(result.getErrors()).isEmpty();
 
         Map data = result.getData();
-        assertThat(data).containsKeys("snippet");
-        data = (Map)data.get("snippet");
-        assertThat(data).contains(entry("key","KEY"), entry("category", "CATEGORY"), entry("title", "TITLE"), entry("body","BODY"));
+        assertThat(data).containsKeys(SNIPPET);
+        data = (Map) data.get(SNIPPET);
+        assertThat(data).contains(entry(KEY.toLowerCase(), KEY), entry(CATEGORY.toLowerCase(), CATEGORY),
+                entry(TITLE.toLowerCase(), TITLE), entry(BODY.toLowerCase(), BODY));
     }
 }
