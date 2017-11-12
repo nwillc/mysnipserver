@@ -16,7 +16,6 @@
 
 package com.github.nwillc.mysnipserver.graphql.schema;
 
-import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLSchema;
 
 import static graphql.schema.GraphQLSchema.newSchema;
@@ -36,10 +35,11 @@ public class SnippetSchema {
 
 
     public SnippetSchema() throws IllegalAccessException, NoSuchMethodException, InstantiationException {
-        schema = newSchema()
-                .query(GraphQLAnnotations.object(QuerySchema.class))
-                .mutation(GraphQLAnnotations.object(MutationSchema.class))
-                .build();
+//        schema = newSchema()
+//                .query(GraphQLAnnotations.object(QuerySchema.class))
+//                .mutation(GraphQLAnnotations.object(MutationSchema.class))
+//                .build();
+        schema = null;
     }
 
     public GraphQLSchema getSchema() {

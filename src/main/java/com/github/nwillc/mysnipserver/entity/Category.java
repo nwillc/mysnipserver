@@ -16,12 +16,6 @@
 
 package com.github.nwillc.mysnipserver.entity;
 
-import graphql.annotations.GraphQLField;
-import graphql.annotations.GraphQLName;
-
-import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.CATEGORY;
-
-@GraphQLName(CATEGORY)
 public class Category extends Entity {
     private String name;
 
@@ -32,7 +26,6 @@ public class Category extends Entity {
         this.name = name;
     }
 
-    @GraphQLField
     public String getName() {
         return name;
     }

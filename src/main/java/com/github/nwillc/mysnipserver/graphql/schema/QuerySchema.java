@@ -22,8 +22,6 @@ import com.github.nwillc.mysnipserver.entity.Field;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.query.Query;
 import com.github.nwillc.opa.query.QueryBuilder;
-import graphql.annotations.GraphQLField;
-import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;
 import org.pmw.tinylog.Logger;
 
@@ -32,26 +30,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
-
-@GraphQLName(QUERY)
 public final class QuerySchema extends DaoConsumer {
 
-    @GraphQLField
     public static List<Category> categories(final DataFetchingEnvironment env) {
         return getCategoryDao(env).findAll().collect(Collectors.toList());
     }
 
-    @GraphQLField
     public static Category category(final DataFetchingEnvironment env,
-                                    @NotNull @GraphQLName(KEY) final String key) {
+                                    @NotNull final String key) {
         return getCategoryDao(env).findOne(key).orElse(null);
     }
 
-    @GraphQLField
     public static List<Snippet> snippets(final DataFetchingEnvironment env,
-                                         @GraphQLName(CATEGORY) final String category,
-                                         @GraphQLName(MATCH) final String match) {
+                                         final String category,
+                                         final String match) {
         QueryBuilder<Snippet> queryGenerator = new QueryBuilder<>(Snippet.class);
 
         if (match != null) {
@@ -84,7 +76,6 @@ public final class QuerySchema extends DaoConsumer {
         }
     }
 
-    @GraphQLField
     public static DataStore datastore(final DataFetchingEnvironment env) {
         return new DataStore() {
             @Override
@@ -99,9 +90,8 @@ public final class QuerySchema extends DaoConsumer {
         };
     }
 
-    @GraphQLField
     public static Snippet snippet(final DataFetchingEnvironment env,
-                                  @NotNull @GraphQLName(KEY) final String key) {
+                                  @NotNull final String key) {
         return getSnippetDao(env).findOne(key).orElse(null);
     }
 }

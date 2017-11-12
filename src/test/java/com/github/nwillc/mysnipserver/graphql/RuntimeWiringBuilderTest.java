@@ -17,31 +17,24 @@
 package com.github.nwillc.mysnipserver.graphql;
 
 
-import graphql.schema.idl.SchemaParser;
-import graphql.schema.idl.TypeDefinitionRegistry;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.Dao;
+import graphql.schema.idl.RuntimeWiring;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 import org.junit.Test;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SchemaTest {
+@RunWith(JMockit.class)
+public class RuntimeWiringBuilderTest {
+    @Mocked
+    private Dao<String,Snippet> snippetDao;
+
     @Test
-    public void testSchemaSyntax() throws Exception {
-        SchemaParser schemaParser = new SchemaParser();
-
-        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("snippets.graphqls");
-
-        assertThat(inputStream).isNotNull();
-
-        final InputStreamReader streamReader = new InputStreamReader(inputStream);
-
-        assertThat(streamReader).isNotNull();
-
-        final TypeDefinitionRegistry registry = schemaParser.parse(streamReader);
-
-        assertThat(registry).isNotNull();
-
+    public void testBuilder() throws Exception {
+        final RuntimeWiring runtimeWiring = RuntimeWiringBuilder.getRuntimeWiring(snippetDao);
+        assertThat(runtimeWiring).isNotNull();
     }
 }

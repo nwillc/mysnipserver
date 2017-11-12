@@ -14,24 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.entity;
+package com.github.nwillc.mysnipserver.graphql.fetchers;
 
-import com.github.nwillc.opa.HasKey;
-import com.groupon.uuid.UUID;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.Dao;
+import graphql.schema.DataFetcher;
+import graphql.schema.DataFetchingEnvironment;
 
-public class Entity extends HasKey<String> {
+import java.util.ArrayList;
+import java.util.List;
 
-    public Entity() {
-        this(new UUID().toString());
-    }
+public class SnippetsFetcher implements DataFetcher<List<Snippet>> {
+    private final Dao<String, Snippet> dao;
 
-    public Entity(String key) {
-        super(key);
+    public SnippetsFetcher(Dao<String, Snippet> dao) {
+        this.dao = dao;
     }
 
     @Override
-    public String getKey() {
-        return super.getKey();
+    public List<Snippet> get(DataFetchingEnvironment environment) {
+        return new ArrayList<>();
     }
-
 }

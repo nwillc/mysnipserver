@@ -16,7 +16,6 @@
 
 package com.github.nwillc.mysnipserver.graphql.schema;
 
-import graphql.annotations.GraphQLAnnotations;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
 import org.junit.Before;
@@ -30,7 +29,7 @@ public class QuerySchemaTest {
 
     @Before
     public void setUp() throws Exception {
-        querySchema = GraphQLAnnotations.object(QuerySchema.class);
+       // querySchema = GraphQLAnnotations.object(QuerySchema.class);
     }
 
     @Test

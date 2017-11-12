@@ -18,21 +18,17 @@ package com.github.nwillc.mysnipserver.graphql.schema;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import graphql.annotations.GraphQLField;
-import graphql.annotations.GraphQLName;
 import graphql.schema.DataFetchingEnvironment;
 
 import javax.validation.constraints.NotNull;
 
 import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
 
-@GraphQLName(MUTATION)
 public final class MutationSchema extends DaoConsumer {
 
-    @GraphQLField
     public static Category category(final DataFetchingEnvironment env,
-                                    @GraphQLName(KEY) final String key,
-                                    @NotNull @GraphQLName(NAME) final String name) {
+                                    final String key,
+                                    final String name) {
         final Category category = new Category(name);
         if (key != null) {
             category.setKey(key);
@@ -41,12 +37,11 @@ public final class MutationSchema extends DaoConsumer {
         return category;
     }
 
-    @GraphQLField
     public static Snippet snippet(final DataFetchingEnvironment env,
-                                  @GraphQLName(KEY) final String key,
-                                  @NotNull @GraphQLName(CATEGORY) final String category,
-                                  @NotNull @GraphQLName(TITLE) final String title,
-                                  @NotNull @GraphQLName(BODY) final String body) {
+                                   final String key,
+                                  @NotNull final String category,
+                                  @NotNull final String title,
+                                  @NotNull  final String body) {
         final Snippet snippet = new Snippet(category, title, body);
         if (key != null) {
             snippet.setKey(key);
@@ -55,16 +50,14 @@ public final class MutationSchema extends DaoConsumer {
         return snippet;
     }
 
-    @GraphQLField
     public static boolean deleteCategory(final DataFetchingEnvironment env,
-                                         @NotNull @GraphQLName(KEY) final String key) {
+                                         @NotNull final String key) {
         getCategoryDao(env).delete(key);
         return true;
     }
 
-    @GraphQLField
     public static boolean deleteSnippet(final DataFetchingEnvironment env,
-                                        @NotNull @GraphQLName(KEY) final String key) {
+                                        @NotNull final String key) {
         getSnippetDao(env).delete(key);
         return true;
     }

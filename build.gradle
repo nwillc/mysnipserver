@@ -80,7 +80,6 @@ dependencies {
             "javax.validation:validation-api:$javax_validation_version",
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
             "org.tinylog:tinylog:$tiny_log_version",
-            "com.graphql-java:graphql-java-annotations:$graphql_annotations_version",
             "com.h2database:h2:$h2database_version",
             'org.apache.commons:commons-dbcp2:2.1.1',
             "com.graphql-java:graphql-java:$graphql_java_version"

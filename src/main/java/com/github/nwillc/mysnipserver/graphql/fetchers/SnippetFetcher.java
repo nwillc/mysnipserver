@@ -14,25 +14,26 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.entity;
+package com.github.nwillc.mysnipserver.graphql.fetchers;
 
-import graphql.annotations.GraphQLAnnotations;
-import graphql.schema.GraphQLObjectType;
-import org.junit.Test;
+import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.opa.Dao;
+import graphql.schema.DataFetcher;
+import graphql.schema.DataFetchingEnvironment;
 
-import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
 
-public class CategoryTest {
+public class SnippetFetcher implements DataFetcher<Snippet> {
+    private final Dao<String, Snippet> dao;
 
-    @Test
-    public void testGraphQLAnnotations() throws Exception {
-        GraphQLObjectType category = null;
-        category = GraphQLAnnotations.object(Category.class);
+    public SnippetFetcher(Dao<String, Snippet> dao) {
+        this.dao = dao;
+    }
 
-        assertThat(category.getName()).isEqualTo(CATEGORY);
-        assertThat(category.getFieldDefinitions().size()).isEqualTo(2);
-        assertThat(category.getFieldDefinition(KEY)).isNotNull();
-        assertThat(category.getFieldDefinition(NAME)).isNotNull();
+    @Override
+    public Snippet get(DataFetchingEnvironment environment) {
+        final String key = environment.getArgument("key");
+        final Optional<Snippet> one = dao.findOne(key);
+        return one.orElse(null);
     }
 }
