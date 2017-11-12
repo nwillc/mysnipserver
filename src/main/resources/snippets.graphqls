@@ -1,0 +1,22 @@
+schema {
+    query: QueryType
+}
+
+type QueryType {
+    category(key: ID!): Category
+    categories : [ Category ]
+    snippet(key: ID!): Snippet
+    snippets : [ Snippet ]
+}
+
+type Snippet {
+    key: ID!
+    category: String!
+    title: String!
+    body: String!
+}
+
+type Category {
+    key: ID!
+    name: String!
+}
