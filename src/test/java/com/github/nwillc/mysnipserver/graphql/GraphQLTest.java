@@ -37,6 +37,8 @@ import org.junit.runner.RunWith;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,12 +46,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 @RunWith(JMockit.class)
+@SuppressWarnings("unchecked")
 public class GraphQLTest {
     public static final String CATEGORY = "CATEGORY";
+    public static final String CATEGORIES = "categories";
     public static final String TITLE = "TITLE";
     public static final String BODY = "BODY";
     public static final String KEY = "KEY";
     public static final String SNIPPET = "snippet";
+    public static final String SNIPPETS = "snippets";
+    public static final String NAME = "NAME";
     private GraphQLSchema schema;
     private GraphQL graphQL;
 
@@ -68,7 +74,7 @@ public class GraphQLTest {
         assertThat(streamReader).isNotNull();
         final TypeDefinitionRegistry registry = schemaParser.parse(streamReader);
         assertThat(registry).isNotNull();
-        final RuntimeWiring wiring = RuntimeWiringBuilder.getRuntimeWiring(snippetDao);
+        final RuntimeWiring wiring = RuntimeWiringBuilder.getRuntimeWiring(snippetDao, categoryDao);
         assertThat(wiring).isNotNull();
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         schema = schemaGenerator.makeExecutableSchema(registry, wiring);
@@ -103,5 +109,113 @@ public class GraphQLTest {
         data = (Map) data.get(SNIPPET);
         assertThat(data).contains(entry(KEY.toLowerCase(), KEY), entry(CATEGORY.toLowerCase(), CATEGORY),
                 entry(TITLE.toLowerCase(), TITLE), entry(BODY.toLowerCase(), BODY));
+    }
+
+    @Test
+    public void testSnippetsQuery() throws Exception {
+
+        Snippet snippet1 = new Snippet(CATEGORY, TITLE, BODY);
+        snippet1.setKey("1");
+
+        Snippet snippet2 = new Snippet(CATEGORY, TITLE, BODY);
+        snippet2.setKey("2");
+
+        List<Snippet> snippetList = new ArrayList<>();
+        snippetList.add(snippet1);
+        snippetList.add(snippet2);
+
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(
+                String.format("query { %s { %s, %s, %s, %s } }", SNIPPETS.toLowerCase(),
+                        KEY.toLowerCase(), CATEGORY.toLowerCase(), TITLE.toLowerCase(), BODY.toLowerCase()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        new Expectations() {{
+            snippetDao.findAll();
+            result = snippetList.stream();
+        }};
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(SNIPPETS);
+        List<Map> list = (List<Map>) data.get(SNIPPETS);
+
+        Integer key = 1;
+        for (Map element : list) {
+            assertThat(element).contains(entry(KEY.toLowerCase(), key.toString()), entry(CATEGORY.toLowerCase(), CATEGORY),
+                    entry(TITLE.toLowerCase(), TITLE), entry(BODY.toLowerCase(), BODY));
+            key++;
+        }
+    }
+
+    @Test
+    public void testCategoryQuery() throws Exception {
+
+        final Category category = new Category(NAME);
+        category.setKey(KEY);
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(
+                String.format("query { %s( %s: \"%s\" ) { %s, %s } }", CATEGORY.toLowerCase(), KEY.toLowerCase(), KEY,
+                        KEY.toLowerCase(), NAME.toLowerCase()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        new Expectations() {{
+            categoryDao.findOne(KEY);
+            result = Optional.of(category);
+        }};
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORY.toLowerCase());
+        data = (Map) data.get(CATEGORY.toLowerCase());
+        assertThat(data).contains(entry(KEY.toLowerCase(), KEY), entry(NAME.toLowerCase(), NAME));
+    }
+
+    @Test
+    public void testCategoriesQuery() throws Exception {
+
+        Category category1 = new Category(NAME);
+        category1.setKey("1");
+
+        Category category2 = new Category(NAME);
+        category2.setKey("2");
+
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(category1);
+        categoryList.add(category2);
+
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput().query(
+                String.format("query { %s { %s, %s } }", CATEGORIES.toLowerCase(),
+                        KEY.toLowerCase(), NAME.toLowerCase()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        new Expectations() {{
+            categoryDao.findAll();
+            result = categoryList.stream();
+        }};
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORIES);
+        List<Map> list = (List<Map>) data.get(CATEGORIES);
+
+        Integer key = 1;
+        for (Map element : list) {
+            assertThat(element).contains(entry(KEY.toLowerCase(), key.toString()), entry(NAME.toLowerCase(), NAME));
+            key++;
+        }
     }
 }

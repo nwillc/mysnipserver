@@ -17,15 +17,20 @@
 package com.github.nwillc.mysnipserver.graphql.fetchers;
 
 import com.github.nwillc.mysnipserver.entity.Category;
-import graphql.schema.DataFetcher;
+import com.github.nwillc.opa.Dao;
 import graphql.schema.DataFetchingEnvironment;
 
-/**
- *
- */
-public class CategoryFetcher implements DataFetcher<Category> {
+import java.util.Optional;
+
+public class CategoryFetcher extends DaoFetcher<String, Category, Category> {
+    public CategoryFetcher(Dao<String, Category> dao) {
+        super(dao);
+    }
+
     @Override
     public Category get(DataFetchingEnvironment environment) {
-        return null;
+        final String key = environment.getArgument("key");
+        final Optional<Category> one = getDao().findOne(key);
+        return one.orElse(null);
     }
 }

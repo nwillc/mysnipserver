@@ -17,6 +17,7 @@
 package com.github.nwillc.mysnipserver.graphql;
 
 
+import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
 import graphql.schema.idl.RuntimeWiring;
@@ -31,10 +32,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RuntimeWiringBuilderTest {
     @Mocked
     private Dao<String,Snippet> snippetDao;
+    @Mocked
+    private Dao<String,Category> categoryDao;
 
     @Test
     public void testBuilder() throws Exception {
-        final RuntimeWiring runtimeWiring = RuntimeWiringBuilder.getRuntimeWiring(snippetDao);
+        final RuntimeWiring runtimeWiring = RuntimeWiringBuilder.getRuntimeWiring(snippetDao, categoryDao);
         assertThat(runtimeWiring).isNotNull();
     }
 }

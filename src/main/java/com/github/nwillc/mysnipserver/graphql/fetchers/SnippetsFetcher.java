@@ -23,16 +23,15 @@ import graphql.schema.DataFetchingEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class SnippetsFetcher implements DataFetcher<List<Snippet>> {
-    private final Dao<String, Snippet> dao;
-
+public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> {
     public SnippetsFetcher(Dao<String, Snippet> dao) {
-        this.dao = dao;
+        super(dao);
     }
 
     @Override
     public List<Snippet> get(DataFetchingEnvironment environment) {
-        return new ArrayList<>();
+        return getDao().findAll().collect(Collectors.toList());
     }
 }

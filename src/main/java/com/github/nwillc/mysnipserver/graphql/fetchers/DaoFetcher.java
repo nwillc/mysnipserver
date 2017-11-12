@@ -16,21 +16,18 @@
 
 package com.github.nwillc.mysnipserver.graphql.fetchers;
 
-import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
-import graphql.schema.DataFetchingEnvironment;
+import com.github.nwillc.opa.HasKey;
+import graphql.schema.DataFetcher;
 
-import java.util.Optional;
+public abstract class DaoFetcher<K, V extends HasKey<K>, R> implements DataFetcher<R> {
+    private final Dao<K,V> dao;
 
-public class SnippetFetcher extends DaoFetcher<String, Snippet, Snippet> {
-    public SnippetFetcher(Dao<String, Snippet> dao) {
-        super(dao);
+    public DaoFetcher(Dao<K, V> dao) {
+        this.dao = dao;
     }
 
-    @Override
-    public Snippet get(DataFetchingEnvironment environment) {
-        final String key = environment.getArgument("key");
-        final Optional<Snippet> one = getDao().findOne(key);
-        return one.orElse(null);
+    protected Dao<K, V> getDao() {
+        return dao;
     }
 }
