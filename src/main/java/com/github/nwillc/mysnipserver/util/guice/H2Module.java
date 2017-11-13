@@ -23,7 +23,7 @@ import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
-import com.github.nwillc.mysnipserver.handlers.GraphQLHandlerV2;
+import com.github.nwillc.mysnipserver.handlers.GraphQLHandler;
 import com.github.nwillc.opa.Dao;
 import com.github.nwillc.opa.impl.jdbc.JdbcDao;
 import com.google.inject.Binder;
@@ -50,9 +50,9 @@ public class H2Module implements Module {
 
         final JdbcDao<String, Category> categoryJdbcDao = new JdbcDao<>(new CategoryConfiguration(h2Database));
         final JdbcDao<String, Snippet> snippetJdbcDao = new JdbcDao<>(new SnippetConfiguration(h2Database));
-        final GraphQLHandlerV2 graphQLHandlerV2 = new GraphQLHandlerV2(categoryJdbcDao, snippetJdbcDao);
+        final GraphQLHandler graphQLHandlerV2 = new GraphQLHandler(categoryJdbcDao, snippetJdbcDao);
 
-        binder.bind(GraphQLHandlerV2.class).toInstance(graphQLHandlerV2);
+        binder.bind(GraphQLHandler.class).toInstance(graphQLHandlerV2);
         binder.bind(new TypeLiteral<Dao<String, Category>>() {
         }).toInstance(categoryJdbcDao);
         binder.bind(new TypeLiteral<Dao<String, Snippet>>() {

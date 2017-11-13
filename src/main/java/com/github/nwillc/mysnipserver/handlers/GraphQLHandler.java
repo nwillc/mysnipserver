@@ -16,50 +16,52 @@
 
 package com.github.nwillc.mysnipserver.handlers;
 
-
-import com.github.nwillc.mysnipserver.DaoProvider;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema;
+import com.github.nwillc.mysnipserver.graphql.RuntimeWiringBuilder;
 import com.github.nwillc.opa.Dao;
 import com.google.inject.Inject;
+import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
+import graphql.schema.idl.RuntimeWiring;
+import graphql.schema.idl.SchemaGenerator;
+import graphql.schema.idl.SchemaParser;
+import graphql.schema.idl.TypeDefinitionRegistry;
 import org.pmw.tinylog.Logger;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ratpack.jackson.Jackson.json;
 
-public class GraphQLHandler implements Handler, DaoProvider {
-    public static final String PATH = "v1/graphql";
+public class GraphQLHandler implements Handler {
+    public static final String PATH = "v2/graphql";
     private static final String QUERY = "query";
     private static final String ERRORS = "errors";
     private static final String DATA = "data";
-    private final Dao<String, Category> categoriesDao;
-    private final Dao<String, Snippet> snippetDao;
+    private static final String GRAPHQL_SCHEMA_IDL = "snippets.graphqls";
+    private static final String VARIABLES = "variables";
     private final GraphQL graphql;
 
     @Inject
     public GraphQLHandler(Dao<String, Category> categoriesDao,
-                          Dao<String, Snippet> snippetDao) throws Exception {
-        this.categoriesDao = categoriesDao;
-        this.snippetDao = snippetDao;
-      //  graphql = GraphQL.newGraphQL(new SnippetSchema().getSchema()).build();
-        graphql = null;
-    }
-
-    @Override
-    public Dao<String, Category> getCategoryDao() {
-        return categoriesDao;
-    }
-
-    @Override
-    public Dao<String, Snippet> getSnippetDao() {
-        return snippetDao;
+                          Dao<String, Snippet> snippetDao) {
+        final SchemaParser schemaParser = new SchemaParser();
+        final TypeDefinitionRegistry registry;
+        try (final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GRAPHQL_SCHEMA_IDL);
+             final InputStreamReader streamReader = new InputStreamReader(inputStream)) {
+            registry = schemaParser.parse(streamReader);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not parse graphql schema", e);
+        }
+        final RuntimeWiring wiring = RuntimeWiringBuilder.getRuntimeWiring(snippetDao, categoriesDao);
+        SchemaGenerator schemaGenerator = new SchemaGenerator();
+        graphql = GraphQL.newGraphQL(schemaGenerator.makeExecutableSchema(registry, wiring)).build();
     }
 
     @Override
@@ -67,16 +69,12 @@ public class GraphQLHandler implements Handler, DaoProvider {
         context.parse(Map.class).then(payload -> {
             Logger.info(QUERY + ": " + payload.get(QUERY));
             @SuppressWarnings("unchecked")
-            Map<String, Object> variables = (Map<String, Object>) payload.get("variables");
-            ExecutionResult executionResult;
-            try {
-                executionResult = graphql.execute(payload.get(QUERY).toString(), null, this, variables);
-            } catch (Throwable e) {
-                Logger.warn("GraphQL failed", e);
-                context.render("{  }");
-                return;
-            }
-
+            Map<String, Object> variables = (Map<String, Object>) payload.get(VARIABLES);
+            ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                    .query(payload.get(QUERY).toString())
+                    .variables(variables)
+                    .build();
+            final ExecutionResult executionResult = graphql.execute(executionInput);
             Map<String, Object> result = new LinkedHashMap<>();
             if (executionResult.getErrors().isEmpty()) {
                 result.put(DATA, executionResult.getData());
