@@ -53,12 +53,12 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
             this.categoryGQL = new graphql.Graphql(graphqlUrlV2, "query { categories { key name } }");
             this.categorySnippetsGQL = new graphql.Graphql(graphqlUrlV2, "query($category: ID!) { snippets ( category: $category ) { key title } }");
             this.categoryCreateGQL = new graphql.Graphql(graphqlUrl, "mutation($name: String!){ category(name: $name){ key }}");
-            this.snippetBodyGQL = new graphql.Graphql(graphqlUrl, "query($snippet: String!){ snippet ( key: $snippet) { body }}");
+            this.snippetBodyGQL = new graphql.Graphql(graphqlUrlV2, "query($snippet: String!) { snippet ( key: $snippet) { body }}");
             this.snippetCreateGQL = new graphql.Graphql(graphqlUrl, "mutation($category: String! $title: String! $body: String!){ snippet ( category: $category title: $title body: $body ){ key }}");
             this.snippetUpdateGQL = new graphql.Graphql(graphqlUrl, "mutation($key: String! $category: String! $title: String! $body: String!){ snippet ( key: $key category: $category title: $title body: $body ){ key }}");
             this.deleteSnippetGQL = new graphql.Graphql(graphqlUrl, "mutation($snippet: String!) { deleteSnippet ( key: $snippet ) }");
             this.deleteCategoryGQL = new graphql.Graphql(graphqlUrl, "mutation($category: String!) { deleteCategory ( key: $category ) }");
-            this.searchCategoryGQL = new graphql.Graphql(graphqlUrl, "query($category: String! $match: String!){ snippets( category: $category match: $match ){ key title }}");
+            this.searchCategoryGQL = new graphql.Graphql(graphqlUrl, "query($category: String! $match: String!) { snippets( category: $category match: $match ){ key title }}");
             this.datastoreGQL = new graphql.Graphql(graphqlUrl, "{ datastore { categories { key name }  snippets { key category title body } }}");
 
             // Functions

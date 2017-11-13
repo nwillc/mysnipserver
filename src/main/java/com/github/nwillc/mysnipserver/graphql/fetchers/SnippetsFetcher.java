@@ -31,6 +31,7 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
         super(dao);
     }
 
+    // TODO: Use a query instead of a filter
     @Override
     public List<Snippet> get(DataFetchingEnvironment environment) {
         if (environment.containsArgument("category")) {
