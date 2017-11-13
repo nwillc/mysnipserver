@@ -1,5 +1,6 @@
 schema {
     query: QueryType
+    mutation: MutationType
 }
 
 type QueryType {
@@ -7,6 +8,12 @@ type QueryType {
     categories : [ Category ]
     snippet(key: ID!): Snippet
     snippets : [ Snippet ]
+}
+
+type MutationType {
+    deleteCategory(key: ID!): Boolean
+    deleteSnippet(key: ID!): Boolean
+    category(name: String!): Category
 }
 
 type Snippet {

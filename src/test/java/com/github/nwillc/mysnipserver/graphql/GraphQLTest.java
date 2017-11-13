@@ -44,6 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 @RunWith(JMockit.class)
+@SuppressWarnings("unchecked")
 public class GraphQLTest {
     public static final String CATEGORY = "CATEGORY";
     public static final String TITLE = "TITLE";
