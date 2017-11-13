@@ -49,7 +49,8 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
             $(this.fileImportDialog).dialog("close");
 
             var graphqlUrl = "v1/graphql";
-            this.categoryGQL = new graphql.Graphql(graphqlUrl, "{ categories { key name }}");
+            var graphqlUrlV2 = "v2/graphql"
+            this.categoryGQL = new graphql.Graphql(graphqlUrlV2, "query { categories { key name } }");
             this.categorySnippetsGQL = new graphql.Graphql(graphqlUrl, "query($category: String!){ snippets ( category: $category ) { key title }}");
             this.categoryCreateGQL = new graphql.Graphql(graphqlUrl, "mutation($name: String!){ category(name: $name){ key }}");
             this.snippetBodyGQL = new graphql.Graphql(graphqlUrl, "query($snippet: String!){ snippet ( key: $snippet) { body }}");

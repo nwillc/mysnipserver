@@ -18,6 +18,7 @@ package com.github.nwillc.mysnipserver;
 
 import com.github.nwillc.mysnipserver.handlers.AuthHandler;
 import com.github.nwillc.mysnipserver.handlers.GraphQLHandler;
+import com.github.nwillc.mysnipserver.handlers.GraphQLHandlerV2;
 import com.github.nwillc.mysnipserver.util.guice.MemoryBackedModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -45,6 +46,7 @@ public final class RatPackApp {
     private final Integer port;
     private final InetAddress address;
     private final GraphQLHandler graphQLHandler;
+    private final GraphQLHandlerV2 graphQLHandlerV2;
     private final AuthHandler authHandler;
 
 
@@ -74,6 +76,7 @@ public final class RatPackApp {
 
         final Injector injector = Guice.createInjector(module);
         graphQLHandler = injector.getInstance(GraphQLHandler.class);
+        graphQLHandlerV2 = injector.getInstance(GraphQLHandlerV2.class);
         authHandler = injector.getInstance(AuthHandler.class);
     }
 
@@ -95,13 +98,14 @@ public final class RatPackApp {
                 .registry(ratpack.guice.Guice.registry(b -> b.module(SessionModule.class)))
                 .serverConfig(config())
                 .handlers(chain -> chain
-                        .all(authHandler::authRequired)
+                //        .all(authHandler::authRequired)
                         .get("ping", ctx -> ctx.render("PONG"))
                         .get("properties", ctx -> ctx.render(props))
-                        .get(TOKEN.of(AuthHandler.PATH), authHandler::googleAuth)
-                        .get(PASSWORD.of(USERNAME.of(AuthHandler.PATH)), authHandler::login)
-                        .delete(AuthHandler.PATH, authHandler::logout)
+                //        .get(TOKEN.of(AuthHandler.PATH), authHandler::googleAuth)
+                //        .get(PASSWORD.of(USERNAME.of(AuthHandler.PATH)), authHandler::login)
+                //        .delete(AuthHandler.PATH, authHandler::logout)
                         .post(GraphQLHandler.PATH, graphQLHandler)
+                        .post(GraphQLHandlerV2.PATH, graphQLHandlerV2)
                         .files(f -> f.dir(PUBLIC).indexFiles("index.html"))
                 )
         );

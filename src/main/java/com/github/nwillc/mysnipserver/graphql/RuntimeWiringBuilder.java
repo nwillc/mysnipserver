@@ -26,7 +26,7 @@ import com.github.nwillc.opa.Dao;
 import graphql.schema.idl.RuntimeWiring;
 
 public class RuntimeWiringBuilder {
-    static RuntimeWiring getRuntimeWiring(Dao<String, Snippet> snippetDao, Dao<String, Category> categoryDao) {
+    public static RuntimeWiring getRuntimeWiring(Dao<String, Snippet> snippetDao, Dao<String, Category> categoryDao) {
         return RuntimeWiring.newRuntimeWiring()
                 .type("QueryType", wiriing -> wiriing
                         .dataFetcher("snippet", new SnippetFetcher(snippetDao))
