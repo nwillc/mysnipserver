@@ -20,6 +20,7 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
+import org.pmw.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,12 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
 
     @Override
     public List<Snippet> get(DataFetchingEnvironment environment) {
+        if (environment.containsArgument("category")) {
+            final Object category = environment.getArgument("category");
+            Logger.info("Snippets in catogory: " + category);
+            return getDao().findAll().filter(s -> s.getCategory().equals(category)).collect(Collectors.toList());
+        }
+        
         return getDao().findAll().collect(Collectors.toList());
     }
 }

@@ -6,7 +6,7 @@ type QueryType {
     category(key: ID!): Category
     categories : [ Category ]
     snippet(key: ID!): Snippet
-    snippets : [ Snippet ]
+    snippets(category: String) : [ Snippet ]
 }
 
 type Snippet {
