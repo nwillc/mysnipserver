@@ -7,7 +7,7 @@ type QueryType {
     category(key: ID!): Category
     categories : [ Category ]
     snippet(key: ID!): Snippet
-    snippets(category: String) : [ Snippet ]
+    snippets(category: ID match: String) : [ Snippet ]
 }
 
 type MutationType {
@@ -18,7 +18,7 @@ type MutationType {
 
 type Snippet {
     key: ID!
-    category: String!
+    category: ID!
     title: String!
     body: String!
 }

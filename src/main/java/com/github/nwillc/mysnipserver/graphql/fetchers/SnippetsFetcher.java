@@ -16,30 +16,40 @@
 
 package com.github.nwillc.mysnipserver.graphql.fetchers;
 
+import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
-import graphql.schema.DataFetcher;
+import com.github.nwillc.opa.query.Query;
+import com.github.nwillc.opa.query.QueryBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import org.pmw.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> {
     public SnippetsFetcher(Dao<String, Snippet> dao) {
         super(dao);
     }
 
-    // TODO: Use a query instead of a filter
+    // TODO: Support match
     @Override
     public List<Snippet> get(DataFetchingEnvironment environment) {
         if (environment.containsArgument("category")) {
             final Object category = environment.getArgument("category");
             Logger.info("Snippets in catogory: " + category);
-            return getDao().findAll().filter(s -> s.getCategory().equals(category)).collect(Collectors.toList());
+            try {
+                final Query<Snippet> snippetQuery = new QueryBuilder<>(Snippet.class).eq("category", category.toString()).build();
+                final Dao<String, Snippet> dao = getDao();
+                try (Stream<Snippet> snippetStream = dao.find(snippetQuery)) {
+                    return snippetStream.collect(Collectors.toList());
+                }
+            } catch (NoSuchFieldException e) {
+                throw new UncheckedSQLException("Cant build query", e);
+            }
         }
-        
+
         return getDao().findAll().collect(Collectors.toList());
     }
 }
