@@ -42,7 +42,7 @@ public final class RatPackApp {
     private static final String PUBLIC = "public";
     private final Integer port;
     private final InetAddress address;
-    private final GraphQLHandler graphQLHandlerV2;
+    private final GraphQLHandler graphQLHandler;
     private final AuthHandler authHandler;
 
 
@@ -71,7 +71,7 @@ public final class RatPackApp {
                 + '.' + store + "Module").newInstance();
 
         final Injector injector = Guice.createInjector(module);
-        graphQLHandlerV2 = injector.getInstance(GraphQLHandler.class);
+        graphQLHandler = injector.getInstance(GraphQLHandler.class);
         authHandler = injector.getInstance(AuthHandler.class);
     }
 
@@ -100,7 +100,7 @@ public final class RatPackApp {
                         //        .get(PASSWORD.of(USERNAME.of(AuthHandler.PATH)), authHandler::login)
                         //        .delete(AuthHandler.PATH, authHandler::logout)
                         //        .post(GraphQLHandler.PATH, graphQLHandler)
-                        .post(GraphQLHandler.PATH, graphQLHandlerV2)
+                        .post(GraphQLHandler.PATH, graphQLHandler)
                         .files(f -> f.dir(PUBLIC).indexFiles("index.html"))
                 )
         );
