@@ -27,3 +27,7 @@ type Category {
     key: ID!
     name: String!
 }
+
+type Result {
+    result: Boolean
+}

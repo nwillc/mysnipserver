@@ -18,10 +18,7 @@ package com.github.nwillc.mysnipserver.graphql;
 
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.graphql.fetchers.CategoriesFetcher;
-import com.github.nwillc.mysnipserver.graphql.fetchers.CategoryFetcher;
-import com.github.nwillc.mysnipserver.graphql.fetchers.SnippetFetcher;
-import com.github.nwillc.mysnipserver.graphql.fetchers.SnippetsFetcher;
+import com.github.nwillc.mysnipserver.graphql.fetchers.*;
 import com.github.nwillc.opa.Dao;
 import graphql.schema.idl.RuntimeWiring;
 
@@ -33,6 +30,9 @@ public class RuntimeWiringBuilder {
                         .dataFetcher("snippets", new SnippetsFetcher(snippetDao))
                         .dataFetcher("category", new CategoryFetcher(categoryDao))
                         .dataFetcher("categories", new CategoriesFetcher(categoryDao))
+                )
+                .type("MutationType", wiring -> wiring
+                        .dataFetcher("deleteSnippet", new SnippetDelete(snippetDao))
                 )
                 .build();
     }

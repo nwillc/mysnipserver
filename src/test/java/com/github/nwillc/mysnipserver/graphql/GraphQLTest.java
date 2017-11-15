@@ -22,6 +22,7 @@ import com.github.nwillc.mysnipserver.dao.jdbc.SnippetConfiguration;
 import com.github.nwillc.mysnipserver.dao.jdbc.TestDatabase;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.opa.impl.jdbc.JdbcDao;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
@@ -34,6 +35,7 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.pmw.tinylog.Logger;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 @SuppressWarnings("unchecked")
-public class GraphQLTest {
+public class GraphQLTest implements JsonMapper {
     public static final String CATEGORY = "category";
     public static final String CATEGORIES = "categories";
     public static final String TITLE = "title";
@@ -62,6 +64,7 @@ public class GraphQLTest {
     private static final Snippet SNIPPET_A_TWO = new Snippet(CATEGORY_A.getKey(), "two", "body two");
     private static final Snippet SNIPPET_B_THREE = new Snippet(CATEGORY_B.getKey(), "three", "body three");
     private static final Snippet SNIPPET_B_FOUR = new Snippet(CATEGORY_B.getKey(), "four", "body four");
+    private JdbcDao<String, Snippet> snippetJdbcDao;
 
     @Rule
     public TestDatabase testDatabase = new TestDatabase();
@@ -74,7 +77,7 @@ public class GraphQLTest {
         categoryJdbcDao.save(CATEGORY_A);
         categoryJdbcDao.save(CATEGORY_B);
 
-        JdbcDao<String, Snippet> snippetJdbcDao = new JdbcDao<>(new SnippetConfiguration(testDatabase.getDatabase()));
+        snippetJdbcDao = new JdbcDao<>(new SnippetConfiguration(testDatabase.getDatabase()));
         snippetJdbcDao.save(SNIPPET_A_ONE);
         snippetJdbcDao.save(SNIPPET_A_TWO);
         snippetJdbcDao.save(SNIPPET_B_THREE);
@@ -172,6 +175,48 @@ public class GraphQLTest {
                 entry(CATEGORY, SNIPPET_A_ONE.getCategory()),
                 entry(TITLE, SNIPPET_A_ONE.getTitle()),
                 entry(BODY, SNIPPET_A_ONE.getBody()));
+    }
+
+    @Test
+    public void testSnippetDelete() throws Exception {
+        assertThat(snippetJdbcDao.findOne(SNIPPET_A_ONE.getKey())).isPresent();
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("mutation { deleteSnippet( key: \"%s\" ) }", SNIPPET_A_ONE.getKey()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        Logger.info(toJson(data));
+        assertThat(data).containsKeys("deleteSnippet");
+        Boolean success = (Boolean) data.get("deleteSnippet");
+        assertThat(success).isTrue();
+        assertThat(snippetJdbcDao.findOne(SNIPPET_A_ONE.getKey())).isNotPresent();
+    }
+
+    @Test
+    public void testSnippetDeleteNotFound() throws Exception {
+        final String badKey = SNIPPET_A_ONE.getKey() + "bad";
+        assertThat(snippetJdbcDao.findOne(badKey)).isNotPresent();
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("mutation { deleteSnippet( key: \"%s\" ) }", badKey))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        Logger.info(toJson(data));
+        assertThat(data).containsKeys("deleteSnippet");
+        Boolean success = (Boolean) data.get("deleteSnippet");
+        assertThat(success).isTrue();
     }
 
     @Test
