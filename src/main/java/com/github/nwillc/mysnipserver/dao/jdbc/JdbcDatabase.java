@@ -38,7 +38,7 @@ public final class JdbcDatabase implements ConnectionProvider {
     }
     
     public JdbcDatabase(String driver, String url, String dbName) throws ClassNotFoundException, SQLException {
-        Logger.info("H2 Database: " + dbName);
+        Logger.info("{} Database {}{}", driver, url, dbName);
         Class.forName(driver);
 
         dataSource = setupDataSource(url + dbName);

@@ -25,7 +25,7 @@ import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class H2DatabaseTest {
+public class JdbcDatabaseTest {
     private JdbcDatabase instance;
 
     @Rule
