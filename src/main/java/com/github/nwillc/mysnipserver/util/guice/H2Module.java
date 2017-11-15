@@ -16,9 +16,9 @@
 
 package com.github.nwillc.mysnipserver.util.guice;
 
-import com.github.nwillc.mysnipserver.dao.h2.CategoryConfiguration;
-import com.github.nwillc.mysnipserver.dao.h2.JdbcDatabase;
-import com.github.nwillc.mysnipserver.dao.h2.SnippetConfiguration;
+import com.github.nwillc.mysnipserver.dao.jdbc.CategoryConfiguration;
+import com.github.nwillc.mysnipserver.dao.jdbc.JdbcDatabase;
+import com.github.nwillc.mysnipserver.dao.jdbc.SnippetConfiguration;
 import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;

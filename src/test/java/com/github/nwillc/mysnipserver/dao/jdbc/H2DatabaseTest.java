@@ -14,12 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.mysnipserver.dao.h2;
+package com.github.nwillc.mysnipserver.dao.jdbc;
 
-
-import com.github.nwillc.funjdbc.functions.Extractor;
-import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.opa.impl.jdbc.JdbcDaoConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,8 +25,8 @@ import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SnippetsConfigurationTest {
-    private JdbcDaoConfiguration<String, Snippet> instance;
+public class H2DatabaseTest {
+    private JdbcDatabase instance;
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -39,8 +35,7 @@ public class SnippetsConfigurationTest {
     public void setUp() throws Exception {
         folder.create();
         final File folderRoot = folder.getRoot();
-        final JdbcDatabase h2Database = new JdbcDatabase(folderRoot.getPath() + File.separator + "snippets");
-        instance = new SnippetConfiguration(h2Database);
+        instance = new JdbcDatabase(folderRoot.getPath() + File.separator + "tempdb");
     }
 
     @Test
@@ -48,8 +43,4 @@ public class SnippetsConfigurationTest {
         assertThat(instance.getConnection()).isNotNull();
     }
 
-    @Test
-    public void testGetExtractor() throws Exception {
-        assertThat(instance.getExtractor()).isInstanceOf(Extractor.class);
-    }
 }
