@@ -27,17 +27,21 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public final class H2Database implements ConnectionProvider {
-    private final static String DRIVER = "org.h2.Driver";
-    private final static String URL = "jdbc:h2:";
+public final class JdbcDatabase implements ConnectionProvider {
+    private final static String DEFAULT_DRIVER = "org.h2.Driver";
+    private final static String DEFAULT_URL = "jdbc:h2:";
     private final DataSource dataSource;
     private final Manager manager;
 
-    public H2Database(String dbName) throws ClassNotFoundException, SQLException {
+    public JdbcDatabase(String dbName) throws ClassNotFoundException, SQLException {
+             this(DEFAULT_DRIVER, DEFAULT_URL, dbName);
+    }
+    
+    public JdbcDatabase(String driver, String url, String dbName) throws ClassNotFoundException, SQLException {
         Logger.info("H2 Database: " + dbName);
-        Class.forName(DRIVER);
+        Class.forName(driver);
 
-        dataSource = setupDataSource(URL + dbName);
+        dataSource = setupDataSource(url + dbName);
 
         manager = Manager.getInstance();
         manager.setConnectionProvider(this);

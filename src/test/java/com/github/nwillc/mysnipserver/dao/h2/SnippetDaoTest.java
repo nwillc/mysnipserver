@@ -40,7 +40,7 @@ public class SnippetDaoTest {
     public void setUp() throws Exception {
         folder.create();
         final File folderRoot = folder.getRoot();
-        final H2Database h2Database = new H2Database(folderRoot.getPath() + File.separator + "snippets");
+        final JdbcDatabase h2Database = new JdbcDatabase(folderRoot.getPath() + File.separator + "snippets");
         snippetDao = new JdbcDao<>(new SnippetConfiguration(h2Database));
     }
 

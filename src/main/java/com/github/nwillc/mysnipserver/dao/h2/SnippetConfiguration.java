@@ -31,7 +31,7 @@ import java.sql.Statement;
 public class SnippetConfiguration implements JdbcDaoConfiguration<String, Snippet> {
     private final ConnectionProvider delegate;
 
-    public SnippetConfiguration(H2Database delegate) {
+    public SnippetConfiguration(JdbcDatabase delegate) {
         this.delegate = delegate;
         delegate.getManager().add(new CreateMigration());
         delegate.getManager().doMigrations();

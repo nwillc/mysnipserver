@@ -40,7 +40,7 @@ public class CategoryDaoTest {
     public void setUp() throws Exception {
         folder.create();
         final File folderRoot = folder.getRoot();
-        final H2Database h2Database = new H2Database(folderRoot.getPath() + File.separator + "snippets");
+        final JdbcDatabase h2Database = new JdbcDatabase(folderRoot.getPath() + File.separator + "snippets");
         categoryDao = new JdbcDao<>(new CategoryConfiguration(h2Database));
     }
 

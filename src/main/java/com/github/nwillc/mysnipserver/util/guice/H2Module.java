@@ -17,7 +17,7 @@
 package com.github.nwillc.mysnipserver.util.guice;
 
 import com.github.nwillc.mysnipserver.dao.h2.CategoryConfiguration;
-import com.github.nwillc.mysnipserver.dao.h2.H2Database;
+import com.github.nwillc.mysnipserver.dao.h2.JdbcDatabase;
 import com.github.nwillc.mysnipserver.dao.h2.SnippetConfiguration;
 import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
@@ -40,9 +40,9 @@ public class H2Module implements Module {
     public void configure(Binder binder) {
         Logger.info("DI Module: H2 Backed");
 
-        final H2Database h2Database;
+        final JdbcDatabase h2Database;
         try {
-            h2Database = new H2Database(H2_DATABASE_NAME);
+            h2Database = new JdbcDatabase(H2_DATABASE_NAME);
         } catch (Exception e) {
             Logger.error("Failed creating h2 database " + H2_DATABASE_NAME, e);
             throw new IllegalStateException("Database not available", e);

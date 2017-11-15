@@ -26,7 +26,7 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class H2DatabaseTest {
-    private H2Database instance;
+    private JdbcDatabase instance;
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -35,7 +35,7 @@ public class H2DatabaseTest {
     public void setUp() throws Exception {
         folder.create();
         final File folderRoot = folder.getRoot();
-        instance = new H2Database(folderRoot.getPath() + File.separator + "tempdb");
+        instance = new JdbcDatabase(folderRoot.getPath() + File.separator + "tempdb");
     }
 
     @Test

@@ -31,7 +31,7 @@ import java.sql.Statement;
 public class CategoryConfiguration implements JdbcDaoConfiguration<String, Category> {
     private final ConnectionProvider delegate;
 
-    public CategoryConfiguration(H2Database delegate) {
+    public CategoryConfiguration(JdbcDatabase delegate) {
         this.delegate = delegate;
         delegate.getManager().add(new CreateMigration());
         delegate.getManager().doMigrations();
