@@ -33,7 +33,6 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
         super(dao);
     }
 
-    // TODO: Support match
     @Override
     public List<Snippet> get(DataFetchingEnvironment environment) {
         if (environment.containsArgument("category")) {
