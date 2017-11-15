@@ -16,12 +16,17 @@
 
 package com.github.nwillc.mysnipserver.graphql.fetchers;
 
+import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.mysnipserver.entity.Category;
+import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
+import com.github.nwillc.opa.query.Query;
+import com.github.nwillc.opa.query.QueryBuilder;
 import graphql.schema.DataFetchingEnvironment;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CategoriesFetcher extends DaoFetcher<String, Category, List<Category>> {
     public CategoriesFetcher(Dao<String, Category> dao) {
@@ -30,6 +35,21 @@ public class CategoriesFetcher extends DaoFetcher<String, Category, List<Categor
 
     @Override
     public List<Category> get(DataFetchingEnvironment environment) {
-        return getDao().findAll().collect(Collectors.toList());
+        if (environment.containsArgument("match")) {
+            try {
+                final Object name = environment.getArgument("match");
+                final Query<Category> categoryQuery = new QueryBuilder<>(Category.class)
+                        .contains("name", name.toString())
+                        .build();
+                try (Stream<Category> categoryStream = getDao().find(categoryQuery)) {
+                    return categoryStream.collect(Collectors.toList());
+                }
+            } catch (NoSuchFieldException e) {
+                throw new UncheckedSQLException("Cant build query", e);
+            }
+        }
+        try (Stream<Category> all = getDao().findAll()) {
+            return all.collect(Collectors.toList());
+        }
     }
 }

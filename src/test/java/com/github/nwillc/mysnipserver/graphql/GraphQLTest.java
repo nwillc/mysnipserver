@@ -54,7 +54,6 @@ public class GraphQLTest {
     public static final String SNIPPET = "snippet";
     public static final String SNIPPETS = "snippets";
     public static final String NAME = "name";
-    private GraphQLSchema schema;
     private GraphQL graphQL;
 
     private static final Category CATEGORY_A = new Category("A");
@@ -64,9 +63,6 @@ public class GraphQLTest {
     private static final Snippet SNIPPET_B_THREE = new Snippet(CATEGORY_B.getKey(), "three", "body three");
     private static final Snippet SNIPPET_B_FOUR = new Snippet(CATEGORY_B.getKey(), "four", "body four");
 
-    private JdbcDao<String, Category> categoryJdbcDao;
-    private JdbcDao<String, Snippet> snippetJdbcDao;
-
     @Rule
     public TestDatabase testDatabase = new TestDatabase();
 
@@ -74,11 +70,11 @@ public class GraphQLTest {
     @Before
     public void setUp() throws Exception {
         // Set up dummy data
-        categoryJdbcDao = new JdbcDao<>(new CategoryConfiguration(testDatabase.getDatabase()));
+        JdbcDao<String, Category> categoryJdbcDao = new JdbcDao<>(new CategoryConfiguration(testDatabase.getDatabase()));
         categoryJdbcDao.save(CATEGORY_A);
         categoryJdbcDao.save(CATEGORY_B);
 
-        snippetJdbcDao = new JdbcDao<>(new SnippetConfiguration(testDatabase.getDatabase()));
+        JdbcDao<String, Snippet> snippetJdbcDao = new JdbcDao<>(new SnippetConfiguration(testDatabase.getDatabase()));
         snippetJdbcDao.save(SNIPPET_A_ONE);
         snippetJdbcDao.save(SNIPPET_A_TWO);
         snippetJdbcDao.save(SNIPPET_B_THREE);
@@ -87,18 +83,72 @@ public class GraphQLTest {
         // Setup GraphQL
         SchemaParser schemaParser = new SchemaParser();
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream("snippets.graphqls");
-        assertThat(inputStream).isNotNull();
         final InputStreamReader streamReader = new InputStreamReader(inputStream);
-        assertThat(streamReader).isNotNull();
         final TypeDefinitionRegistry registry = schemaParser.parse(streamReader);
-        assertThat(registry).isNotNull();
         final RuntimeWiring wiring = RuntimeWiringBuilder.getRuntimeWiring(snippetJdbcDao, categoryJdbcDao);
-        assertThat(wiring).isNotNull();
         SchemaGenerator schemaGenerator = new SchemaGenerator();
-        schema = schemaGenerator.makeExecutableSchema(registry, wiring);
-        assertThat(schema).isNotNull();
+        GraphQLSchema schema = schemaGenerator.makeExecutableSchema(registry, wiring);
         graphQL = GraphQL.newGraphQL(schema).build();
-        assertThat(graphQL).isNotNull();
+    }
+
+    @Test
+    public void testCategoryQuery() throws Exception {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("query { category( key: \"%s\" ) { key name } }", CATEGORY_A.getKey()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORY);
+        data = (Map) data.get(CATEGORY);
+        assertThat(data).contains(
+                entry(KEY, CATEGORY_A.getKey()),
+                entry(NAME, CATEGORY_A.getName()));
+    }
+
+    @Test
+    public void testCategoriesQuery() throws Exception {
+
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query("query { categories { key name } }")
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORIES);
+        List<Map> list = (List<Map>) data.get(CATEGORIES);
+        assertThat(list).hasSize(2);
+        list.forEach(element -> assertThat(element.get(KEY)).isIn(CATEGORY_A.getKey(), CATEGORY_B.getKey()));
+    }
+
+    @Test
+    public void testCategoryMatch() throws Exception {
+
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("query { categories( match: \"%s\") { key name } }", CATEGORY_A.getName()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORIES);
+        List<Map> list = (List<Map>) data.get(CATEGORIES);
+        assertThat(list).hasSize(1);
+        list.forEach(element -> assertThat(element.get(KEY)).isIn(CATEGORY_A.getKey()));
     }
 
     @Test
@@ -170,6 +220,26 @@ public class GraphQLTest {
     }
 
     @Test
+    public void testSnippetsMatch() throws Exception {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("query { snippets( match: \"%s\") { key category title body } }", "o"))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(SNIPPETS);
+        List<Map> list = (List<Map>) data.get(SNIPPETS);
+
+        assertThat(list).hasSize(3);
+        list.forEach(element -> assertThat(element.get(KEY)).isNotEqualTo(SNIPPET_B_THREE.getKey()));
+    }
+
+    @Test
     public void testSnippetsInCategoryQuery() throws Exception {
         Map<String, Object> variables = new HashMap<>();
         variables.put(CATEGORY, CATEGORY_A.getKey());
@@ -192,43 +262,4 @@ public class GraphQLTest {
         list.forEach(element -> assertThat(element.get(KEY)).isIn(SNIPPET_A_ONE.getKey(), SNIPPET_A_TWO.getKey()));
     }
 
-    @Test
-    public void testCategoryQuery() throws Exception {
-        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
-                .query(String.format("query { category( key: \"%s\" ) { key name } }", CATEGORY_A.getKey()))
-                .build();
-
-        assertThat(executionInput).isNotNull();
-
-        final ExecutionResult result = graphQL.execute(executionInput);
-        assertThat(result).isNotNull();
-        assertThat(result.getErrors()).isEmpty();
-
-        Map data = result.getData();
-        assertThat(data).containsKeys(CATEGORY);
-        data = (Map) data.get(CATEGORY);
-        assertThat(data).contains(
-                entry(KEY, CATEGORY_A.getKey()),
-                entry(NAME, CATEGORY_A.getName()));
-    }
-
-    @Test
-    public void testCategoriesQuery() throws Exception {
-
-        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
-                .query("query { categories { key name } }")
-                .build();
-
-        assertThat(executionInput).isNotNull();
-
-        final ExecutionResult result = graphQL.execute(executionInput);
-        assertThat(result).isNotNull();
-        assertThat(result.getErrors()).isEmpty();
-
-        Map data = result.getData();
-        assertThat(data).containsKeys(CATEGORIES);
-        List<Map> list = (List<Map>) data.get(CATEGORIES);
-        assertThat(list).hasSize(2);
-        list.forEach(element -> assertThat(element.get(KEY)).isIn(CATEGORY_A.getKey(), CATEGORY_B.getKey()));
-    }
 }

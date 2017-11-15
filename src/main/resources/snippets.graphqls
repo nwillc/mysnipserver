@@ -5,7 +5,7 @@ schema {
 
 type QueryType {
     category(key: ID!): Category
-    categories : [ Category ]
+    categories(match: String) : [ Category ]
     snippet(key: ID!): Snippet
     snippets(category: ID match: String) : [ Snippet ]
 }

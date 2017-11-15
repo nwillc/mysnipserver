@@ -50,6 +50,22 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
             }
         }
 
-        return getDao().findAll().collect(Collectors.toList());
+        if (environment.containsArgument("match")) {
+            final Object title = environment.getArgument("match");
+            Logger.info("Snippets w/ title: " + title);
+            try {
+                final Query<Snippet> snippetQuery = new QueryBuilder<>(Snippet.class).contains("title", title.toString()).build();
+                final Dao<String, Snippet> dao = getDao();
+                try (Stream<Snippet> snippetStream = dao.find(snippetQuery)) {
+                    return snippetStream.collect(Collectors.toList());
+                }
+            } catch (NoSuchFieldException e) {
+                throw new UncheckedSQLException("Cant build query", e);
+            }
+        }
+
+        try (final Stream<Snippet> snippets = getDao().findAll()) {
+                 return snippets.collect(Collectors.toList());
+        }
     }
 }
