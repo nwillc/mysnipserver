@@ -37,7 +37,7 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
     public List<Snippet> get(DataFetchingEnvironment environment) {
         if (environment.containsArgument("category")) {
             final Object category = environment.getArgument("category");
-            Logger.info("Snippets in catogory: " + category);
+            Logger.debug("Snippets in catogory: " + category);
             try {
                 final Query<Snippet> snippetQuery = new QueryBuilder<>(Snippet.class).eq("category", category.toString()).build();
                 final Dao<String, Snippet> dao = getDao();
@@ -51,7 +51,7 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
 
         if (environment.containsArgument("match")) {
             final Object title = environment.getArgument("match");
-            Logger.info("Snippets w/ title: " + title);
+            Logger.debug("Snippets w/ title: " + title);
             try {
                 final Query<Snippet> snippetQuery = new QueryBuilder<>(Snippet.class).contains("title", title.toString()).build();
                 final Dao<String, Snippet> dao = getDao();

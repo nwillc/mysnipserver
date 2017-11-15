@@ -22,7 +22,6 @@ import com.github.nwillc.mysnipserver.dao.jdbc.SnippetConfiguration;
 import com.github.nwillc.mysnipserver.dao.jdbc.TestDatabase;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
-import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.opa.impl.jdbc.JdbcDao;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
@@ -35,7 +34,6 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.pmw.tinylog.Logger;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 @SuppressWarnings("unchecked")
-public class GraphQLTest implements JsonMapper {
+public class GraphQLTest {
     public static final String CATEGORY = "category";
     public static final String CATEGORIES = "categories";
     public static final String TITLE = "title";
@@ -191,7 +189,6 @@ public class GraphQLTest implements JsonMapper {
         assertThat(result.getErrors()).isEmpty();
 
         Map data = result.getData();
-        Logger.info(toJson(data));
         assertThat(data).containsKeys("deleteSnippet");
         Boolean success = (Boolean) data.get("deleteSnippet");
         assertThat(success).isTrue();
@@ -213,7 +210,6 @@ public class GraphQLTest implements JsonMapper {
         assertThat(result.getErrors()).isEmpty();
 
         Map data = result.getData();
-        Logger.info(toJson(data));
         assertThat(data).containsKeys("deleteSnippet");
         Boolean success = (Boolean) data.get("deleteSnippet");
         assertThat(success).isTrue();
