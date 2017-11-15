@@ -200,7 +200,7 @@ public class GraphQLTest {
         variables.put(CATEGORY.toLowerCase(), CATEGORY + "1");
 
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
-                .query("query($category: String) {snippets( category: $category ) { key category title body } }")
+                .query("query($category: ID) {snippets( category: $category ) { key category title body } }")
                 .variables(variables)
                 .build();
 
