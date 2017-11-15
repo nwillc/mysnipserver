@@ -21,7 +21,7 @@ import com.github.nwillc.opa.HasKey;
 import graphql.schema.DataFetcher;
 
 public abstract class DaoFetcher<K, V extends HasKey<K>, R> implements DataFetcher<R> {
-    private final Dao<K,V> dao;
+    private final Dao<K, V> dao;
 
     public DaoFetcher(Dao<K, V> dao) {
         this.dao = dao;

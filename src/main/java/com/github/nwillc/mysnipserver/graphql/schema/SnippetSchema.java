@@ -18,8 +18,6 @@ package com.github.nwillc.mysnipserver.graphql.schema;
 
 import graphql.schema.GraphQLSchema;
 
-import static graphql.schema.GraphQLSchema.newSchema;
-
 public class SnippetSchema {
     public static final String DATASTORE = "datastore";
     public static final String CATEGORY = "category";

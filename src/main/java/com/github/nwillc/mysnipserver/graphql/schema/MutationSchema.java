@@ -22,8 +22,6 @@ import graphql.schema.DataFetchingEnvironment;
 
 import javax.validation.constraints.NotNull;
 
-import static com.github.nwillc.mysnipserver.graphql.schema.SnippetSchema.*;
-
 public final class MutationSchema extends DaoConsumer {
 
     public static Category category(final DataFetchingEnvironment env,
@@ -38,10 +36,10 @@ public final class MutationSchema extends DaoConsumer {
     }
 
     public static Snippet snippet(final DataFetchingEnvironment env,
-                                   final String key,
+                                  final String key,
                                   @NotNull final String category,
                                   @NotNull final String title,
-                                  @NotNull  final String body) {
+                                  @NotNull final String body) {
         final Snippet snippet = new Snippet(category, title, body);
         if (key != null) {
             snippet.setKey(key);

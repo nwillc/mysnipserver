@@ -64,7 +64,7 @@ public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> 
         }
 
         try (final Stream<Snippet> snippets = getDao().findAll()) {
-                 return snippets.collect(Collectors.toList());
+            return snippets.collect(Collectors.toList());
         }
     }
 }

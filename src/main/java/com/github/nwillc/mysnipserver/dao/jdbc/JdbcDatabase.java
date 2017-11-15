@@ -34,9 +34,9 @@ public final class JdbcDatabase implements ConnectionProvider {
     private final Manager manager;
 
     public JdbcDatabase(String dbName) throws ClassNotFoundException, SQLException {
-             this(DEFAULT_DRIVER, DEFAULT_URL, dbName);
+        this(DEFAULT_DRIVER, DEFAULT_URL, dbName);
     }
-    
+
     public JdbcDatabase(String driver, String url, String dbName) throws ClassNotFoundException, SQLException {
         Logger.debug("{} Database {}{}", driver, url, dbName);
         Class.forName(driver);

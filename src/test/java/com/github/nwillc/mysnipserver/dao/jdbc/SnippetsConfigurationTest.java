@@ -23,9 +23,6 @@ import com.github.nwillc.opa.impl.jdbc.JdbcDaoConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -18,7 +18,6 @@ package com.github.nwillc.mysnipserver.graphql.fetchers;
 
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.mysnipserver.entity.Category;
-import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
 import com.github.nwillc.opa.query.Query;
 import com.github.nwillc.opa.query.QueryBuilder;

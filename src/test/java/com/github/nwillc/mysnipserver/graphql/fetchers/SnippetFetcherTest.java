@@ -36,7 +36,7 @@ public class SnippetFetcherTest {
     private SnippetFetcher instance;
 
     @Mocked
-    private Dao<String,Snippet> dao;
+    private Dao<String, Snippet> dao;
 
     @Mocked
     private DataFetchingEnvironment env;
@@ -51,9 +51,11 @@ public class SnippetFetcherTest {
     public void testGetSnippet() throws Exception {
         final Snippet snippet = new Snippet();
 
-        new Expectations(){{
-            env.getArgument("key"); result = "foo";
-            dao.findOne("foo"); result = Optional.of(snippet);
+        new Expectations() {{
+            env.getArgument("key");
+            result = "foo";
+            dao.findOne("foo");
+            result = Optional.of(snippet);
         }};
 
         final Snippet snippet1 = instance.get(env);
@@ -62,9 +64,11 @@ public class SnippetFetcherTest {
 
     @Test
     public void testGetUnknownSnippet() throws Exception {
-        new Expectations(){{
-            env.getArgument("key"); result = "foo";
-            dao.findOne("foo"); result = Optional.empty();
+        new Expectations() {{
+            env.getArgument("key");
+            result = "foo";
+            dao.findOne("foo");
+            result = Optional.empty();
         }};
 
         assertThat(instance.get(env)).isNull();

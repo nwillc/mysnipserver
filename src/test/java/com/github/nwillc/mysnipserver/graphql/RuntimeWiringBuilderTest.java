@@ -31,9 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JMockit.class)
 public class RuntimeWiringBuilderTest {
     @Mocked
-    private Dao<String,Snippet> snippetDao;
+    private Dao<String, Snippet> snippetDao;
     @Mocked
-    private Dao<String,Category> categoryDao;
+    private Dao<String, Category> categoryDao;
 
     @Test
     public void testBuilder() throws Exception {
