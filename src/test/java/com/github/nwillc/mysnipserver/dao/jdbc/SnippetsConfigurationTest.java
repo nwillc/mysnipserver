@@ -33,14 +33,11 @@ public class SnippetsConfigurationTest {
     private JdbcDaoConfiguration<String, Snippet> instance;
 
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public TestDatabase testDatabase = new TestDatabase();
 
     @Before
     public void setUp() throws Exception {
-        folder.create();
-        final File folderRoot = folder.getRoot();
-        final JdbcDatabase h2Database = new JdbcDatabase(folderRoot.getPath() + File.separator + "snippets");
-        instance = new SnippetConfiguration(h2Database);
+        instance = new SnippetConfiguration(testDatabase.getDatabase());
     }
 
     @Test

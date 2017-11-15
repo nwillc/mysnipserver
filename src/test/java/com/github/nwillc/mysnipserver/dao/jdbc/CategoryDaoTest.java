@@ -34,14 +34,11 @@ public class CategoryDaoTest {
     private Dao<String, Category> categoryDao;
 
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public TestDatabase testDatabase = new TestDatabase();
 
     @Before
     public void setUp() throws Exception {
-        folder.create();
-        final File folderRoot = folder.getRoot();
-        final JdbcDatabase h2Database = new JdbcDatabase(folderRoot.getPath() + File.separator + "snippets");
-        categoryDao = new JdbcDao<>(new CategoryConfiguration(h2Database));
+        categoryDao = new JdbcDao<>(new CategoryConfiguration(testDatabase.getDatabase()));
     }
 
     @Test

@@ -16,30 +16,37 @@
 
 package com.github.nwillc.mysnipserver.dao.jdbc;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.rules.ExternalResource;
+import org.pmw.tinylog.Logger;
 
 import java.io.File;
+import java.nio.file.Files;
 
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ *
+ */
+public class TestDatabase extends ExternalResource {
+    public static final String DEFAULT_NAME = "tempdb";
+    private final String name;
+    private File folder;
+    private JdbcDatabase database;
 
-public class JdbcDatabaseTest {
-    private JdbcDatabase instance;
-
-    @Rule
-    public TestDatabase database = new TestDatabase();
-
-
-    @Before
-    public void setUp() throws Exception {
-        instance = database.getDatabase();
+    public TestDatabase() {
+        this(DEFAULT_NAME);
     }
 
-    @Test
-    public void testGetConnection() throws Exception {
-        assertThat(instance.getConnection()).isNotNull();
+    public TestDatabase(String name) {
+        this.name = name;
     }
 
+    @Override
+    protected void before() throws Throwable {
+        folder = Files.createTempDirectory(name).toFile();
+        Logger.debug("Temp database: {}/{}", folder, name);
+        database = new JdbcDatabase(folder.getPath() + File.separator + name);
+    }
+
+    public JdbcDatabase getDatabase() {
+        return database;
+    }
 }

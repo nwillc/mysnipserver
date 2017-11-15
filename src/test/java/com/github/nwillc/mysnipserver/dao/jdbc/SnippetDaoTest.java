@@ -34,14 +34,11 @@ public class SnippetDaoTest {
     private Dao<String, Snippet> snippetDao;
 
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public TestDatabase testDatabase = new TestDatabase();
 
     @Before
     public void setUp() throws Exception {
-        folder.create();
-        final File folderRoot = folder.getRoot();
-        final JdbcDatabase h2Database = new JdbcDatabase(folderRoot.getPath() + File.separator + "snippets");
-        snippetDao = new JdbcDao<>(new SnippetConfiguration(h2Database));
+        snippetDao = new JdbcDao<>(new SnippetConfiguration(testDatabase.getDatabase()));
     }
 
     @Test
