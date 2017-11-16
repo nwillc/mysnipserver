@@ -13,7 +13,7 @@ type QueryType {
 type MutationType {
     deleteCategory(key: ID!): Boolean
     deleteSnippet(key: ID!): Boolean
-    category(name: String!): Category
+    category(key: ID name: String!): Category
 }
 
 type Snippet {

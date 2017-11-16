@@ -22,8 +22,8 @@ import graphql.schema.DataFetchingEnvironment;
 
 import java.util.Optional;
 
-public class SnippetFetcher extends DaoFetcher<String, Snippet, Snippet> {
-    public SnippetFetcher(Dao<String, Snippet> dao) {
+public class SnippetQuery extends DaoFetcher<String, Snippet, Snippet> {
+    public SnippetQuery(Dao<String, Snippet> dao) {
         super(dao);
     }
 

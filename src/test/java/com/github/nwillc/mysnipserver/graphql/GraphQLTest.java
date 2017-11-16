@@ -22,6 +22,7 @@ import com.github.nwillc.mysnipserver.dao.jdbc.SnippetConfiguration;
 import com.github.nwillc.mysnipserver.dao.jdbc.TestDatabase;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
+import com.github.nwillc.mysnipserver.util.JsonMapper;
 import com.github.nwillc.opa.impl.jdbc.JdbcDao;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
@@ -34,6 +35,7 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.pmw.tinylog.Logger;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,10 +44,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.entry;
 
 @SuppressWarnings("unchecked")
-public class GraphQLTest {
+public class GraphQLTest implements JsonMapper {
     public static final String CATEGORY = "category";
     public static final String CATEGORIES = "categories";
     public static final String TITLE = "title";
@@ -111,6 +114,49 @@ public class GraphQLTest {
         assertThat(data).contains(
                 entry(KEY, CATEGORY_A.getKey()),
                 entry(NAME, CATEGORY_A.getName()));
+    }
+
+    @Test
+    public void testCategoryCreate() throws Exception {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query("mutation { category( name: \"foo\" ) { key name } }")
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORY);
+        data = (Map) data.get(CATEGORY);
+        assertThat(data).containsKeys(KEY, NAME);
+        assertThat(data.get(NAME)).isEqualTo("foo");
+
+        assertThat(categoryJdbcDao.findOne(data.get(KEY).toString())).isPresent();
+    }
+
+    @Test
+    public void testCategoryUpdate() throws Exception {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("mutation { category( key: \"%s\" name: \"foo\" ) { key name } }", CATEGORY_A.getKey()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(CATEGORY);
+        data = (Map) data.get(CATEGORY);
+        assertThat(data).containsKeys(KEY, NAME);
+        assertThat(data.get(KEY)).isEqualTo(CATEGORY_A.getKey());
+        assertThat(data.get(NAME)).isEqualTo("foo");
+
+        assertThat(categoryJdbcDao.findOne(data.get(KEY).toString())).isPresent();
     }
 
     @Test

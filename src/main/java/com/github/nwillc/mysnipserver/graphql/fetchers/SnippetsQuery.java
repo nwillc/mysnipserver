@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SnippetsFetcher extends DaoFetcher<String, Snippet, List<Snippet>> {
-    public SnippetsFetcher(Dao<String, Snippet> dao) {
+public class SnippetsQuery extends DaoFetcher<String, Snippet, List<Snippet>> {
+    public SnippetsQuery(Dao<String, Snippet> dao) {
         super(dao);
     }
 

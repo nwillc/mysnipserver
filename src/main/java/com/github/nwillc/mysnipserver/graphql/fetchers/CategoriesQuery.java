@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class CategoriesFetcher extends DaoFetcher<String, Category, List<Category>> {
-    public CategoriesFetcher(Dao<String, Category> dao) {
+public class CategoriesQuery extends DaoFetcher<String, Category, List<Category>> {
+    public CategoriesQuery(Dao<String, Category> dao) {
         super(dao);
     }
 

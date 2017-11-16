@@ -22,8 +22,8 @@ import graphql.schema.DataFetchingEnvironment;
 
 import java.util.Optional;
 
-public class CategoryFetcher extends DaoFetcher<String, Category, Category> {
-    public CategoryFetcher(Dao<String, Category> dao) {
+public class CategoryQuery extends DaoFetcher<String, Category, Category> {
+    public CategoryQuery(Dao<String, Category> dao) {
         super(dao);
     }
 

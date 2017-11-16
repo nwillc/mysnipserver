@@ -32,8 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(JMockit.class)
-public class SnippetFetcherTest {
-    private SnippetFetcher instance;
+public class SnippetQueryTest {
+    private SnippetQuery instance;
 
     @Mocked
     private Dao<String, Snippet> dao;
@@ -43,7 +43,7 @@ public class SnippetFetcherTest {
 
     @Before
     public void setUp() throws Exception {
-        instance = new SnippetFetcher(dao);
+        instance = new SnippetQuery(dao);
         assertThat(instance).isNotNull();
     }
 

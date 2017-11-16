@@ -26,14 +26,15 @@ public class RuntimeWiringBuilder {
     public static RuntimeWiring getRuntimeWiring(Dao<String, Snippet> snippetDao, Dao<String, Category> categoryDao) {
         return RuntimeWiring.newRuntimeWiring()
                 .type("QueryType", wiriing -> wiriing
-                        .dataFetcher("snippet", new SnippetFetcher(snippetDao))
-                        .dataFetcher("snippets", new SnippetsFetcher(snippetDao))
-                        .dataFetcher("category", new CategoryFetcher(categoryDao))
-                        .dataFetcher("categories", new CategoriesFetcher(categoryDao))
+                        .dataFetcher("snippet", new SnippetQuery(snippetDao))
+                        .dataFetcher("snippets", new SnippetsQuery(snippetDao))
+                        .dataFetcher("category", new CategoryQuery(categoryDao))
+                        .dataFetcher("categories", new CategoriesQuery(categoryDao))
                 )
                 .type("MutationType", wiring -> wiring
                         .dataFetcher("deleteSnippet", new SnippetDelete(snippetDao))
                         .dataFetcher("deleteCategory", new CategoryDelete(categoryDao))
+                        .dataFetcher("category", new CategorySave(categoryDao))
                 )
                 .build();
     }

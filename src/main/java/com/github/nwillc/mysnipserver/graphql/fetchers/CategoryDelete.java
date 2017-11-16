@@ -20,8 +20,6 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.opa.Dao;
 import graphql.schema.DataFetchingEnvironment;
 
-import java.util.Optional;
-
 public class CategoryDelete extends DaoFetcher<String, Category, Boolean> {
     public CategoryDelete(Dao<String, Category> dao) {
         super(dao);
