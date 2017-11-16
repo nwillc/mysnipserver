@@ -63,6 +63,7 @@ public class GraphQLTest {
     private static final Snippet SNIPPET_B_THREE = new Snippet(CATEGORY_B.getKey(), "three", "body three");
     private static final Snippet SNIPPET_B_FOUR = new Snippet(CATEGORY_B.getKey(), "four", "body four");
     private JdbcDao<String, Snippet> snippetJdbcDao;
+    private JdbcDao<String, Category> categoryJdbcDao;
 
     @Rule
     public TestDatabase testDatabase = new TestDatabase();
@@ -71,7 +72,7 @@ public class GraphQLTest {
     @Before
     public void setUp() throws Exception {
         // Set up dummy data
-        JdbcDao<String, Category> categoryJdbcDao = new JdbcDao<>(new CategoryConfiguration(testDatabase.getDatabase()));
+        categoryJdbcDao = new JdbcDao<>(new CategoryConfiguration(testDatabase.getDatabase()));
         categoryJdbcDao.save(CATEGORY_A);
         categoryJdbcDao.save(CATEGORY_B);
 
@@ -110,6 +111,26 @@ public class GraphQLTest {
         assertThat(data).contains(
                 entry(KEY, CATEGORY_A.getKey()),
                 entry(NAME, CATEGORY_A.getName()));
+    }
+
+    @Test
+    public void testDeleteCategpry() throws Exception {
+        assertThat(categoryJdbcDao.findOne(CATEGORY_A.getKey())).isPresent();
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("mutation { deleteCategory( key: \"%s\" ) }", CATEGORY_A.getKey()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys("deleteCategory");
+        Boolean success = (Boolean) data.get("deleteCategory");
+        assertThat(success).isTrue();
+        assertThat(categoryJdbcDao.findOne(CATEGORY_A.getKey())).isNotPresent();
     }
 
     @Test

@@ -33,6 +33,7 @@ public class RuntimeWiringBuilder {
                 )
                 .type("MutationType", wiring -> wiring
                         .dataFetcher("deleteSnippet", new SnippetDelete(snippetDao))
+                        .dataFetcher("deleteCategory", new CategoryDelete(categoryDao))
                 )
                 .build();
     }
