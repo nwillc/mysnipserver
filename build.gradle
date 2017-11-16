@@ -88,7 +88,7 @@ dependencies {
         exclude group: 'com.google.guava', module: 'guava-jdk5'
     }
 
-    runtime "org.tinylog:slf4j-binding:$slf4j_version"
+    runtime "org.tinylog:slf4j-binding:$tiny_log_version"
 
     testCompile "org.jmockit:jmockit:$jmockit_version",
             "com.github.fakemongo:fongo:$fakemongo_version",
