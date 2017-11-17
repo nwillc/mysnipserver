@@ -58,7 +58,7 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
             this.snippetUpdateGQL = new graphql.Graphql(graphqlUrlV2, "mutation($key: ID! $category: ID! $title: String! $body: String!){ snippet ( key: $key category: $category title: $title body: $body ){ key }}");
             this.deleteSnippetGQL = new graphql.Graphql(graphqlUrlV2, "mutation($snippet: ID!) { deleteSnippet ( key: $snippet ) }");
             this.deleteCategoryGQL = new graphql.Graphql(graphqlUrlV2, "mutation($category: ID!) { deleteCategory ( key: $category ) }");
-            this.searchCategoryGQL = new graphql.Graphql(graphqlUrlV2, "query($category: String! $match: String!) { snippets( category: $category match: $match ){ key title }}");
+            this.searchCategoryGQL = new graphql.Graphql(graphqlUrlV2, "query($category: ID! $match: String!) { snippets( category: $category match: $match ){ key title }}");
             this.datastoreGQL = new graphql.Graphql(graphqlUrlV2, "{ export { categories { key name }  snippets { key category title body } }}");
 
             // Functions
