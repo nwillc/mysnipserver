@@ -8,6 +8,7 @@ type QueryType {
     categories(match: String) : [ Category ]
     snippet(key: ID!): Snippet
     snippets(category: ID match: String) : [ Snippet ]
+    export: Export
 }
 
 type MutationType {
@@ -27,4 +28,9 @@ type Snippet {
 type Category {
     key: ID!
     name: String!
+}
+
+type Export {
+    snippets: [ Snippet ]
+    categories: [ Category ]
 }

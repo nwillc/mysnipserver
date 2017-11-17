@@ -19,7 +19,7 @@ package com.github.nwillc.mysnipserver.entity;
 import java.util.List;
 
 
-public interface DataStore {
+public interface Export {
     List<Category> getCategories();
     List<Snippet> getSnippets();
 }

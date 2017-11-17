@@ -30,6 +30,7 @@ public class RuntimeWiringBuilder {
                         .dataFetcher("snippets", new SnippetsQuery(snippetDao))
                         .dataFetcher("category", new CategoryQuery(categoryDao))
                         .dataFetcher("categories", new CategoriesQuery(categoryDao))
+                        .dataFetcher("export", new ExportQuery(snippetDao, categoryDao))
                 )
                 .type("MutationType", wiring -> wiring
                         .dataFetcher("deleteSnippet", new SnippetDelete(snippetDao))
