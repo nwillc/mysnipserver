@@ -268,6 +268,32 @@ public class GraphQLTest implements JsonMapper {
     }
 
     @Test
+    public void testSnippetUpdate() throws Exception {
+        final Snippet snippet = new Snippet("category", "title", "body");
+        snippet.setKey(SNIPPET_A_ONE.getKey());
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("mutation { snippet( key: \"%s\" category: \"%s\" title: \"%s\" body: \"%s\") { key category title body } }",
+                 snippet.getKey(), snippet.getCategory(), snippet.getTitle(), snippet.getBody()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        Logger.info(toJson(data));
+        assertThat(data).containsKeys(SNIPPET);
+        data = (Map) data.get(SNIPPET);
+        assertThat(data).contains(
+                entry(KEY, snippet.getKey()),
+                entry(CATEGORY, snippet.getCategory()),
+                entry(TITLE, snippet.getTitle()),
+                entry(BODY, snippet.getBody()));
+    }
+
+    @Test
     public void testSnippetDelete() throws Exception {
         assertThat(snippetJdbcDao.findOne(SNIPPET_A_ONE.getKey())).isPresent();
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()

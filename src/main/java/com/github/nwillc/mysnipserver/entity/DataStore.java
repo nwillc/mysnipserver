@@ -21,6 +21,5 @@ import java.util.List;
 
 public interface DataStore {
     List<Category> getCategories();
-
     List<Snippet> getSnippets();
 }
