@@ -421,4 +421,19 @@ public class GraphQLTest implements JsonMapper {
         list.forEach(element -> assertThat(element.get(KEY)).isIn(SNIPPET_A_ONE.getKey(), SNIPPET_A_TWO.getKey()));
     }
 
+    @Test
+    public void testExport() throws Exception {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query("{ export { categories { key name }  snippets { key category title body } }}")
+                .build();
+        assertThat(executionInput).isNotNull();
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys("export");
+        data = (Map) data.get("export");
+        assertThat(data).containsKeys(SNIPPETS, CATEGORIES);
+    }
 }
