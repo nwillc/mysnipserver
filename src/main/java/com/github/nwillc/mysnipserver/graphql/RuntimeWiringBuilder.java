@@ -35,6 +35,7 @@ public class RuntimeWiringBuilder {
                         .dataFetcher("deleteSnippet", new SnippetDelete(snippetDao))
                         .dataFetcher("deleteCategory", new CategoryDelete(categoryDao))
                         .dataFetcher("category", new CategorySave(categoryDao))
+                        .dataFetcher("snippet", new SnippetSave(snippetDao))
                 )
                 .build();
     }

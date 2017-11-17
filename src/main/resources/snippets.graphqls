@@ -14,6 +14,7 @@ type MutationType {
     deleteCategory(key: ID!): Boolean
     deleteSnippet(key: ID!): Boolean
     category(key: ID name: String!): Category
+    snippet(key: ID category: ID! title: String! body: String!): Snippet
 }
 
 type Snippet {

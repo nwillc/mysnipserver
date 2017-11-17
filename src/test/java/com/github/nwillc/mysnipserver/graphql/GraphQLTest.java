@@ -160,7 +160,7 @@ public class GraphQLTest implements JsonMapper {
     }
 
     @Test
-    public void testDeleteCategpry() throws Exception {
+    public void testDeleteCategory() throws Exception {
         assertThat(categoryJdbcDao.findOne(CATEGORY_A.getKey())).isPresent();
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
                 .query(String.format("mutation { deleteCategory( key: \"%s\" ) }", CATEGORY_A.getKey()))
@@ -240,6 +240,31 @@ public class GraphQLTest implements JsonMapper {
                 entry(CATEGORY, SNIPPET_A_ONE.getCategory()),
                 entry(TITLE, SNIPPET_A_ONE.getTitle()),
                 entry(BODY, SNIPPET_A_ONE.getBody()));
+    }
+
+    @Test
+    public void testSnippetCreate() throws Exception {
+        final Snippet snippet = new Snippet(CATEGORY_A.getKey(), "title", "body");
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("mutation { snippet( category: \"%s\" title: \"%s\" body: \"%s\") { key category title body } }",
+                        snippet.getCategory(), snippet.getTitle(), snippet.getBody()))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        Logger.info(toJson(data));
+        assertThat(data).containsKeys(SNIPPET);
+        data = (Map) data.get(SNIPPET);
+        assertThat(data).contains(
+                entry(CATEGORY, snippet.getCategory()),
+                entry(TITLE, snippet.getTitle()),
+                entry(BODY, snippet.getBody()));
+        assertThat(snippetJdbcDao.findOne(data.get(KEY).toString())).isPresent();
     }
 
     @Test
