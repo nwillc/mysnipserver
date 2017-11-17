@@ -203,7 +203,7 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
                 var filename = "export.json";
                 console.log("export: " + filename);
                 _this.datastoreGQL.execute(function (response) {
-                    var blob = new Blob([JSON.stringify(response.data.datastore)], { type: 'application/json' });
+                    var blob = new Blob([JSON.stringify(response.data.export)], { type: 'application/json' });
                     if (window.navigator.msSaveOrOpenBlob) {
                         window.navigator.msSaveBlob(blob, filename);
                     } else {

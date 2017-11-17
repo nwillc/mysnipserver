@@ -257,7 +257,6 @@ public class GraphQLTest implements JsonMapper {
         assertThat(result.getErrors()).isEmpty();
 
         Map data = result.getData();
-        Logger.info(toJson(data));
         assertThat(data).containsKeys(SNIPPET);
         data = (Map) data.get(SNIPPET);
         assertThat(data).contains(
@@ -283,7 +282,6 @@ public class GraphQLTest implements JsonMapper {
         assertThat(result.getErrors()).isEmpty();
 
         Map data = result.getData();
-        Logger.info(toJson(data));
         assertThat(data).containsKeys(SNIPPET);
         data = (Map) data.get(SNIPPET);
         assertThat(data).contains(
