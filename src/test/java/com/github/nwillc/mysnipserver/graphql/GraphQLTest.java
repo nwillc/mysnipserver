@@ -397,6 +397,27 @@ public class GraphQLTest implements JsonMapper {
     }
 
     @Test
+    public void testSnippetsCategoryAndMatch() throws Exception {
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
+                .query(String.format("query { snippets( category: \"%s\" match: \"%s\") { key category title body } }",
+                       CATEGORY_A.getKey(), "one"))
+                .build();
+
+        assertThat(executionInput).isNotNull();
+
+        final ExecutionResult result = graphQL.execute(executionInput);
+        assertThat(result).isNotNull();
+        assertThat(result.getErrors()).isEmpty();
+
+        Map data = result.getData();
+        assertThat(data).containsKeys(SNIPPETS);
+        List<Map> list = (List<Map>) data.get(SNIPPETS);
+
+        assertThat(list).hasSize(1);
+        list.forEach(element -> assertThat(element.get(KEY)).isNotEqualTo(SNIPPET_B_THREE.getKey()));
+    }
+
+    @Test
     public void testSnippetsInCategoryQuery() throws Exception {
         Map<String, Object> variables = new HashMap<>();
         variables.put(CATEGORY, CATEGORY_A.getKey());

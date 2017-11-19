@@ -35,35 +35,32 @@ public class SnippetsQuery extends DaoFetcher<String, Snippet, List<Snippet>> {
 
     @Override
     public List<Snippet> get(DataFetchingEnvironment environment) {
-        if (environment.containsArgument("category")) {
-            final Object category = environment.getArgument("category");
-            Logger.debug("Snippets in catogory: " + category);
-            try {
-                final Query<Snippet> snippetQuery = new QueryBuilder<>(Snippet.class).eq("category", category.toString()).build();
-                final Dao<String, Snippet> dao = getDao();
-                try (Stream<Snippet> snippetStream = dao.find(snippetQuery)) {
-                    return snippetStream.collect(Collectors.toList());
-                }
-            } catch (NoSuchFieldException e) {
-                throw new UncheckedSQLException("Cant build query", e);
+        final String category = environment.getArgument("category");
+        final String match = environment.getArgument("match");
+        QueryBuilder<Snippet> queryBuilder = null;
+
+        try {
+            if (category != null) {
+                queryBuilder = new QueryBuilder<>(Snippet.class).eq("category", category);
             }
+
+            if (match != null) {
+                boolean and = queryBuilder != null;
+                if (!and) {
+                    queryBuilder = new QueryBuilder<>(Snippet.class);
+                }
+
+                queryBuilder = queryBuilder.contains("title", match);
+                if (and) {
+                    queryBuilder = queryBuilder.and();
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            throw new UncheckedSQLException("Cant build query", e);
         }
 
-        if (environment.containsArgument("match")) {
-            final Object title = environment.getArgument("match");
-            Logger.debug("Snippets w/ title: " + title);
-            try {
-                final Query<Snippet> snippetQuery = new QueryBuilder<>(Snippet.class).contains("title", title.toString()).build();
-                final Dao<String, Snippet> dao = getDao();
-                try (Stream<Snippet> snippetStream = dao.find(snippetQuery)) {
-                    return snippetStream.collect(Collectors.toList());
-                }
-            } catch (NoSuchFieldException e) {
-                throw new UncheckedSQLException("Cant build query", e);
-            }
-        }
-
-        try (final Stream<Snippet> snippets = getDao().findAll()) {
+        final Query<Snippet> query = queryBuilder == null ? null : queryBuilder.build();
+        try (final Stream<Snippet> snippets = query == null ? getDao().findAll() : getDao().find(query)) {
             return snippets.collect(Collectors.toList());
         }
     }

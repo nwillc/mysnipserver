@@ -157,6 +157,8 @@ pmd {
 }
 
 test {
+    jvmArgs = ['-Djdk.attach.allowAttachSelf', '-Dtinylog.level=debug']
+    
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning $descriptor.className.$descriptor.name")
     }
