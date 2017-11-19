@@ -22,7 +22,6 @@ import com.github.nwillc.opa.Dao;
 import com.github.nwillc.opa.query.Query;
 import com.github.nwillc.opa.query.QueryBuilder;
 import graphql.schema.DataFetchingEnvironment;
-import org.pmw.tinylog.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;

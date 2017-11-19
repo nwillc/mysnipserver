@@ -21,5 +21,6 @@ import java.util.List;
 
 public interface Export {
     List<Category> getCategories();
+
     List<Snippet> getSnippets();
 }

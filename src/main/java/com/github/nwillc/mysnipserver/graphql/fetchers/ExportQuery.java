@@ -38,7 +38,7 @@ public class ExportQuery implements DataFetcher<Export> {
 
     @Override
     public Export get(DataFetchingEnvironment environment) {
-       return new Export() {
+        return new Export() {
             @Override
             public List<Category> getCategories() {
                 try (Stream<Category> categoryStream = categoryDao.findAll()) {

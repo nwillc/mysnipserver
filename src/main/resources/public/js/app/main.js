@@ -48,7 +48,6 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
             $(this.fileImportDialog).dialog({ height: 100, width: 450 });
             $(this.fileImportDialog).dialog("close");
 
-            var graphqlUrl = "v1/graphql";
             var graphqlUrlV2 = "v2/graphql"
             this.categoryGQL = new graphql.Graphql(graphqlUrlV2, "query { categories { key name } }");
             this.categorySnippetsGQL = new graphql.Graphql(graphqlUrlV2, "query($category: ID!) { snippets ( category: $category ) { key title } }");

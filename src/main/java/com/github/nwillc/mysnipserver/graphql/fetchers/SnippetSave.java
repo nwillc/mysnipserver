@@ -20,8 +20,6 @@ import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.opa.Dao;
 import graphql.schema.DataFetchingEnvironment;
 
-import java.util.Optional;
-
 public class SnippetSave extends DaoFetcher<String, Snippet, Snippet> {
     public SnippetSave(Dao<String, Snippet> dao) {
         super(dao);

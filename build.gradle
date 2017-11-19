@@ -50,7 +50,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 group = 'com.github.nwillc'
-version = '3.0.0'
+version = '3.1.0'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
@@ -72,9 +72,6 @@ dependencies {
             "com.fasterxml.jackson.core:jackson-core:$jackson_fasterxml_version",
             "com.fasterxml.jackson.core:jackson-databind:$jackson_fasterxml_version",
             "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jackson_fasterxml_version",
-            "com.fasterxml.jackson.core:jackson-annotations:$jackson_fasterxml_version",
-            "com.google.http-client:google-http-client-jackson2:$google_http_client",
-            "com.google.http-client:google-http-client:$google_http_client",
             'com.google.inject:guice:4.1.0',
             'com.groupon:locality-uuid:1.1.1',
             "javax.validation:validation-api:$javax_validation_version",
@@ -83,10 +80,6 @@ dependencies {
             "com.h2database:h2:$h2database_version",
             'org.apache.commons:commons-dbcp2:2.1.1',
             "com.graphql-java:graphql-java:$graphql_java_version"
-
-    compile("com.google.api-client:google-api-client:$google_http_client") {
-        exclude group: 'com.google.guava', module: 'guava-jdk5'
-    }
 
     runtime "org.tinylog:slf4j-binding:$tiny_log_version"
 

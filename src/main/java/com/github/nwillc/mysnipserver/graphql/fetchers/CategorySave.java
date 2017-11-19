@@ -12,8 +12,6 @@ import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.opa.Dao;
 import graphql.schema.DataFetchingEnvironment;
 
-import java.util.Optional;
-
 public class CategorySave extends DaoFetcher<String, Category, Category> {
     public CategorySave(Dao<String, Category> dao) {
         super(dao);
