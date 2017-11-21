@@ -20,21 +20,10 @@ requirejs.config({
     "paths": {
         "app": "../app",
         "jquery": "//code.jquery.com/jquery-3.1.1.min",
-        "jquery-ui": "//code.jquery.com/ui/1.12.1/jquery-ui.min",
-        "gapi": "//apis.google.com/js/platform"
-    },
-    "shim": {
-            "gapi": {
-                exports: "gapi"
-             }
+        "jquery-ui": "//code.jquery.com/ui/1.12.1/jquery-ui.min"
     }
 });
 
-requirejs(["gapi", "app/main"], function(gapi, main) {
-    gapi.load("auth2", function () {
-        gapi.auth2.init({
-            client_id: "728919834589-6e41p6kek58pe4honddltevel30cusuo.apps.googleusercontent.com"
-        });
-    });
+requirejs(["app/main"], function(main) {
     var application = new main.App();
 });

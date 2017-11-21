@@ -177,19 +177,6 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
                 });
             };
 
-            this.logout = function () {
-                console.log("logout");
-                $.ajax({
-                    url: "v1/auth",
-                    method: "DELETE",
-                    success: function () { window.location.replace("/login.html"); }
-                });
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function () {
-                    console.log("User signed out of Google.");
-                });
-            };
-
             this.buildInfo = function () {
                 console.log("build info");
                 $.get("properties", function (data) {
@@ -292,7 +279,6 @@ define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, gr
             $("#buildInfoButton").click(this.buildInfo);
             $("#updateButton").click(this.updateSnippet);
             $("#moveButton").click(this.openMoveSnippet);
-            $("#logoutButton").click(this.logout);
             $("#performMove").click(this.moveSnippet);
             $("#exportButton").click(this.export);
             $("#fileImportButton").click(this.openFileImport);
