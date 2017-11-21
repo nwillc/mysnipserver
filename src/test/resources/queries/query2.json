@@ -1,1 +1,0 @@
-{ "query" : "query($category: String) {snippets( category: $category ) { key category title } }", "variables" : { "category" : "Java" } }
