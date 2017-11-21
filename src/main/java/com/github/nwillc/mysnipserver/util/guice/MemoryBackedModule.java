@@ -18,7 +18,6 @@ package com.github.nwillc.mysnipserver.util.guice;
 
 import com.github.nwillc.mysnipserver.dao.memory.CategoryDao;
 import com.github.nwillc.mysnipserver.dao.memory.SnippetDao;
-import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
@@ -39,7 +38,5 @@ public class MemoryBackedModule implements Module {
         }).to(CategoryDao.class).in(Scopes.SINGLETON);
         binder.bind(new TypeLiteral<Dao<String, Snippet>>() {
         }).to(SnippetDao.class).in(Scopes.SINGLETON);
-        binder.bind(new TypeLiteral<Dao<String, User>>() {
-        }).to(UserDao.class).in(Scopes.SINGLETON);
     }
 }

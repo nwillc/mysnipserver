@@ -51,12 +51,9 @@ public class MongoDbModule implements Module {
         MongoClient client = new MongoClient(serverAddress, auths);
         Dao<String, Category> categoryDao = new MongoDbDao<>(client, DATABASE, Category.class);
         Dao<String, Snippet> snippetDao = new CachingDao<>(new MongoDbDao<>(client, DATABASE, Snippet.class));
-        Dao<String, User> userDao = new MongoDbDao<>(client, DATABASE, User.class);
         binder.bind(new TypeLiteral<Dao<String, Category>>() {
         }).toInstance(categoryDao);
         binder.bind(new TypeLiteral<Dao<String, Snippet>>() {
         }).toInstance(snippetDao);
-        binder.bind(new TypeLiteral<Dao<String, User>>() {
-        }).toInstance(userDao);
     }
 }

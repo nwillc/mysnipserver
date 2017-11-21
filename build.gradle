@@ -50,7 +50,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 group = 'com.github.nwillc'
-version = '3.1.0'
+version = '3.1.1'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'

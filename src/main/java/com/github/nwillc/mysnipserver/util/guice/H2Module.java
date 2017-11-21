@@ -19,7 +19,6 @@ package com.github.nwillc.mysnipserver.util.guice;
 import com.github.nwillc.mysnipserver.dao.jdbc.CategoryConfiguration;
 import com.github.nwillc.mysnipserver.dao.jdbc.JdbcDatabase;
 import com.github.nwillc.mysnipserver.dao.jdbc.SnippetConfiguration;
-import com.github.nwillc.mysnipserver.dao.memory.UserDao;
 import com.github.nwillc.mysnipserver.entity.Category;
 import com.github.nwillc.mysnipserver.entity.Snippet;
 import com.github.nwillc.mysnipserver.entity.User;
@@ -57,7 +56,5 @@ public class H2Module implements Module {
         }).toInstance(categoryJdbcDao);
         binder.bind(new TypeLiteral<Dao<String, Snippet>>() {
         }).toInstance(snippetJdbcDao);
-        binder.bind(new TypeLiteral<Dao<String, User>>() {
-        }).to(UserDao.class).in(Scopes.SINGLETON);
     }
 }
