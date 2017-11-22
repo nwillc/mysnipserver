@@ -39,21 +39,23 @@ public class SnippetsQuery extends DaoFetcher<String, Snippet, List<Snippet>> {
         QueryBuilder<Snippet> queryBuilder = null;
 
         try {
-            if (category != null) {
-                queryBuilder = new QueryBuilder<>(Snippet.class).eq("category", category);
-            }
-
             if (match != null) {
-                boolean and = queryBuilder != null;
-                if (!and) {
-                    queryBuilder = new QueryBuilder<>(Snippet.class);
+                queryBuilder = new QueryBuilder<>(Snippet.class)
+                        .contains("title", match)
+                        .contains("body", match)
+                        .or();
+            }
+
+            if (category != null) {
+                if (queryBuilder == null) {
+                    queryBuilder = new QueryBuilder<>(Snippet.class).eq("category", category);
+                }  else {
+                    queryBuilder.eq("category", category).and();
                 }
 
-                queryBuilder = queryBuilder.contains("title", match);
-                if (and) {
-                    queryBuilder = queryBuilder.and();
-                }
             }
+
+
         } catch (NoSuchFieldException e) {
             throw new UncheckedSQLException("Cant build query", e);
         }

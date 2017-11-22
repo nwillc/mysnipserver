@@ -61,10 +61,10 @@ public class GraphQLTest implements JsonMapper {
 
     private static final Category CATEGORY_A = new Category("A");
     private static final Category CATEGORY_B = new Category("B");
-    private static final Snippet SNIPPET_A_ONE = new Snippet(CATEGORY_A.getKey(), "one", "body one");
-    private static final Snippet SNIPPET_A_TWO = new Snippet(CATEGORY_A.getKey(), "two", "body two");
-    private static final Snippet SNIPPET_B_THREE = new Snippet(CATEGORY_B.getKey(), "three", "body three");
-    private static final Snippet SNIPPET_B_FOUR = new Snippet(CATEGORY_B.getKey(), "four", "body four");
+    private static final Snippet SNIPPET_A_ONE = new Snippet(CATEGORY_A.getKey(), "one", "A one");
+    private static final Snippet SNIPPET_A_TWO = new Snippet(CATEGORY_A.getKey(), "two", "A two");
+    private static final Snippet SNIPPET_B_THREE = new Snippet(CATEGORY_B.getKey(), "three", "B one");
+    private static final Snippet SNIPPET_B_FOUR = new Snippet(CATEGORY_B.getKey(), "four", "B two");
     private JdbcDao<String, Snippet> snippetJdbcDao;
     private JdbcDao<String, Category> categoryJdbcDao;
 
@@ -379,7 +379,7 @@ public class GraphQLTest implements JsonMapper {
     @Test
     public void testSnippetsMatch() throws Exception {
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
-                .query(String.format("query { snippets( match: \"%s\") { key category title body } }", "o"))
+                .query(String.format("query { snippets( match: \"%s\") { key category title body } }", "one"))
                 .build();
 
         assertThat(executionInput).isNotNull();
@@ -392,8 +392,7 @@ public class GraphQLTest implements JsonMapper {
         assertThat(data).containsKeys(SNIPPETS);
         List<Map> list = (List<Map>) data.get(SNIPPETS);
 
-        assertThat(list).hasSize(3);
-        list.forEach(element -> assertThat(element.get(KEY)).isNotEqualTo(SNIPPET_B_THREE.getKey()));
+        assertThat(list).hasSize(2);
     }
 
     @Test
