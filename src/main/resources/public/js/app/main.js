@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-define(["gapi", "jquery-ui", "jquery", "app/graphql"], function (gapi, ui, $, graphql) {
+define(["jquery-ui", "jquery", "app/graphql"], function (ui, $, graphql) {
     return {
         App: function () {
             "use strict";

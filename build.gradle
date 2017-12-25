@@ -190,7 +190,7 @@ task createDockerfile(type: Dockerfile) {
     copyFile "libs/${shadowJar.baseName}.jar", '/opt/service'
     workingDir '/opt/service'
     defaultCommand '--port', mysnipserver_port, '--store', 'H2'
-    entryPoint 'java', '-Djava.awt.headless=true', '-jar', "${shadowJar.baseName}.jar"
+    entryPoint 'java', '-Djava.awt.headless=true', '-cp', "${shadowJar.baseName}.jar", "com.github.nwillc.mysnipserver.RatPackApp"
 }
 
 task buildImage(type: DockerBuildImage, dependsOn: [assemble, createDockerfile]) {
