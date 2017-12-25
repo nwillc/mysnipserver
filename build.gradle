@@ -34,7 +34,6 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'pmd'
@@ -53,7 +52,6 @@ group = 'com.github.nwillc'
 version = '3.1.1'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
-mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
 repositories {
     mavenLocal()
@@ -63,7 +61,7 @@ repositories {
 }
 
 dependencies {
-    compile "com.github.nwillc:opa:$opa_version",
+    implementation "com.github.nwillc:opa:$opa_version",
             "io.ratpack:ratpack-core:$ratpack_version",
             "io.ratpack:ratpack-exec:$ratpack_version",
             "io.ratpack:ratpack-session:$ratpack_version",
@@ -81,9 +79,9 @@ dependencies {
             'org.apache.commons:commons-dbcp2:2.1.1',
             "com.graphql-java:graphql-java:$graphql_java_version"
 
-    runtime "org.tinylog:slf4j-binding:$tiny_log_version"
+    runtimeOnly "org.tinylog:slf4j-binding:$tiny_log_version"
 
-    testCompile "org.jmockit:jmockit:$jmockit_version",
+    testImplementation "org.jmockit:jmockit:$jmockit_version",
             "com.github.fakemongo:fongo:$fakemongo_version",
             "org.assertj:assertj-core:$assertj_version",
             "com.github.nwillc:jdk_contract_tests:$jdk_contract_tests_version",
@@ -122,6 +120,8 @@ shadowJar {
     classifier = null
     version = null
 }
+
+shadowJar.dependsOn assemble
 
 pmd {
     toolVersion = '4.3'
@@ -165,12 +165,6 @@ test {
     testLogging {
         showStandardStreams true
         exceptionFormat "full"
-    }
-}
-
-run {
-    if (project.hasProperty("appArgs")) {
-        args Eval.me(appArgs)
     }
 }
 
