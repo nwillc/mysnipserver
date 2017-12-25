@@ -26,10 +26,10 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.4',
-                'com.bmuschko:gradle-docker-plugin:3.2.0',
+                'com.bmuschko:gradle-docker-plugin:3.2.1',
                 'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
-                'com.github.jengelman.gradle.plugins:shadow:2.0.1',
-                'com.bmuschko:gradle-docker-plugin:3.2.0'
+                'com.github.jengelman.gradle.plugins:shadow:2.0.2',
+                'com.bmuschko:gradle-docker-plugin:3.2.1'
     }
 }
 
@@ -76,7 +76,7 @@ dependencies {
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
             "org.tinylog:tinylog:$tiny_log_version",
             "com.h2database:h2:$h2database_version",
-            'org.apache.commons:commons-dbcp2:2.1.1',
+            "org.apache.commons:commons-dbcp2:$commons_dhcp2_version",
             "com.graphql-java:graphql-java:$graphql_java_version"
 
     runtimeOnly "org.tinylog:slf4j-binding:$tiny_log_version"
