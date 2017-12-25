@@ -34,6 +34,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'pmd'
@@ -49,9 +50,10 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
 group = 'com.github.nwillc'
-version = '3.1.2'
+version = '3.1.3'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
+mainClassName = 'com.github.nwillc.mysnipserver.RatPackApp'
 
 repositories {
     mavenLocal()
@@ -121,8 +123,6 @@ shadowJar {
     version = null
 }
 
-shadowJar.dependsOn assemble
-
 pmd {
     toolVersion = '4.3'
     sourceSets = [sourceSets.main]
@@ -190,7 +190,7 @@ task createDockerfile(type: Dockerfile) {
     copyFile "libs/${shadowJar.baseName}.jar", '/opt/service'
     workingDir '/opt/service'
     defaultCommand '--port', mysnipserver_port, '--store', 'H2'
-    entryPoint 'java', '-Djava.awt.headless=true', '-cp', "${shadowJar.baseName}.jar", "com.github.nwillc.mysnipserver.RatPackApp"
+    entryPoint 'java', '-Djava.awt.headless=true', '-jar', "${shadowJar.baseName}.jar"
 }
 
 task buildImage(type: DockerBuildImage, dependsOn: [assemble, createDockerfile]) {

@@ -57,6 +57,6 @@ JAVA_OPTS="-XX:+UseAltSigs -Dtinylog.configuration=./tinylog.properties -Djava.a
 JAR=$(ls -1t $(find . -name ${JAR_NAME}) | head -1)
 
 echo Start server...
-CMD="java ${JAVA_OPTS[@]} -cp ${JAR} com.github.nwillc.mysnipserver.RatPackApp ${@}"
+CMD="java ${JAVA_OPTS[@]} -jar ${JAR} ${@}"
 [ -n "${VERBOSE}" ] && echo ${CMD}
 ${CMD}
