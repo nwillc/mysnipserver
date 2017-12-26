@@ -14,7 +14,7 @@ There is a 'env.sh.example' file that exports variables used by the provided 'ru
 
 ## Docker Tasks
 
-Can create an image, or run in a container, right from the gradle build.
+Can create an image, or run it in a container, right from the gradle build.
 
 ## See Also
 
