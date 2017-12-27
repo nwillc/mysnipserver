@@ -14,11 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+
 buildscript {
     ext.username ='nwillc'
     ext.imagename = "$username/$project.name"
     ext.email = "$username@gmail.com"
     ext.port = "4567"
+    
     repositories {
         mavenLocal()
         maven {
@@ -47,17 +53,18 @@ apply plugin: 'com.bmuschko.docker-remote-api'
 apply plugin: 'com.github.nwillc.buildinfo'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
-import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+
 
 group = "com.github.$username"
-version = '3.1.4'
+version = '3.1.5'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = "${project.group}.${project.name}.RatPackApp"
+
+DockerRegistryCredentials dockerCredentials = new DockerRegistryCredentials(
+        username: username,
+        password: System.getenv('DOCKER_PASSWD'),
+        email: email)
 
 repositories {
     mavenLocal()
@@ -172,15 +179,6 @@ test {
     }
 }
 
-docker {
-    registryCredentials {
-        url = 'https://index.docker.io/v1/'
-        username = "$username"
-        password = System.getenv('DOCKER_PASSWD')
-        email = "$email"
-    }
-}
-
 task createDockerfile(type: Dockerfile) {
     def labels = [maintainer: "$email",
                   version: project.version]
@@ -198,12 +196,14 @@ task createDockerfile(type: Dockerfile) {
 }
 
 task buildImage(type: DockerBuildImage, dependsOn: [assemble, createDockerfile]) {
+    registryCredentials = dockerCredentials
     inputDir = project.file("build")
     dockerFile = createDockerfile.destFile
     tags = [ "$imagename:$project.version".toString(), "$imagename:latest".toString() ]
 }
 
 task pushImage(type: DockerPushImage, dependsOn: buildImage) {
+    registryCredentials = dockerCredentials
     imageName = "$imagename"
 }
 
