@@ -2,7 +2,8 @@ language: java
 sudo: required
 jdk:
   - oraclejdk8
-services: docker
+services:
+  - docker
 branches:
   only:
     - master
@@ -11,4 +12,5 @@ env:
 after_success:
   - ./gradlew jacocoTestReport --no-daemon
   - bash <(curl -s https://codecov.io/bash)
+  - docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWD}"
   - ./gradlew pushImage
