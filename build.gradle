@@ -36,7 +36,7 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:buildinfo:0.1.4',
-                'com.bmuschko:gradle-docker-plugin:3.2.1',
+                'com.bmuschko:gradle-docker-plugin:3.3.1',
                 'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
                 'com.github.jengelman.gradle.plugins:shadow:2.0.2',
                 'com.bmuschko:gradle-docker-plugin:3.2.1'
@@ -56,7 +56,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 
 group = "com.github.$username"
-version = '3.1.5'
+version = '3.1.6-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 mainClassName = "${project.group}.${project.name}.RatPackApp"
@@ -83,7 +83,7 @@ dependencies {
             "com.fasterxml.jackson.core:jackson-core:$jackson_fasterxml_version",
             "com.fasterxml.jackson.core:jackson-databind:$jackson_fasterxml_version",
             "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jackson_fasterxml_version",
-            'com.google.inject:guice:4.1.0',
+            "com.google.inject:guice:$guice_version",
             'com.groupon:locality-uuid:1.1.1',
             "javax.validation:validation-api:$javax_validation_version",
             "org.mongodb:mongo-java-driver:$mongo_driver_version",
